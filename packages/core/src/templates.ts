@@ -8,11 +8,9 @@ export function createTaskTemplate(taskName: string, instructions: string): Task
   const body = [
     `# ${cleanTaskName}`,
     '',
-    '1. Review the user input for this task.',
-    cleanInstructions
-      ? `2. Apply these instructions: ${cleanInstructions}`
-      : '2. Use the available user context to complete the task.',
-    '3. Return the completed result to the user.'
+    `- Goal: ${cleanInstructions}`,
+    '- Use the provided user input.',
+    '- Return a concise result.'
   ].join('\n')
 
   return {
