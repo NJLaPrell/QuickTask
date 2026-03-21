@@ -7,9 +7,13 @@
     "build": "pnpm -r build",
     "check": "pnpm -r check",
     "test": "pnpm -r --if-present test",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "changeset": "changeset",
+    "release:version": "changeset version",
+    "release:docs-check": "node scripts/release-docs-check.mjs"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.30.0",
     "@types/node": "^25.5.0",
     "typescript": "^5.9.3"
   }

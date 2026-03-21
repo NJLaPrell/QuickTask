@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      readme_status:
+        description: "README sync status"
+        required: true
+        type: choice
+        options:
+          - updated
+          - no-change
+      docs_status:
+        description: "docs/ sync status"
+        required: true
+        type: choice
+        options:
+          - updated
+          - no-change
+      docs_sync_notes:
+        description: "Required if any status is no-change"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce main branch releases
+        run: |
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "Releases must run from main. Current ref: ${GITHUB_REF}"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run checks
+        run: pnpm check
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Docs synchronization gate
+        env:
+          RELEASE_README_STATUS: ${{ inputs.readme_status }}
+          RELEASE_DOCS_STATUS: ${{ inputs.docs_status }}
+          RELEASE_DOCS_SYNC_NOTES: ${{ inputs.docs_sync_notes }}
+        run: pnpm release:docs-check
+
+      - name: Apply release versions and changelogs
+        run: pnpm release:version
+
+      - name: Detect release version
+        id: detect_version
+        run: |
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          echo "release_version=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - name: Fail when no release changes were produced
+        run: |
+          if git diff --quiet; then
+            echo "No changeset-driven release changes were produced."
+            echo "Make sure at least one .changeset entry is merged into main."
+            exit 1
+          fi
+
+      - name: Commit release changes
+        run: |
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "chore(release): v${{ steps.detect_version.outputs.release_version }}"
+
+      - name: Push release commit
+        run: git push origin HEAD:main
+
+      - name: Create and push release tag
+        run: |
+          git tag "v${{ steps.detect_version.outputs.release_version }}"
+          git push origin "v${{ steps.detect_version.outputs.release_version }}"
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.detect_version.outputs.release_version }}
+          generate_release_notes: true

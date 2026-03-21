@@ -11,7 +11,9 @@ This is the current development quick start based on what is implemented today.
 For commit and PR workflow conventions, see `COMMIT_STRATEGY.md`.
 For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
 For task execution loop conventions, see `TASK_PR_DELIVERY_WORKFLOW.md`.
+For production release policy, see `RELEASE_STRATEGY.md`.
 For the canonical command/result contract, see `docs/qt-command-result-contract.md`.
+For adapter rendering behavior per host, see `docs/qt-adapter-rendering-matrix.md`.
 
 ### Prerequisites
 
@@ -63,6 +65,31 @@ pnpm --filter quicktask-openclaw build
 - There is no fully packaged install flow yet for VS Code, Cursor, or OpenClaw.
 - Core behavior is available as library/runtime code; host adapters are still being completed.
 - Release, marketplace publishing, and install docs are tracked in `TASKS.md`.
+
+## Release workflow
+
+QuickTask uses Changesets with lockstep versions across workspace packages.
+
+### Add release notes during development
+
+For user-visible changes, add a changeset entry:
+
+```bash
+pnpm changeset
+```
+
+### Run a production release
+
+Use the GitHub `Release` workflow (`workflow_dispatch`) from `main`.
+
+The workflow will:
+
+1. run checks/tests/build,
+2. enforce docs synchronization inputs,
+3. apply Changesets version/changelog updates,
+4. commit release changes,
+5. create tag `vX.Y.Z`,
+6. publish a GitHub Release with generated notes.
 
 ## User Guide
 

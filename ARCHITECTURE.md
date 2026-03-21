@@ -55,8 +55,20 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 The single source of truth for supported command forms and runtime result codes is:
 
 - `docs/qt-command-result-contract.md`
+- `docs/qt-adapter-rendering-matrix.md` for host rendering behavior by result code.
 
 Host adapters and user-facing docs should reference this contract to avoid drift.
+
+## Concurrent template write policy
+
+QuickTask uses a lock-file strategy for deterministic concurrent writes:
+
+1. Before saving `tasks/[task].md`, core attempts to create `tasks/[task].md.lock` using exclusive create semantics.
+2. If the lock already exists, save fails fast with a storage error (`Concurrent write in progress`).
+3. When the write completes or fails, core removes the lock.
+4. Template file writes still use temp-file-then-rename for atomic content replacement.
+
+This guarantees no partial/corrupted template state while making conflict behavior explicit for adapters.
 
 ## Current state
 
