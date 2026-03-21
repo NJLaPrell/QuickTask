@@ -1,0 +1,55 @@
+# QuickTask Pre-Release Readiness Workflow
+
+This workflow defines everything that happens before the `Release` workflow takes over.
+
+## Intent
+
+- Triggered by asking the chat assistant to prepare a release.
+- Runs full-hardening validation in the current repo state.
+- Produces a readiness report.
+- Converts uncovered medium/high findings into `TASKS.md` task updates (not GitHub issues).
+- Stops at the handoff boundary where `RELEASE_STRATEGY.md` begins.
+
+## Blocking policy
+
+- `high`: blocking
+- `medium`: blocking
+- `low`: non-blocking
+
+Release handoff is allowed only when there are no medium/high findings.
+
+## Standard execution steps
+
+1. Run:
+   - `pnpm release:prepare`
+2. Review `docs/release-readiness-report.md`.
+3. For each finding:
+   - If it maps to an existing task, update that task section in `TASKS.md` with validation evidence.
+   - If no task exists, add a new task to `TASKS.md`.
+4. For any newly added task:
+   - assign phase manually,
+   - assign priority manually (`P0`/`P1`/`P2`),
+   - include dependency links where relevant.
+5. Re-run `pnpm release:prepare` after changes.
+6. When report has no medium/high findings, handoff to release:
+   - follow `RELEASE_STRATEGY.md` manual release checklist.
+
+## What `pnpm release:prepare` validates
+
+- `pnpm check`
+- `pnpm test`
+- `pnpm build`
+- `pnpm release:docs-check` (with readiness defaults)
+- Existing open release-readiness tasks in `TASKS.md` (as medium findings)
+
+## Task system policy (required)
+
+- Use `TASKS.md` as the only issue tracker for this release-readiness flow.
+- Do not create or assign GitHub issues.
+- Keep phase assignment manual for new findings.
+
+## Artifacts
+
+- Readiness report: `docs/release-readiness-report.md`
+- Source scripts: `scripts/release-prepare-readiness.mjs`
+- Release handoff policy: `RELEASE_STRATEGY.md`

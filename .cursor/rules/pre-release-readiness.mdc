@@ -1,0 +1,25 @@
+---
+description: Enforce chat-triggered pre-release readiness workflow before release handoff
+alwaysApply: true
+---
+
+# Pre-Release Readiness Workflow
+
+When the user asks to prepare a release (or equivalent), run `PRE_RELEASE_READINESS_WORKFLOW.md`.
+
+## Required behavior
+
+1. Run `pnpm release:prepare`.
+2. Read `docs/release-readiness-report.md`.
+3. Treat `medium` and `high` findings as blocking.
+4. Use `TASKS.md` as the issue system:
+   - update existing tasks when findings map to open work,
+   - add new tasks when findings are unmapped.
+5. For new tasks, assign phase and priority manually.
+6. Re-run `pnpm release:prepare` after task updates when practical.
+7. Handoff to `RELEASE_STRATEGY.md` only when medium/high findings are cleared or explicitly accepted by the user.
+
+## Policy constraints
+
+- Do not create GitHub issues for readiness findings.
+- Do not assign owners/assignees in this flow.

@@ -82,6 +82,7 @@ Working rules for all tasks:
 - [ ] T027 - Define support matrix and compatibility policy (P1)
 - [ ] T028 - Add dependency and supply-chain security scanning (P1)
 - [ ] T033 - Add repository governance and release guardrails (P1)
+- [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
 
 ### Phase 5 - Packaging and release operations
 - Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
@@ -116,6 +117,7 @@ Working rules for all tasks:
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
 - [x] T039 - Define concurrent template write policy and tests (P1)
 - [x] T040 - Add stale write-lock recovery policy and tests (P1)
+- [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
 
 ## Active task backlog
 
@@ -682,6 +684,24 @@ Working rules for all tasks:
   - Active concurrent writes remain blocked with deterministic error behavior.
   - Recovery behavior is documented and test-covered.
 - Dependencies: T039.
+
+## T041 - Add pre-release readiness workflow and report pipeline
+- Status: [x] complete (not yet archived)
+- Priority: P1
+- Goal: Standardize chat-triggered pre-release preparation with full-hardening validation and `TASKS.md`-based finding tracking before release workflow handoff.
+- Files: `package.json`, `scripts/release-prepare-readiness.mjs`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `.cursor/rules/`, `.cursor/commands/`, `RELEASE_STRATEGY.md`, `README.md`, `docs/release-readiness-report.md`.
+- Steps:
+  1. Add a single command to run readiness checks and generate a report artifact.
+  2. Define blocking policy (`medium` and `high`) and release handoff condition.
+  3. Codify readiness flow for chat-triggered execution and `TASKS.md`-only issue tracking.
+  4. Wire docs/rules so the assistant executes the same pattern consistently.
+  5. Run readiness preparation once to establish a baseline report.
+- Acceptance criteria:
+  - `pnpm release:prepare` exists and writes a readiness report.
+  - Readiness findings are tracked in `TASKS.md`, not GitHub issues.
+  - Release strategy references readiness handoff criteria.
+  - Workflow/rule docs are present and aligned.
+- Dependencies: T018, T025, T033.
 
 ## Task history
 
