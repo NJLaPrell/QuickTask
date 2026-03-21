@@ -12,18 +12,17 @@ This workflow defines everything that happens before the `Release` workflow take
 
 ## Blocking policy
 
-- `high`: blocking
-- `medium`: blocking
-- `low`: non-blocking
+- Existing findings already tracked in `TASKS.md`: non-blocking for handoff.
+- New `high`/`medium` findings mapped to the current release phase: blocking.
+- New `low` findings: non-blocking.
 
-Release handoff is allowed only when there are no medium/high findings.
+Current release phase is derived from milestone progress in `TASKS.md` (highest phase with no open tasks).
 
 ## Standard execution steps
 
 1. Run:
    - `pnpm release:prepare`
-   - Default scope is `phase-2` (Phase 1 + Phase 2 tasks only).
-   - Optional full-product scope: `RELEASE_PREP_SCOPE=all-phases pnpm release:prepare`
+   - Scope is always full-product (`all phases`); there is no per-phase mode.
 2. Review `docs/release-readiness-report.md`.
 3. Perform a README prerelease audit:
    - update `README.md` with any missing user-facing documentation for shipped behavior,
@@ -36,7 +35,7 @@ Release handoff is allowed only when there are no medium/high findings.
    - assign priority manually (`P0`/`P1`/`P2`),
    - include dependency links where relevant.
 6. Re-run `pnpm release:prepare` after changes.
-7. When report has no medium/high findings, handoff to release:
+7. When report has no new medium/high findings for the current release phase, handoff to release:
    - follow `RELEASE_STRATEGY.md` manual release checklist.
 
 ## What `pnpm release:prepare` validates
@@ -45,9 +44,7 @@ Release handoff is allowed only when there are no medium/high findings.
 - `pnpm test`
 - `pnpm build`
 - `pnpm release:docs-check` (with readiness defaults)
-- Existing open `TASKS.md` tasks in the selected scope:
-  - default: Phase 1 + Phase 2 (`phase-2`)
-  - optional: all phases (`all-phases`)
+- Existing open `TASKS.md` tasks across all phases.
 
 ## Task system policy (required)
 

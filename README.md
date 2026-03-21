@@ -66,7 +66,7 @@ Expected behavior:
 ## Current Status
 
 - Core runtime behavior for create/run/improve lifecycle is implemented.
-- Host integrations for VS Code, Cursor, and OpenClaw are still being wired to the shared runtime.
+- Host integrations for VS Code, Cursor, and OpenClaw are wired to the shared runtime.
 - Installable release artifacts and marketplace distribution are tracked as open work in `TASKS.md`.
 
 ## Project Structure

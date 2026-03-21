@@ -9,9 +9,9 @@ When the user asks to prepare a release (or equivalent), run `PRE_RELEASE_READIN
 
 ## Required behavior
 
-1. Run `pnpm release:prepare` (default `phase-2` scope unless user asks for broader scope).
+1. Run `pnpm release:prepare` (always full-product scope across all phases).
 2. Read `docs/release-readiness-report.md`.
-3. Treat `medium` and `high` findings as blocking.
+3. Treat only new `medium` and `high` findings for the current release phase as blocking.
 4. Use `TASKS.md` as the issue system:
    - update existing tasks when findings map to open work,
    - add new tasks when findings are unmapped.
