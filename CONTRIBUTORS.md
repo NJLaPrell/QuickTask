@@ -167,6 +167,15 @@ Once readiness is green (or explicitly accepted), hand off to the release strate
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
 
+### Stage 3: Publish VS Code Marketplace listing (optional, post-release)
+
+Run this after a release tag exists and the extension version matches that tag:
+
+1. Add repository secret `VSCE_PAT` with a Visual Studio Marketplace token that can publish updates.
+2. Dispatch workflow `Publish VS Code Marketplace`.
+3. Set `release_tag` to the released tag (`vX.Y.Z`).
+4. The workflow validates version parity, packages the VSIX, and publishes to Marketplace.
+
 ## Security checks
 
 QuickTask enforces dependency and supply-chain checks in CI:

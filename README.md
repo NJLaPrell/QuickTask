@@ -68,7 +68,7 @@ Expected behavior:
 - Core runtime behavior for create/run/improve lifecycle is implemented.
 - Host integrations for VS Code, Cursor, and OpenClaw are wired to the shared runtime.
 - Release workflows now build and publish installable VSIX/OpenClaw artifacts with integrity metadata.
-- Marketplace distribution remains tracked work in `TASKS.md`.
+- Marketplace publishing workflow is available for post-release rollout (`Publish VS Code Marketplace`).
 
 ## Support Matrix
 

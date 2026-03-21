@@ -1,0 +1,68 @@
+name: Publish VS Code Marketplace
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to publish (example: v0.2.1)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vscode-marketplace-publish
+  cancel-in-progress: false
+
+jobs:
+  publish-vscode-marketplace:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    steps:
+      - name: Validate VSCE_PAT is configured
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "${VSCE_PAT}" ]; then
+            echo "Missing required repository secret: VSCE_PAT"
+            exit 1
+          fi
+
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches extension version
+        run: |
+          TAG_VERSION="${RELEASE_TAG#v}"
+          EXT_VERSION=$(node -p "require('./packages/vscode-extension/package.json').version")
+          if [ "${TAG_VERSION}" != "${EXT_VERSION}" ]; then
+            echo "Release tag ${RELEASE_TAG} does not match extension version ${EXT_VERSION}."
+            exit 1
+          fi
+
+      - name: Publish extension to VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: pnpm --filter quicktask-vscode publish:marketplace
+
+      - name: Publish summary
+        run: |
+          echo "Published quicktask-vscode ${RELEASE_TAG} to VS Code Marketplace." >> "${GITHUB_STEP_SUMMARY}"
