@@ -233,3 +233,13 @@ test('returns structured response for incomplete improve command', () => {
     cleanup()
   }
 })
+
+test('returns storage error result when template write fails', () => {
+  const runtime = createQtRuntime(createFileTaskStore({ tasksDir: '/dev/null/quicktask' }))
+  const result = runtime.handle('/qt summarize cannot persist here')
+
+  assert.equal(result.kind, 'error')
+  assert.equal(result.code, 'qt:storage:error')
+  assert.equal(result.diagnosticCode, 'storage-io-failure')
+  assert.match(result.message, /Failed to save task template|ENOTDIR/)
+})

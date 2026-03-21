@@ -125,3 +125,9 @@ export type QtRuntimeResult =
       status: ImprovementProposalStatus
       message: string
     }
+  | {
+      kind: 'error'
+      code: 'qt:storage:error'
+      diagnosticCode: 'storage-io-failure'
+      message: string
+    }

@@ -48,7 +48,7 @@ Working rules for all tasks:
 - [x] T034 - Define improvement proposal lifecycle contract
 - [x] T007 - Implement improvement acceptance and overwrite behavior
 - [x] T022 - Define stable core API surface for adapters
-- [ ] T023 - Harden file-backed storage error handling
+- [x] T023 - Harden file-backed storage error handling
 - [ ] T029 - Define runtime diagnostics and error observability
 - [ ] T030 - Add persisted template corruption recovery strategy
 - [ ] T031 - Add template format versioning and migration path
@@ -89,6 +89,7 @@ Working rules for all tasks:
 - [x] T034 - Define improvement proposal lifecycle contract
 - [x] T007 - Implement improvement acceptance and overwrite behavior
 - [x] T022 - Define stable core API surface for adapters
+- [x] T023 - Harden file-backed storage error handling
 
 ## Active task backlog
 
@@ -353,6 +354,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009.
 
 ## T023 - Harden file-backed storage error handling
+- Status: [x] complete (not yet archived)
 - Goal: Make template persistence robust across common filesystem failure modes.
 - Files: `packages/core/src/store.ts`, `packages/core/src/runtime.ts`, tests/docs.
 - Steps:
