@@ -64,9 +64,11 @@ Host adapters and user-facing docs should reference this contract to avoid drift
 QuickTask uses a lock-file strategy for deterministic concurrent writes:
 
 1. Before saving `tasks/[task].md`, core attempts to create `tasks/[task].md.lock` using exclusive create semantics.
-2. If the lock already exists, save fails fast with a storage error (`Concurrent write in progress`).
-3. When the write completes or fails, core removes the lock.
-4. Template file writes still use temp-file-then-rename for atomic content replacement.
+2. If the lock already exists, core checks lock staleness by file age.
+3. Stale locks (older than 5 minutes) are removed and the lock acquisition is retried once.
+4. Active locks still fail fast with a storage error (`Concurrent write in progress`).
+5. When the write completes or fails, core removes the lock.
+6. Template file writes still use temp-file-then-rename for atomic content replacement.
 
 This guarantees no partial/corrupted template state while making conflict behavior explicit for adapters.
 
