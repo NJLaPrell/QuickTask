@@ -1,0 +1,35 @@
+---
+description: Enforce strict findings-first PR review and merge gates
+alwaysApply: true
+---
+
+# PR Review And Merge Strategy
+
+Apply this whenever the user asks to review a PR or assess merge readiness.
+
+## Review output requirements
+
+- Use strict findings-first review.
+- List findings by severity (`high`, `medium`, `low`), highest first.
+- For each finding, include file/path context, risk, and recommended fix direction.
+- After findings, include open questions/assumptions, then brief risk summary.
+
+## Blocker rules
+
+A PR is blocked when:
+
+1. Any unresolved `high` severity finding exists, or
+2. Any required check is failing.
+
+## Required checks
+
+- Tests must pass.
+- Typecheck must pass.
+- Lint/format checks must pass.
+
+## Approval and merge behavior
+
+- Auto-recommend approval only for low-risk PRs.
+- Escalate medium/high-risk PRs for explicit human decision.
+- Recommend merge only when required checks are green and no blockers remain.
+- If no findings exist, explicitly state no findings and mention residual risks/testing gaps.

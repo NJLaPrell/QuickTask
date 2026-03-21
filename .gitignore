@@ -2,8 +2,12 @@ node_modules/
 dist/
 build/
 coverage/
+.nyc_output/
 .DS_Store
+*.log
+*.tsbuildinfo
 *.vsix
 *.tgz
 .env
-pnpm-lock.yaml
+.env.*
+!.env.example

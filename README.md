@@ -8,6 +8,9 @@ QuickTask is a slash-command workflow for creating, running, and improving reusa
 
 This is the current development quick start based on what is implemented today.
 
+For commit and PR workflow conventions, see `COMMIT_STRATEGY.md`.
+For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
+
 ### Prerequisites
 
 - Node.js (current LTS recommended)

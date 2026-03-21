@@ -1,0 +1,32 @@
+---
+description: Enforce trunk-based branching and semantic release tagging
+alwaysApply: true
+---
+
+# Branching And Tagging Strategy
+
+Follow this repository strategy unless the user explicitly requests an exception.
+
+## Branching
+
+- Use trunk-based development.
+- Start from `main`.
+- Use short-lived task branches named `t###-short-slug`.
+- Keep one task per branch.
+
+## Merging
+
+- Prepare branches for squash merge.
+- Keep PR scope task-focused and validation-backed.
+
+## Tagging
+
+- Use semantic version tags with `v` prefix: `vMAJOR.MINOR.PATCH`.
+- Create tags only for production releases from `main`.
+- Do not create tags for every merge.
+
+## Hotfixes
+
+- Branch hotfixes from `main`.
+- Fast-track focused fixes via PR.
+- After merge, cut a patch release tag.
