@@ -1,0 +1,27 @@
+---
+description: Require docs and task assessment before starting a new phase
+alwaysApply: true
+---
+
+# Phase Kickoff Assessment
+
+When work starts on a new phase (or the user asks to begin/complete a phase), run this kickoff before implementation:
+
+1. Read `TASKS.md` for the target phase goal, open tasks, dependencies, and acceptance criteria.
+2. Review phase-relevant docs for drift or missing guidance:
+   - `README.md`
+   - `CONTRIBUTORS.md`
+   - `ARCHITECTURE.md`
+   - `RELEASE_STRATEGY.md`
+   - `PRE_RELEASE_READINESS_WORKFLOW.md`
+   - `docs/*` contracts/reference docs touched by that phase
+3. Identify gaps discovered during kickoff and convert them into `TASKS.md` updates before coding:
+   - add new tasks if scope gaps or prerequisite work are missing,
+   - update existing tasks if acceptance criteria/dependencies are incomplete,
+   - assign phase and priority (`P0`/`P1`/`P2`) manually.
+4. Share a short kickoff summary with:
+   - what was reviewed,
+   - what tasks were added/updated,
+   - what work remains in the phase.
+
+Do not skip kickoff assessment when phase scope changes or new risks appear.
