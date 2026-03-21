@@ -33,6 +33,23 @@ test('returns help for /qt', () => {
   }
 })
 
+test('records safe runtime diagnostics events', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt/summarize sensitive user input')
+    const events = runtime.getDiagnostics()
+
+    assert.ok(events.length >= 2)
+    assert.equal(events[events.length - 2].phase, 'command.received')
+    assert.equal(events[events.length - 1].phase, 'command.completed')
+    assert.equal(events[events.length - 2].commandKind, 'run')
+    assert.equal(events[events.length - 1].code, 'qt:run:not-found')
+    assert.doesNotMatch(JSON.stringify(events), /sensitive user input/)
+  } finally {
+    cleanup()
+  }
+})
+
 test('returns task-not-found when running an unknown task', () => {
   const { runtime, cleanup } = createRuntimeForTest()
   try {
@@ -241,6 +258,7 @@ test('returns storage error result when template write fails', () => {
   assert.equal(result.kind, 'error')
   assert.equal(result.code, 'qt:storage:error')
   assert.equal(result.diagnosticCode, 'storage-io-failure')
+  assert.match(result.requestId, /^qt-/)
   assert.match(result.message, /Failed to save task template|ENOTDIR/)
 })
 
@@ -258,6 +276,7 @@ test('returns storage error result and recovers when template file is corrupted'
     assert.equal(result.kind, 'error')
     assert.equal(result.code, 'qt:storage:error')
     assert.equal(result.diagnosticCode, 'storage-io-failure')
+    assert.match(result.requestId, /^qt-/)
     assert.match(result.message, /is corrupted and was moved to/)
   } finally {
     rmSync(tasksDir, { recursive: true, force: true })

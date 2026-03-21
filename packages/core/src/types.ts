@@ -58,6 +58,14 @@ export type ImprovementProposal = {
 
 export type ImprovementProposalStatus = 'proposed' | 'accepted' | 'rejected' | 'abandoned'
 
+export type RuntimeDiagnosticEvent = {
+  requestId: string
+  timestamp: string
+  phase: 'command.received' | 'command.completed' | 'command.failed'
+  commandKind: QtCommand['kind']
+  code?: string
+}
+
 export type QtRuntimeResult =
   | {
       kind: 'help'
@@ -129,5 +137,6 @@ export type QtRuntimeResult =
       kind: 'error'
       code: 'qt:storage:error'
       diagnosticCode: 'storage-io-failure'
+      requestId: string
       message: string
     }
