@@ -38,7 +38,7 @@ Working rules for all tasks:
 - [h] T001 - Decide persistent task storage layout
 - [h] T003 - Tighten command parsing against the current spec
 - [h] T009 - Add core unit test harness
-- [x] T002 - Replace in-memory store with file-backed task store
+- [h] T002 - Replace in-memory store with file-backed task store
 
 ### Phase 2 - Core behavior and reliability
 - [ ] T004 - Implement template creation flow from user instructions
@@ -82,26 +82,9 @@ Working rules for all tasks:
 
 ## Completed tasks (not yet archived)
 
-- [x] T002 - Replace in-memory store with file-backed task store
+- None currently.
 
 ## Active task backlog
-
-## T002 - Replace in-memory store with file-backed task store
-- Status: [x] complete (not yet archived)
-- Goal: Persist task templates as markdown files instead of using the in-memory store.
-- Files: `packages/core/src/store.ts`, supporting core files, tests.
-- Steps:
-  1. Implement file-backed read/write operations for task templates.
-  2. Use the documented storage layout from T001.
-  3. Preserve task lookup by logical task name.
-  4. Ensure saved templates are written as `[task].md` content.
-  5. Keep interfaces small and host-agnostic.
-- Acceptance criteria:
-  - Templates can be saved, loaded, and overwritten from disk.
-  - Missing tasks are handled cleanly.
-  - File contents round-trip correctly.
-  - Automated tests cover save/load/overwrite/not-found behavior.
-- Dependencies: T001.
 
 ## T004 - Implement template creation flow from user instructions
 - Goal: Generate new task templates from user-provided instructions using the current spec.
@@ -548,6 +531,23 @@ Working rules for all tasks:
   - Host lookup rules are documented.
   - No runtime code changes beyond what is needed to support the documentation.
 - Dependencies: none.
+
+### [h] T002 - Replace in-memory store with file-backed task store
+- Status: [h] archived complete
+- Goal: Persist task templates as markdown files instead of using the in-memory store.
+- Files: `packages/core/src/store.ts`, supporting core files, tests.
+- Steps:
+  1. Implement file-backed read/write operations for task templates.
+  2. Use the documented storage layout from T001.
+  3. Preserve task lookup by logical task name.
+  4. Ensure saved templates are written as `[task].md` content.
+  5. Keep interfaces small and host-agnostic.
+- Acceptance criteria:
+  - Templates can be saved, loaded, and overwritten from disk.
+  - Missing tasks are handled cleanly.
+  - File contents round-trip correctly.
+  - Automated tests cover save/load/overwrite/not-found behavior.
+- Dependencies: T001.
 
 ### [h] T003 - Tighten command parsing against the current spec
 - Status: [h] archived complete
