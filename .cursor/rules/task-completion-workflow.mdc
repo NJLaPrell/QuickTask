@@ -15,6 +15,7 @@ When the user asks to complete a task, treat `TASKS.md` as the source of truth a
 6. Validate changes within reason (run relevant checks/tests/build commands).
 7. Execute the PR delivery loop from `TASK_PR_DELIVERY_WORKFLOW.md`.
 8. Update `TASKS.md` status/history and summarize what changed.
+9. After closing the task, assess whether the implemented changes require new tasks or updates to existing tasks in `TASKS.md`, and apply those task list updates immediately.
 
 ## TASKS.md maintenance requirements
 

@@ -14,6 +14,7 @@
 - When a task is completed:
   1. Mark it as `[x]` in milestone execution order and in the task section.
   2. Keep completed tasks in place until related follow-up work settles.
+  3. Assess the closed task for newly discovered gaps; add new tasks or update existing tasks immediately when needed.
 - When moving tasks to history:
   1. Move fully completed tasks from the active backlog into `Task history`.
   2. Change status to `[h]` (archived in history).
@@ -22,6 +23,10 @@
   - `[ ]` not done (active backlog)
   - `[x]` complete (done, not yet archived)
   - `[h]` completed and archived in history
+- Use this priority legend consistently:
+  - `P0` critical path (must-have to ship a stable product)
+  - `P1` important (high impact, but not a hard blocker to initial ship)
+  - `P2` valuable follow-through (improves adoption/operability)
 
 Working rules for all tasks:
 - Create one branch per task and open one PR per task.
@@ -35,69 +40,81 @@ Working rules for all tasks:
 ## Milestone execution order
 
 ### Phase 1 - Core foundations
-- [h] T001 - Decide persistent task storage layout
-- [h] T003 - Tighten command parsing against the current spec
-- [h] T009 - Add core unit test harness
-- [h] T002 - Replace in-memory store with file-backed task store
+- Success measure: Core `/qt` parsing, persistence, and tests pass locally with deterministic behavior.
+- [h] T001 - Decide persistent task storage layout (P0)
+- [h] T003 - Tighten command parsing against the current spec (P0)
+- [h] T009 - Add core unit test harness (P0)
+- [h] T002 - Replace in-memory store with file-backed task store (P0)
 
 ### Phase 2 - Core behavior and reliability
-- [x] T004 - Implement template creation flow from user instructions
-- [x] T005 - Implement existing task execution flow
-- [x] T006 - Implement improvement proposal flow
-- [x] T008 - Define runtime result contract for host adapters
-- [x] T034 - Define improvement proposal lifecycle contract
-- [x] T007 - Implement improvement acceptance and overwrite behavior
-- [x] T022 - Define stable core API surface for adapters
-- [x] T023 - Harden file-backed storage error handling
-- [x] T029 - Define runtime diagnostics and error observability
-- [x] T030 - Add persisted template corruption recovery strategy
-- [x] T031 - Add template format versioning and migration path
+- Success measure: All core create/run/improve lifecycles are contract-stable, failure-safe, and fully test-backed.
+- [x] T004 - Implement template creation flow from user instructions (P0)
+- [x] T005 - Implement existing task execution flow (P0)
+- [x] T006 - Implement improvement proposal flow (P0)
+- [x] T008 - Define runtime result contract for host adapters (P0)
+- [x] T034 - Define improvement proposal lifecycle contract (P0)
+- [x] T007 - Implement improvement acceptance and overwrite behavior (P0)
+- [x] T022 - Define stable core API surface for adapters (P0)
+- [x] T023 - Harden file-backed storage error handling (P0)
+- [x] T029 - Define runtime diagnostics and error observability (P0)
+- [x] T030 - Add persisted template corruption recovery strategy (P0)
+- [x] T031 - Add template format versioning and migration path (P0)
+- [ ] T035 - Publish canonical command and result contract docs (P0)
+- [ ] T036 - Define proposal persistence and TTL policy (P0)
+- [ ] T037 - Return structured runtime errors for parse failures (P0)
+- [ ] T038 - Add adapter rendering matrix from result contract (P1)
+- [ ] T039 - Define concurrent template write policy and tests (P1)
 
 ### Phase 3 - Host integrations
-- [ ] T010 - Wire the VS Code extension to the core runtime
-- [ ] T011 - Implement native VS Code `/qt` chat command
-- [ ] T012 - Refine Cursor command integration around the core runtime
-- [ ] T013 - Wire the OpenClaw adapter to the core runtime
-- [ ] T014 - Implement native OpenClaw `/qt` command flow
+- Success measure: `/qt` works end-to-end in VS Code, Cursor, and OpenClaw via the shared core runtime with no duplicated task logic.
+- [ ] T010 - Wire the VS Code extension to the core runtime (P0)
+- [ ] T011 - Implement native VS Code `/qt` chat command (P0)
+- [ ] T012 - Refine Cursor command integration around the core runtime (P0)
+- [ ] T013 - Wire the OpenClaw adapter to the core runtime (P0)
+- [ ] T014 - Implement native OpenClaw `/qt` command flow (P0)
 
 ### Phase 4 - CI and quality controls
-- [ ] T015 - Add repo-wide build and test workflow
-- [ ] T021 - Add linting and formatting quality gates
-- [ ] T024 - Add host-level end-to-end smoke tests
-- [ ] T027 - Define support matrix and compatibility policy
-- [ ] T028 - Add dependency and supply-chain security scanning
-- [ ] T033 - Add repository governance and release guardrails
+- Success measure: CI enforces build/test/lint/security/compatibility standards and blocks regressions before merge.
+- [ ] T015 - Add repo-wide build and test workflow (P0)
+- [ ] T021 - Add linting and formatting quality gates (P1)
+- [ ] T024 - Add host-level end-to-end smoke tests (P1)
+- [ ] T027 - Define support matrix and compatibility policy (P1)
+- [ ] T028 - Add dependency and supply-chain security scanning (P1)
+- [ ] T033 - Add repository governance and release guardrails (P1)
 
 ### Phase 5 - Packaging and release operations
-- [ ] T016 - Add VSIX packaging for the VS Code extension
-- [ ] T017 - Add OpenClaw package build artifact
-- [ ] T018 - Add release workflow for GitHub Releases
-- [ ] T025 - Add release versioning and changelog workflow
-- [ ] T026 - Add post-release install verification checks
-- [ ] T032 - Add release-candidate validation workflow
+- Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
+- [ ] T016 - Add VSIX packaging for the VS Code extension (P1)
+- [ ] T017 - Add OpenClaw package build artifact (P1)
+- [ ] T018 - Add release workflow for GitHub Releases (P1)
+- [ ] T025 - Add release versioning and changelog workflow (P1)
+- [ ] T026 - Add post-release install verification checks (P1)
+- [ ] T032 - Add release-candidate validation workflow (P1)
 
 ### Phase 6 - Distribution and docs
-- [ ] T019 - Add VS Code Marketplace publishing workflow
-- [ ] T020 - Write installation and release documentation
+- Success measure: Users can discover, install, and upgrade QuickTask across hosts using clear docs and repeatable publishing paths.
+- [ ] T019 - Add VS Code Marketplace publishing workflow (P2)
+- [ ] T020 - Write installation and release documentation (P2)
 
 ## Completed tasks (not yet archived)
 
-- [x] T004 - Implement template creation flow from user instructions
-- [x] T005 - Implement existing task execution flow
-- [x] T006 - Implement improvement proposal flow
-- [x] T008 - Define runtime result contract for host adapters
-- [x] T034 - Define improvement proposal lifecycle contract
-- [x] T007 - Implement improvement acceptance and overwrite behavior
-- [x] T022 - Define stable core API surface for adapters
-- [x] T023 - Harden file-backed storage error handling
-- [x] T031 - Add template format versioning and migration path
-- [x] T030 - Add persisted template corruption recovery strategy
-- [x] T029 - Define runtime diagnostics and error observability
+- [x] T004 - Implement template creation flow from user instructions (P0)
+- [x] T005 - Implement existing task execution flow (P0)
+- [x] T006 - Implement improvement proposal flow (P0)
+- [x] T008 - Define runtime result contract for host adapters (P0)
+- [x] T034 - Define improvement proposal lifecycle contract (P0)
+- [x] T007 - Implement improvement acceptance and overwrite behavior (P0)
+- [x] T022 - Define stable core API surface for adapters (P0)
+- [x] T023 - Harden file-backed storage error handling (P0)
+- [x] T031 - Add template format versioning and migration path (P0)
+- [x] T030 - Add persisted template corruption recovery strategy (P0)
+- [x] T029 - Define runtime diagnostics and error observability (P0)
 
 ## Active task backlog
 
 ## T004 - Implement template creation flow from user instructions
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Generate new task templates from user-provided instructions using the current spec.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
 - Steps:
@@ -116,6 +133,7 @@ Working rules for all tasks:
 
 ## T005 - Implement existing task execution flow
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Execute an existing task using stored template instructions plus user input.
 - Files: `packages/core/src/runtime.ts`, supporting core files, tests.
 - Steps:
@@ -132,6 +150,7 @@ Working rules for all tasks:
 
 ## T006 - Implement improvement proposal flow
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Generate old-versus-new template proposals for `/qt improve`.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
 - Steps:
@@ -148,6 +167,7 @@ Working rules for all tasks:
 
 ## T007 - Implement improvement acceptance and overwrite behavior
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: When an improvement is accepted, overwrite the existing task template on disk.
 - Files: core runtime/store files, tests, docs if needed.
 - Steps:
@@ -163,6 +183,7 @@ Working rules for all tasks:
 
 ## T008 - Define runtime result contract for host adapters
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Standardize the response shapes that VS Code, Cursor, and OpenClaw adapters consume.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, tests/docs.
 - Steps:
@@ -176,6 +197,7 @@ Working rules for all tasks:
 - Dependencies: T004, T005, T006.
 
 ## T010 - Wire the VS Code extension to the core runtime
+- Priority: P0
 - Goal: Replace the VS Code scaffold with a real integration point to QuickTask core.
 - Files: `packages/vscode-extension/*`, core files as needed, tests.
 - Steps:
@@ -190,6 +212,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009, T022.
 
 ## T011 - Implement native VS Code `/qt` chat command
+- Priority: P0
 - Goal: Support QuickTask through a native VS Code chat command flow.
 - Files: `packages/vscode-extension/*`, docs/tests.
 - Steps:
@@ -205,6 +228,7 @@ Working rules for all tasks:
 - Dependencies: T010.
 
 ## T012 - Refine Cursor command integration around the core runtime
+- Priority: P0
 - Goal: Turn the current Cursor stub into a practical exact-UX integration around the shared runtime.
 - Files: `.cursor/commands/qt.md`, supporting docs or scripts, tests if practical.
 - Steps:
@@ -219,6 +243,7 @@ Working rules for all tasks:
 - Dependencies: T008.
 
 ## T013 - Wire the OpenClaw adapter to the core runtime
+- Priority: P0
 - Goal: Replace the OpenClaw scaffold with a real integration point to QuickTask core.
 - Files: `packages/openclaw-plugin/*`, core files as needed, tests/docs.
 - Steps:
@@ -233,6 +258,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009, T022.
 
 ## T014 - Implement native OpenClaw `/qt` command flow
+- Priority: P0
 - Goal: Support QuickTask through a native OpenClaw slash-command flow.
 - Files: `packages/openclaw-plugin/*`, docs/tests.
 - Steps:
@@ -248,6 +274,7 @@ Working rules for all tasks:
 - Dependencies: T013.
 
 ## T015 - Add repo-wide build and test workflow
+- Priority: P0
 - Goal: Add GitHub Actions CI for install, test, and build.
 - Files: `.github/workflows/*`, package scripts/config as needed.
 - Steps:
@@ -261,6 +288,7 @@ Working rules for all tasks:
 - Dependencies: T009.
 
 ## T016 - Add VSIX packaging for the VS Code extension
+- Priority: P1
 - Goal: Produce a VSIX artifact from the repo build.
 - Files: extension package/config, build scripts, workflow files.
 - Steps:
@@ -274,6 +302,7 @@ Working rules for all tasks:
 - Dependencies: T011, T015.
 
 ## T017 - Add OpenClaw package build artifact
+- Priority: P1
 - Goal: Produce an installable package artifact for OpenClaw.
 - Files: OpenClaw package/config, build scripts, workflow files.
 - Steps:
@@ -287,6 +316,7 @@ Working rules for all tasks:
 - Dependencies: T014, T015.
 
 ## T018 - Add release workflow for GitHub Releases
+- Priority: P1
 - Goal: Publish release artifacts from tags or release events.
 - Files: `.github/workflows/*`, docs/scripts as needed.
 - Steps:
@@ -301,6 +331,7 @@ Working rules for all tasks:
 - Dependencies: T016, T017.
 
 ## T019 - Add VS Code Marketplace publishing workflow
+- Priority: P2
 - Goal: Prepare and automate publishing to the VS Code Marketplace.
 - Files: extension metadata, workflow files, docs.
 - Steps:
@@ -314,6 +345,7 @@ Working rules for all tasks:
 - Dependencies: T016, T018.
 
 ## T020 - Write installation and release documentation
+- Priority: P2
 - Goal: Document install and release flows for VS Code, Cursor, and OpenClaw.
 - Files: `README.md`, optionally supporting docs.
 - Steps:
@@ -328,6 +360,7 @@ Working rules for all tasks:
 - Dependencies: T018, T019, T027.
 
 ## T021 - Add linting and formatting quality gates
+- Priority: P1
 - Goal: Add repository-wide lint and formatting checks that run locally and in CI.
 - Files: root/package configs, package-level configs, workflow files, docs as needed.
 - Steps:
@@ -343,6 +376,7 @@ Working rules for all tasks:
 
 ## T022 - Define stable core API surface for adapters
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Ensure host adapters consume a documented, stable `@quicktask/core` API.
 - Files: `packages/core/src/index.ts`, core types/runtime files, tests/docs.
 - Steps:
@@ -358,6 +392,7 @@ Working rules for all tasks:
 
 ## T023 - Harden file-backed storage error handling
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Make template persistence robust across common filesystem failure modes.
 - Files: `packages/core/src/store.ts`, `packages/core/src/runtime.ts`, tests/docs.
 - Steps:
@@ -375,6 +410,7 @@ Working rules for all tasks:
 - Dependencies: T002, T008, T009.
 
 ## T024 - Add host-level end-to-end smoke tests
+- Priority: P1
 - Goal: Validate working `/qt` flows through host adapters using built artifacts.
 - Files: host test harness files, workflow files, docs as needed.
 - Steps:
@@ -389,6 +425,7 @@ Working rules for all tasks:
 - Dependencies: T011, T012, T014, T015.
 
 ## T025 - Add release versioning and changelog workflow
+- Priority: P1
 - Goal: Standardize semantic versioning and changelog generation for releases.
 - Files: release docs/config/scripts/workflow files.
 - Steps:
@@ -403,6 +440,7 @@ Working rules for all tasks:
 - Dependencies: T018.
 
 ## T026 - Add post-release install verification checks
+- Priority: P1
 - Goal: Confirm published artifacts are installable and usable after release.
 - Files: workflow/check scripts, release docs.
 - Steps:
@@ -417,6 +455,7 @@ Working rules for all tasks:
 - Dependencies: T016, T017, T018.
 
 ## T027 - Define support matrix and compatibility policy
+- Priority: P1
 - Goal: Set clear compatibility expectations across hosts, OSes, and runtime versions.
 - Files: `README.md`, `ARCHITECTURE.md`, CI configs as needed.
 - Steps:
@@ -431,6 +470,7 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T028 - Add dependency and supply-chain security scanning
+- Priority: P1
 - Goal: Detect vulnerable dependencies and risky supply-chain changes early.
 - Files: workflow files, dependency policies/docs, package configs as needed.
 - Steps:
@@ -446,6 +486,7 @@ Working rules for all tasks:
 
 ## T029 - Define runtime diagnostics and error observability
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Make runtime and adapter failures diagnosable in development and support scenarios.
 - Files: core runtime/types files, adapter integration files, docs/tests.
 - Steps:
@@ -461,6 +502,7 @@ Working rules for all tasks:
 
 ## T030 - Add persisted template corruption recovery strategy
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Prevent data loss and provide recovery behavior for corrupted task template files.
 - Files: `packages/core/src/store.ts`, runtime/docs/tests, scripts if needed.
 - Steps:
@@ -476,6 +518,7 @@ Working rules for all tasks:
 
 ## T031 - Add template format versioning and migration path
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Ensure persisted templates can evolve without breaking existing user data.
 - Files: core store/runtime files, migration utilities, tests/docs.
 - Steps:
@@ -490,6 +533,7 @@ Working rules for all tasks:
 - Dependencies: T002, T023, T030.
 
 ## T032 - Add release-candidate validation workflow
+- Priority: P1
 - Goal: Validate release artifacts in a staged RC process before final publication.
 - Files: release workflow files, docs, optional validation scripts.
 - Steps:
@@ -504,6 +548,7 @@ Working rules for all tasks:
 - Dependencies: T018, T024, T026.
 
 ## T033 - Add repository governance and release guardrails
+- Priority: P1
 - Goal: Enforce review, ownership, and quality controls on high-impact changes.
 - Files: `CODEOWNERS`, workflow files, contributing docs.
 - Steps:
@@ -520,6 +565,7 @@ Working rules for all tasks:
 
 ## T034 - Define improvement proposal lifecycle contract
 - Status: [x] complete (not yet archived)
+- Priority: P0
 - Goal: Standardize how improvement proposals are identified, accepted, rejected, or abandoned across hosts.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, adapter docs/tests.
 - Steps:
@@ -534,10 +580,86 @@ Working rules for all tasks:
   - Contract is documented for adapter implementations.
 - Dependencies: T006, T008.
 
+## T035 - Publish canonical command and result contract docs
+- Priority: P0
+- Goal: Keep user-facing and adapter-facing command/contract docs aligned with actual runtime behavior.
+- Files: `README.md`, `ARCHITECTURE.md`, `packages/core/src/types.ts`, new docs under `docs/` as needed.
+- Steps:
+  1. Define one canonical command and runtime-result contract reference.
+  2. Update `README.md` command forms to include lifecycle action commands.
+  3. Cross-link adapter guidance to the same contract source.
+  4. Add a lightweight consistency check or review checklist to prevent future drift.
+- Acceptance criteria:
+  - Documented commands match parser-supported commands.
+  - Documented result states match `QtRuntimeResult`.
+  - User docs and adapter docs reference the same contract source.
+- Dependencies: T008, T022, T034.
+
+## T036 - Define proposal persistence and TTL policy
+- Priority: P0
+- Goal: Ensure improve proposal IDs behave deterministically across runtime restarts and long-running sessions.
+- Files: `packages/core/src/runtime.ts`, `packages/core/src/store.ts`, `packages/core/src/types.ts`, tests/docs.
+- Steps:
+  1. Decide whether proposals are persisted to disk or explicitly session-scoped.
+  2. Define proposal expiration/TTL and stale proposal behavior.
+  3. Implement the chosen behavior in runtime/store.
+  4. Add tests for restart, expiry, and stale action flows.
+- Acceptance criteria:
+  - Proposal accept/reject/abandon behavior is deterministic after restart.
+  - TTL/staleness behavior is explicit and test-covered.
+  - Adapter expectations for stale proposals are documented.
+- Dependencies: T006, T007, T034.
+
+## T037 - Return structured runtime errors for parse failures
+- Priority: P0
+- Goal: Ensure `createQtRuntime().handle()` never throws for invalid input and always returns structured error results.
+- Files: `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, parser/runtime tests.
+- Steps:
+  1. Wrap parser failures in runtime so non-`/qt` input returns a structured error result.
+  2. Add parse-error-specific diagnostic code(s) in the runtime result contract.
+  3. Ensure diagnostics events include failed parse attempts safely.
+  4. Add tests for invalid/non-command inputs.
+- Acceptance criteria:
+  - Invalid input paths return structured runtime errors.
+  - Runtime no longer throws parser errors through the public `handle()` API.
+  - Parse-failure behavior is test-covered and documented.
+- Dependencies: T003, T008, T029.
+
+## T038 - Add adapter rendering matrix from result contract
+- Priority: P1
+- Goal: Define exactly how each host should render each runtime result code and required user actions.
+- Files: new doc under `docs/`, adapter integration docs in `packages/vscode-extension`, `.cursor/commands`, and `packages/openclaw-plugin` as needed.
+- Steps:
+  1. Enumerate all runtime result codes and required payload fields.
+  2. Map each result code to expected VS Code/Cursor/OpenClaw UX behavior.
+  3. Document fallback behavior for unknown/new result codes.
+  4. Add adapter integration checklist against the matrix.
+- Acceptance criteria:
+  - Every runtime result code has explicit rendering guidance per host.
+  - Unknown-code fallback behavior is documented.
+  - Adapter work references this matrix as the source of truth.
+- Dependencies: T008, T022.
+
+## T039 - Define concurrent template write policy and tests
+- Priority: P1
+- Goal: Prevent inconsistent template state when multiple host processes write the same task concurrently.
+- Files: `packages/core/src/store.ts`, runtime/store tests, docs.
+- Steps:
+  1. Define concurrency policy (last-write-wins, optimistic lock/version check, or lock file strategy).
+  2. Implement the chosen policy for save/overwrite flows.
+  3. Add deterministic tests simulating concurrent writes.
+  4. Document conflict behavior for adapter UX.
+- Acceptance criteria:
+  - Concurrent write behavior is deterministic and documented.
+  - No partial/corrupted state from concurrent write attempts.
+  - Conflict or overwrite outcomes are test-covered.
+- Dependencies: T023, T030, T031.
+
 ## Task history
 
 ### [h] T001 - Decide persistent task storage layout
 - Status: [h] archived complete
+- Priority: P0
 - Goal: Choose and document the repository path and naming rules for persisted `[task].md` files.
 - Files: `ARCHITECTURE.md`, optionally new doc under repo root if needed.
 - Steps:
@@ -555,6 +677,7 @@ Working rules for all tasks:
 
 ### [h] T002 - Replace in-memory store with file-backed task store
 - Status: [h] archived complete
+- Priority: P0
 - Goal: Persist task templates as markdown files instead of using the in-memory store.
 - Files: `packages/core/src/store.ts`, supporting core files, tests.
 - Steps:
@@ -572,6 +695,7 @@ Working rules for all tasks:
 
 ### [h] T003 - Tighten command parsing against the current spec
 - Status: [h] archived complete
+- Priority: P0
 - Goal: Make the parser behavior match the agreed command forms exactly.
 - Files: `packages/core/src/parser.ts`, related types/tests.
 - Steps:
@@ -587,6 +711,7 @@ Working rules for all tasks:
 
 ### [h] T009 - Add core unit test harness
 - Status: [h] archived complete
+- Priority: P0
 - Goal: Establish a clean test setup for the core package.
 - Files: core package config/tests, root config if needed.
 - Steps:

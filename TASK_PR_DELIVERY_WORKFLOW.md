@@ -17,6 +17,7 @@ This workflow applies to all tasks unless the user explicitly overrides it.
    - required checks are green (tests, typecheck, lint/format),
    - no blocking findings remain.
 7. Update `TASKS.md` status/history and provide a user summary.
+8. After task closure, review the implemented changes for scope impact; create follow-up tasks or update existing tasks in `TASKS.md` when gaps are discovered.
 
 ## Required automation behavior for AI
 
