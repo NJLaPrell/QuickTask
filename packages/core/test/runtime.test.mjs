@@ -50,6 +50,25 @@ test('records safe runtime diagnostics events', () => {
   }
 })
 
+test('returns structured parse error results for non-quicktask input', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    const result = runtime.handle('hello world')
+    assert.equal(result.kind, 'error')
+    assert.equal(result.code, 'qt:parse:error')
+    assert.equal(result.diagnosticCode, 'parse-invalid-input')
+    assert.match(result.requestId, /^qt-/)
+    assert.equal(result.message, 'Input is not a QuickTask command.')
+
+    const events = runtime.getDiagnostics()
+    assert.equal(events[events.length - 1].phase, 'command.failed')
+    assert.equal(events[events.length - 1].commandKind, 'invalid_input')
+    assert.equal(events[events.length - 1].code, 'qt:parse:error')
+  } finally {
+    cleanup()
+  }
+})
+
 test('returns task-not-found when running an unknown task', () => {
   const { runtime, cleanup } = createRuntimeForTest()
   try {

@@ -67,7 +67,7 @@ export type RuntimeDiagnosticEvent = {
   requestId: string
   timestamp: string
   phase: 'command.received' | 'command.completed' | 'command.failed'
-  commandKind: QtCommand['kind']
+  commandKind: QtCommand['kind'] | 'invalid_input'
   code?: string
 }
 
@@ -141,8 +141,8 @@ export type QtRuntimeResult =
     }
   | {
       kind: 'error'
-      code: 'qt:storage:error'
-      diagnosticCode: 'storage-io-failure'
+      code: 'qt:storage:error' | 'qt:parse:error'
+      diagnosticCode: 'storage-io-failure' | 'parse-invalid-input'
       requestId: string
       message: string
     }

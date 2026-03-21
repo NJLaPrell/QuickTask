@@ -63,16 +63,18 @@ export function createQtRuntime(
       return diagnostics.slice()
     },
     handle(input: string): QtRuntimeResult {
-      const command = parseQtCommand(input)
       const requestId = nextRequestId()
-      const startedAt = new Date().toISOString()
-      recordDiagnostic({
-        requestId,
-        timestamp: startedAt,
-        phase: 'command.received',
-        commandKind: command.kind
-      })
+      let commandKind: RuntimeDiagnosticEvent['commandKind'] = 'invalid_input'
       try {
+        const command = parseQtCommand(input)
+        commandKind = command.kind
+        recordDiagnostic({
+          requestId,
+          timestamp: new Date().toISOString(),
+          phase: 'command.received',
+          commandKind
+        })
+
         if (command.kind === 'menu') {
           return finalizeResult(requestId, command.kind, {
             kind: 'help',
@@ -250,20 +252,28 @@ export function createQtRuntime(
           proposedTemplate: proposal.proposedTemplate
         })
       } catch (error) {
+        const isParseError =
+          error instanceof Error && error.message === 'Input is not a QuickTask command.'
+        const errorCode: 'qt:parse:error' | 'qt:storage:error' = isParseError
+          ? 'qt:parse:error'
+          : 'qt:storage:error'
+        const diagnosticCode: 'parse-invalid-input' | 'storage-io-failure' = isParseError
+          ? 'parse-invalid-input'
+          : 'storage-io-failure'
+
         recordDiagnostic({
           requestId,
           timestamp: new Date().toISOString(),
           phase: 'command.failed',
-          commandKind: command.kind,
-          code: 'qt:storage:error'
+          commandKind,
+          code: errorCode
         })
         return {
           kind: 'error',
-          code: 'qt:storage:error',
-          diagnosticCode: 'storage-io-failure',
+          code: errorCode,
+          diagnosticCode,
           requestId,
-          message:
-            error instanceof Error ? error.message : 'A filesystem error occurred while handling QuickTask command.'
+          message: error instanceof Error ? error.message : 'An unknown runtime error occurred while handling QuickTask command.'
         }
       }
     }

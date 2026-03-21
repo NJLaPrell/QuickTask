@@ -61,7 +61,7 @@ Working rules for all tasks:
 - [x] T031 - Add template format versioning and migration path (P0)
 - [x] T035 - Publish canonical command and result contract docs (P0)
 - [x] T036 - Define proposal persistence and TTL policy (P0)
-- [ ] T037 - Return structured runtime errors for parse failures (P0)
+- [x] T037 - Return structured runtime errors for parse failures (P0)
 - [ ] T038 - Add adapter rendering matrix from result contract (P1)
 - [ ] T039 - Define concurrent template write policy and tests (P1)
 
@@ -111,6 +111,7 @@ Working rules for all tasks:
 - [x] T029 - Define runtime diagnostics and error observability (P0)
 - [x] T035 - Publish canonical command and result contract docs (P0)
 - [x] T036 - Define proposal persistence and TTL policy (P0)
+- [x] T037 - Return structured runtime errors for parse failures (P0)
 
 ## Active task backlog
 
@@ -615,6 +616,7 @@ Working rules for all tasks:
 - Dependencies: T006, T007, T034.
 
 ## T037 - Return structured runtime errors for parse failures
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Ensure `createQtRuntime().handle()` never throws for invalid input and always returns structured error results.
 - Files: `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, parser/runtime tests.

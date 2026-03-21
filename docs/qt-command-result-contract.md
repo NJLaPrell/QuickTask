@@ -41,6 +41,7 @@ User-facing docs and host adapter docs should reference this file rather than re
 - `qt:improve:abandon:recorded`
 - `qt:improve:proposal-expired`
 - `qt:improve:already-finalized`
+- `qt:parse:error`
 - `qt:storage:error`
 
 ## Proposal lifecycle storage policy
