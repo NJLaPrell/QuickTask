@@ -36,6 +36,36 @@ pnpm test
 pnpm build
 ```
 
+## Install QuickTask
+
+QuickTask ships installable artifacts through GitHub Releases.
+
+### VS Code (Marketplace)
+
+1. Open [Visual Studio Marketplace](https://marketplace.visualstudio.com/vscode).
+2. Search for `QuickTask` by publisher `njlaprell`.
+3. Install the extension.
+
+### VS Code (manual VSIX)
+
+1. Download `quicktask-vscode-vX.Y.Z.vsix` from the matching GitHub release.
+2. In VS Code, open Command Palette.
+3. Run `Extensions: Install from VSIX...` and choose the downloaded file.
+
+### Cursor (VSIX)
+
+1. Download `quicktask-vscode-vX.Y.Z.vsix` from GitHub release assets.
+2. Use Cursor's extension install-from-VSIX flow.
+3. Reload the window if prompted.
+
+### OpenClaw
+
+1. Download `quicktask-openclaw-vX.Y.Z.tgz` from the release assets.
+2. Extract the archive (it includes a `package/` directory).
+3. Load `package/dist/index.js` in your OpenClaw host integration and import `registerQuickTask()`.
+
+For asset names and verification details, see `docs/release-assets-and-verification.md`.
+
 ## Usage
 
 ### Command forms
@@ -85,6 +115,23 @@ Compatibility policy:
 
 - Breaking compatibility changes must be documented in `TASKS.md` and release notes before merge.
 - Update this matrix in the same PR as any support-floor changes.
+
+## Release And Publishing Flow
+
+Production release is driven by GitHub Actions and Changesets:
+
+1. Merge release-ready PRs into `main`.
+2. Run `Release Candidate Validation` workflow from `main` and capture the run ID.
+3. Dispatch `Release` with docs-sync inputs and the `rc_run_id`.
+4. The release workflow versions packages, creates tag `vX.Y.Z`, and publishes release assets.
+
+Post-release VS Code Marketplace rollout:
+
+1. Configure repository secret `VSCE_PAT` with publish permission for `njlaprell`.
+2. Dispatch workflow `Publish VS Code Marketplace` with `release_tag=vX.Y.Z`.
+3. Workflow validates release-tag/version parity, packages VSIX, and publishes to Marketplace.
+
+Release policy details live in `RELEASE_STRATEGY.md`. Contributor operational steps are in `CONTRIBUTORS.md`.
 
 ## Project Structure
 
