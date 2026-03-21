@@ -17,21 +17,21 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
     store,
     handle(input: string): QtRuntimeResult {
       const command = parseQtCommand(input)
-
-      if (command.kind === 'menu') {
-        return {
-          kind: 'help',
-          code: 'qt:help',
-          usage: [
-            '/qt',
-            '/qt [task] [instructions]',
-            '/qt/[task] [input]',
-            '/qt improve [task] [input]'
-          ]
+      try {
+        if (command.kind === 'menu') {
+          return {
+            kind: 'help',
+            code: 'qt:help',
+            usage: [
+              '/qt',
+              '/qt [task] [instructions]',
+              '/qt/[task] [input]',
+              '/qt improve [task] [input]'
+            ]
+          }
         }
-      }
 
-      if (command.kind === 'create') {
+        if (command.kind === 'create') {
         if (!command.instructions.trim()) {
           return {
             kind: 'clarification',
@@ -63,7 +63,7 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
       }
 
-      if (command.kind === 'incomplete') {
+        if (command.kind === 'incomplete') {
         return {
           kind: 'incomplete',
           code: 'qt:incomplete',
@@ -72,7 +72,7 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
       }
 
-      if (command.kind === 'improve_action') {
+        if (command.kind === 'improve_action') {
         const proposal = proposals.get(command.proposalId)
         if (!proposal || proposal.taskName !== command.taskName) {
           return {
@@ -128,7 +128,7 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
       }
 
-      if (command.kind === 'run') {
+        if (command.kind === 'run') {
         const template = getTaskTemplate(store, command.taskName)
         if (!template) {
           return {
@@ -148,36 +148,45 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
       }
 
-      const template = getTaskTemplate(store, command.taskName)
-      if (!template) {
-        return {
-          kind: 'not_found',
-          code: 'qt:improve:not-found',
-          taskName: command.taskName,
-          message: `No template exists yet for ${command.taskName}.`
+        const template = getTaskTemplate(store, command.taskName)
+        if (!template) {
+          return {
+            kind: 'not_found',
+            code: 'qt:improve:not-found',
+            taskName: command.taskName,
+            message: `No template exists yet for ${command.taskName}.`
+          }
         }
-      }
 
-      const proposal = proposeTemplateImprovement(
-        command.taskName,
-        template.body,
-        command.userInput
-      )
-      proposals.set(proposal.proposalId, {
-        taskName: command.taskName,
-        oldTemplate: proposal.oldTemplate,
-        proposedTemplate: proposal.proposedTemplate,
-        status: 'proposed'
-      })
+        const proposal = proposeTemplateImprovement(
+          command.taskName,
+          template.body,
+          command.userInput
+        )
+        proposals.set(proposal.proposalId, {
+          taskName: command.taskName,
+          oldTemplate: proposal.oldTemplate,
+          proposedTemplate: proposal.proposedTemplate,
+          status: 'proposed'
+        })
 
-      return {
-        kind: 'improve_proposed',
-        code: 'qt:improve:proposed',
-        taskName: command.taskName,
-        proposalId: proposal.proposalId,
-        source: proposal.source,
-        oldTemplate: proposal.oldTemplate,
-        proposedTemplate: proposal.proposedTemplate
+        return {
+          kind: 'improve_proposed',
+          code: 'qt:improve:proposed',
+          taskName: command.taskName,
+          proposalId: proposal.proposalId,
+          source: proposal.source,
+          oldTemplate: proposal.oldTemplate,
+          proposedTemplate: proposal.proposedTemplate
+        }
+      } catch (error) {
+        return {
+          kind: 'error',
+          code: 'qt:storage:error',
+          diagnosticCode: 'storage-io-failure',
+          message:
+            error instanceof Error ? error.message : 'A filesystem error occurred while handling QuickTask command.'
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 import type { TaskTemplate } from './types.js'
@@ -72,7 +72,15 @@ export function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTem
   }
 
   const filename = path.basename(templatePath)
-  const body = readFileSync(templatePath, 'utf8')
+  let body: string
+  try {
+    body = readFileSync(templatePath, 'utf8')
+  } catch (error) {
+    throw new Error(
+      `Failed to read task template ${filename}: ${error instanceof Error ? error.message : 'unknown error'}`
+    )
+  }
+
   return {
     taskName: cleanTaskName,
     filename,
@@ -86,7 +94,17 @@ export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): 
   const templatePath = path.join(store.tasksDir, filename)
 
   mkdirSync(store.tasksDir, { recursive: true })
-  writeFileSync(templatePath, template.body, 'utf8')
+  const tempPath = `${templatePath}.${process.pid}.${Date.now()}.tmp`
+
+  try {
+    writeFileSync(tempPath, template.body, 'utf8')
+    renameSync(tempPath, templatePath)
+  } catch (error) {
+    rmSync(tempPath, { force: true })
+    throw new Error(
+      `Failed to save task template ${filename}: ${error instanceof Error ? error.message : 'unknown error'}`
+    )
+  }
 
   return {
     ...template,
