@@ -46,7 +46,7 @@ Working rules for all tasks:
 - [x] T006 - Implement improvement proposal flow
 - [x] T008 - Define runtime result contract for host adapters
 - [x] T034 - Define improvement proposal lifecycle contract
-- [ ] T007 - Implement improvement acceptance and overwrite behavior
+- [x] T007 - Implement improvement acceptance and overwrite behavior
 - [ ] T022 - Define stable core API surface for adapters
 - [ ] T023 - Harden file-backed storage error handling
 - [ ] T029 - Define runtime diagnostics and error observability
@@ -87,6 +87,7 @@ Working rules for all tasks:
 - [x] T006 - Implement improvement proposal flow
 - [x] T008 - Define runtime result contract for host adapters
 - [x] T034 - Define improvement proposal lifecycle contract
+- [x] T007 - Implement improvement acceptance and overwrite behavior
 
 ## Active task backlog
 
@@ -141,6 +142,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T007 - Implement improvement acceptance and overwrite behavior
+- Status: [x] complete (not yet archived)
 - Goal: When an improvement is accepted, overwrite the existing task template on disk.
 - Files: core runtime/store files, tests, docs if needed.
 - Steps:
