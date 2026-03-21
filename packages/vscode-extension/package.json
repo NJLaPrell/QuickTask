@@ -1,0 +1,21 @@
+{
+  "name": "quicktask-vscode",
+  "displayName": "QuickTask",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "njlaprell",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "main": "dist/extension.js",
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {},
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  }
+}
