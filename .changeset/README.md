@@ -49,3 +49,15 @@ pnpm release:version
 ```
 
 That updates package versions and changelog files from all pending changesets.
+
+Formatting is validated in CI with:
+
+```bash
+pnpm release:validate-changesets
+```
+
+Curated user-facing release notes are generated from pending changesets with:
+
+```bash
+pnpm release:notes
+```

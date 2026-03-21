@@ -49,6 +49,19 @@ jobs:
       - name: Workspace build
         run: pnpm build
 
+      - name: Validate changeset note format
+        run: pnpm release:validate-changesets
+
+      - name: Package VS Code extension (.vsix)
+        run: pnpm package:vscode
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quicktask-vscode-vsix
+          path: artifacts/*.vsix
+          if-no-files-found: error
+
       - name: Package manager consistency
         run: pnpm check:package-manager
 
