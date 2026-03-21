@@ -23,10 +23,19 @@ This document defines the production release process for QuickTask.
 Each release-relevant PR should include:
 
 1. A changeset entry (`pnpm changeset`) for user-visible changes.
+   - Structure changeset summaries with:
+     - `New Features`
+     - `Bug Fixes`
+     - `Internal Improvements`
+     - `Breaking Changes` (explicitly `None.` when not applicable)
 2. Documentation updates when behavior changes:
    - `README.md` for user-facing usage/install/release flow changes.
    - files under `docs/` for contract/reference behavior changes.
 3. Test/typecheck/lint/build checks passing.
+4. PR labels aligned to release-note categories when applicable:
+   - `breaking-change`, `semver-major`
+   - `feature`, `enhancement`, `semver-minor`
+   - `bug`, `fix`, `bugfix`, `semver-patch`
 
 ## Pre-release readiness gate (chat-triggered)
 
@@ -61,6 +70,7 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
    - semantic tag `vX.Y.Z`
    - published GitHub Release for `vX.Y.Z`
 7. Release notes come from GitHub generated notes and the repository changelogs.
+   - GitHub note categories are configured in `.github/release.yml`.
 
 ## Docs sync gate policy
 
