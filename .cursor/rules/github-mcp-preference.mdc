@@ -1,0 +1,18 @@
+---
+description: Prefer GitHub MCP tools over CLI for GitHub operations
+alwaysApply: true
+---
+
+# GitHub MCP Preference
+
+For GitHub operations, use MCP tools first when available.
+
+## Required behavior
+
+- Prefer GitHub MCP tools for PRs, issues, comments, checks, and release actions.
+- Use command-line GitHub tools (`gh`, git remote operations) only when equivalent MCP tools are unavailable or fail.
+- When falling back to CLI, state the fallback reason in the user-facing summary.
+
+## Scope
+
+- Applies to PR creation, PR review comments, merge actions, issue workflows, and release asset operations.

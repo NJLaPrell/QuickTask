@@ -58,3 +58,4 @@ Merge is allowed only when:
 - Never hide blocking findings behind summary text.
 - If no findings exist, state that explicitly and mention residual risks/testing gaps.
 - Do not recommend merge when blockers exist.
+- Use GitHub MCP tools for PR reads/comments/merge when available; use CLI only as fallback.

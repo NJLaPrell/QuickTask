@@ -4,6 +4,7 @@ This repository uses a task-driven commit strategy optimized for both human cont
 
 For branch lifecycle and release tags, see `BRANCHING_TAGGING_STRATEGY.md`.
 For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
+For end-to-end task execution flow, see `TASK_PR_DELIVERY_WORKFLOW.md`.
 
 ## Core defaults
 

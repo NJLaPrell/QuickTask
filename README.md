@@ -10,6 +10,7 @@ This is the current development quick start based on what is implemented today.
 
 For commit and PR workflow conventions, see `COMMIT_STRATEGY.md`.
 For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
+For task execution loop conventions, see `TASK_PR_DELIVERY_WORKFLOW.md`.
 
 ### Prerequisites
 

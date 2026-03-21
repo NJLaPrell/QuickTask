@@ -1,0 +1,37 @@
+---
+description: Enforce branch-PR-review-fix-merge loop for task execution
+alwaysApply: true
+---
+
+# Task PR Delivery Loop
+
+When the user asks to complete a task, follow this loop by default:
+
+1. Branch from `main` with `t###-short-slug`.
+2. Implement task scope, tests, and validation.
+3. Open a PR.
+4. Review the PR and leave a findings-first comment.
+5. If review finds blockers, fix, commit, push, comment, and re-review.
+6. Merge only when required checks are green and no blockers remain.
+7. Update `TASKS.md` status/history and summarize completion.
+
+## Review comment format
+
+- `high` findings first (blocking)
+- then `medium`/`low`
+- open questions/assumptions
+- merge recommendation
+
+## Merge gates
+
+- tests pass
+- typecheck passes
+- lint/format checks pass
+- no unresolved blocking findings
+
+## Notes
+
+- Use Conventional Commits.
+- Keep one task per branch/PR.
+- Use GitHub MCP tools first for PR operations; fall back to CLI only when MCP is unavailable.
+- If the user requests a different flow, follow user direction.

@@ -33,3 +33,4 @@ A PR is blocked when:
 - Escalate medium/high-risk PRs for explicit human decision.
 - Recommend merge only when required checks are green and no blockers remain.
 - If no findings exist, explicitly state no findings and mention residual risks/testing gaps.
+- Use GitHub MCP tools for review and merge actions when available; use CLI only as fallback.
