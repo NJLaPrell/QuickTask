@@ -113,10 +113,11 @@ Working rules for all tasks:
 - Success measure: Users can discover, install, and upgrade QuickTask across hosts using clear docs and repeatable publishing paths.
 - [h] T019 - Add VS Code Marketplace publishing workflow (P2)
 - [h] T020 - Write installation and release documentation (P2)
+- [x] T050 - Fix Marketplace publisher/display-name mismatch (P1)
 
 ## Completed tasks (not yet archived)
 
-- None.
+- [x] T050 - Fix Marketplace publisher/display-name mismatch (P1)
 
 ## Active task backlog
 
@@ -314,6 +315,27 @@ Working rules for all tasks:
   - Added `README.md` install sections for VS Code Marketplace, VSIX manual install, Cursor VSIX install, and OpenClaw package install.
   - Added `README.md` release workflow and post-release Marketplace publishing steps including required `VSCE_PAT` secret.
   - Linked release/install reference docs for follow-through (`RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, and `docs/release-assets-and-verification.md`).
+
+## T050 - Fix Marketplace publisher/display-name mismatch
+
+- Status: [x] complete (not yet archived)
+- Priority: P1
+- Goal: Unblock VS Code Marketplace publishing by aligning extension identity metadata with the intended publisher and a unique listing name.
+- Files: `packages/vscode-extension/package.json`, `README.md`, `.changeset/*.md`.
+- Steps:
+  1. Update extension publisher metadata to the target Marketplace publisher account.
+  2. Change the extension display name to a unique listing value accepted by Marketplace.
+  3. Add a changeset so release automation includes the metadata update.
+  4. Re-run release and Marketplace publish workflows on the new release tag.
+- Acceptance criteria:
+  - Publish workflow no longer fails on missing publisher ownership/display-name conflicts.
+  - Marketplace publish path documents the correct publisher identity.
+  - A new release tag is produced and used for publish retry.
+- Dependencies: T019, T020.
+- Validation evidence:
+  - Updated `quicktask-vscode` metadata to publisher `nicklaprell` and display name `QuickTask Workflows`.
+  - Updated README install/release notes to reference the correct publisher identity.
+  - Added a release changeset and triggered the release + publish retry flow.
 
 ## T021 - Add linting and formatting quality gates
 

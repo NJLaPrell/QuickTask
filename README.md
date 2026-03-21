@@ -43,7 +43,7 @@ QuickTask ships installable artifacts through GitHub Releases.
 ### VS Code (Marketplace)
 
 1. Open [Visual Studio Marketplace](https://marketplace.visualstudio.com/vscode).
-2. Search for `QuickTask` by publisher `njlaprell`.
+2. Search for `QuickTask Workflows` by publisher `nicklaprell`.
 3. Install the extension.
 
 ### VS Code (manual VSIX)
@@ -127,7 +127,7 @@ Production release is driven by GitHub Actions and Changesets:
 
 Post-release VS Code Marketplace rollout:
 
-1. Configure repository secret `VSCE_PAT` with publish permission for `njlaprell`.
+1. Configure repository secret `VSCE_PAT` with publish permission for `nicklaprell`.
 2. Dispatch workflow `Publish VS Code Marketplace` with `release_tag=vX.Y.Z`.
 3. Workflow validates release-tag/version parity, packages VSIX, and publishes to Marketplace.
 
