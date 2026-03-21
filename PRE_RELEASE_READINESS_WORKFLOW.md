@@ -25,15 +25,18 @@ Release handoff is allowed only when there are no medium/high findings.
    - Default scope is `phase-2` (Phase 1 + Phase 2 tasks only).
    - Optional full-product scope: `RELEASE_PREP_SCOPE=all-phases pnpm release:prepare`
 2. Review `docs/release-readiness-report.md`.
-3. For each finding:
+3. Perform a README prerelease audit:
+   - update `README.md` with any missing user-facing documentation for shipped behavior,
+   - follow `README_EDITING.md` while editing.
+4. For each finding:
    - If it maps to an existing task, update that task section in `TASKS.md` with validation evidence.
    - If no task exists, add a new task to `TASKS.md`.
-4. For any newly added task:
+5. For any newly added task:
    - assign phase manually,
    - assign priority manually (`P0`/`P1`/`P2`),
    - include dependency links where relevant.
-5. Re-run `pnpm release:prepare` after changes.
-6. When report has no medium/high findings, handoff to release:
+6. Re-run `pnpm release:prepare` after changes.
+7. When report has no medium/high findings, handoff to release:
    - follow `RELEASE_STRATEGY.md` manual release checklist.
 
 ## What `pnpm release:prepare` validates

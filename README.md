@@ -1,63 +1,87 @@
-![QuickTask](./logo.png)
+<h1>
+  <img src="./logo.png" alt="QuickTask" />
+</h1>
 
-# QuickTask
+Reusable slash-command task templates for AI chat workflows.
 
-QuickTask is a slash-command workflow for creating, running, and improving reusable task templates through `/qt`. It is organized as a monorepo with a shared core runtime and host adapters for VS Code, Cursor, and OpenClaw.
+QuickTask gives you a single `/qt` command family to create, run, and iteratively improve task templates. The project uses a shared core runtime so behavior stays consistent across host adapters.
 
-## Documentation
+## Why QuickTask
 
-- Contributor workflows, local development commands, and release preparation: `CONTRIBUTORS.md`
-- Production release policy: `RELEASE_STRATEGY.md`
-- Pre-release readiness workflow: `PRE_RELEASE_READINESS_WORKFLOW.md`
-- Canonical command/result contract: `docs/qt-command-result-contract.md`
-- Adapter rendering behavior matrix: `docs/qt-adapter-rendering-matrix.md`
+- **Reusable workflows**: define a task once and run it repeatedly with new input.
+- **Improvement loop built in**: propose, accept, reject, or abandon template updates.
+- **Host-agnostic core**: command parsing and runtime behavior live in one shared package.
+- **Deterministic contracts**: command and result shapes are documented for adapter implementations.
 
-## User Guide
+## Quick Start (Repository)
 
-### What `/qt` does
+QuickTask is currently development-focused. Use these steps to run checks and explore behavior locally.
 
-QuickTask supports these command forms:
+### Prerequisites
+
+- Node.js current LTS
+- `pnpm` 10.x
+
+### Install and validate
+
+```bash
+pnpm install
+pnpm check
+pnpm test
+```
+
+### Optional full build
+
+```bash
+pnpm build
+```
+
+## Usage
+
+### Command forms
 
 - `/qt` - show command help.
 - `/qt [task] [instructions]` - create a new task template.
-- `/qt/[task] [input]` - run an existing task with user input.
-- `/qt improve [task] [input]` - propose an improvement to an existing task.
+- `/qt/[task] [input]` - run an existing task with input.
+- `/qt improve [task] [input]` - propose an improvement for an existing task.
 - `/qt improve accept [task] [proposal-id]` - accept and apply a proposal.
 - `/qt improve reject [task] [proposal-id]` - reject a proposal.
 - `/qt improve abandon [task] [proposal-id]` - abandon a proposal.
 
-### Command behavior
+### Common workflow example
 
-#### Show help
+```text
+/qt summarize summarize meeting notes into concise bullet points
+/qt/summarize Notes from today's planning session...
+/qt improve summarize prioritize action items and owners
+/qt improve accept summarize p_abc123
+```
 
-Use `/qt` to get the command summary and supported forms.
+Expected behavior:
 
-#### Create a task template
+- Creating a task that already exists returns an explicit already-exists result.
+- Running a missing task returns a clear not-found result.
+- Improvement proposals are previewed before they can be accepted.
 
-Use `/qt [task] [instructions]` to define a task. Example:
+## Current Status
 
-`/qt summarize summarize meeting notes into concise bullet points`
+- Core runtime behavior for create/run/improve lifecycle is implemented.
+- Host integrations for VS Code, Cursor, and OpenClaw are still being wired to the shared runtime.
+- Installable release artifacts and marketplace distribution are tracked as open work in `TASKS.md`.
 
-If the task already exists, the runtime should return an "already exists" style result instead of silently replacing it.
+## Project Structure
 
-#### Run a task
+- `packages/core` - parser, runtime, storage, and shared types/contracts.
+- `packages/vscode-extension` - VS Code host adapter.
+- `packages/openclaw-plugin` - OpenClaw host adapter.
+- `.cursor/commands` - Cursor slash-command entrypoints.
+- `docs/` - contract docs and readiness artifacts.
 
-Use `/qt/[task] [input]` to execute a saved template with user input. Example:
+## Documentation
 
-`/qt/summarize Notes from today's planning session...`
-
-If the task does not exist, QuickTask returns a clear not-found result.
-
-#### Propose an improvement
-
-Use `/qt improve [task] [input]` to generate a proposed update to an existing template. Example:
-
-`/qt improve summarize favor action items and owners`
-
-Improvement proposals are shown before acceptance so hosts can present confirmation UX.
-
-### Current project state
-
-- Core runtime behavior exists and is being expanded.
-- Host integrations are scaffolded and being wired to the shared core runtime.
-- Full installation and release instructions are tracked in `TASKS.md`.
+- User-facing command/result contract: `docs/qt-command-result-contract.md`
+- Adapter rendering matrix: `docs/qt-adapter-rendering-matrix.md`
+- Contributor guide and local workflow: `CONTRIBUTORS.md`
+- Pre-release readiness workflow: `PRE_RELEASE_READINESS_WORKFLOW.md`
+- Production release strategy: `RELEASE_STRATEGY.md`
+- Task tracking source of truth: `TASKS.md`

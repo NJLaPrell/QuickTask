@@ -36,8 +36,11 @@ Before running the `Release` workflow, run pre-release readiness:
    - Default scope is `phase-2` (Phase 1 + Phase 2 tasks).
    - Use `RELEASE_PREP_SCOPE=all-phases pnpm release:prepare` for full-product readiness.
 2. Review `docs/release-readiness-report.md`.
-3. Treat medium/high findings as blocking.
-4. Convert findings into `TASKS.md` updates:
+3. Run a prerelease README audit:
+   - update `README.md` to cover any missing user-facing documentation for shipped behavior,
+   - follow `README_EDITING.md` while editing `README.md`.
+4. Treat medium/high findings as blocking.
+5. Convert findings into `TASKS.md` updates:
    - update existing tasks when applicable,
    - add new tasks with manual phase/priority assignment when unmapped.
 

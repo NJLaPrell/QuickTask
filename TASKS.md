@@ -83,6 +83,9 @@ Working rules for all tasks:
 - [ ] T028 - Add dependency and supply-chain security scanning (P1)
 - [ ] T033 - Add repository governance and release guardrails (P1)
 - [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
+- [ ] T042 - Add release readiness preflight for pending changesets (P1)
+- [ ] T043 - Add CI check for package manager config consistency (P1)
+- [ ] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
 
 ### Phase 5 - Packaging and release operations
 - Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
@@ -92,6 +95,11 @@ Working rules for all tasks:
 - [ ] T025 - Add release versioning and changelog workflow (P1)
 - [ ] T026 - Add post-release install verification checks (P1)
 - [ ] T032 - Add release-candidate validation workflow (P1)
+- [ ] T045 - Add single-command release handoff wrapper (P2)
+- [ ] T046 - Publish installable release assets on GitHub releases (P1)
+- [ ] T047 - Add curated user-focused release notes layer (P1)
+- [ ] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
+- [ ] T049 - Define first-public-release version baseline policy (P2)
 
 ### Phase 6 - Distribution and docs
 - Success measure: Users can discover, install, and upgrade QuickTask across hosts using clear docs and repeatable publishing paths.
@@ -694,14 +702,143 @@ Working rules for all tasks:
   1. Add a single command to run readiness checks and generate a report artifact.
   2. Define blocking policy (`medium` and `high`) and release handoff condition.
   3. Codify readiness flow for chat-triggered execution and `TASKS.md`-only issue tracking.
-  4. Wire docs/rules so the assistant executes the same pattern consistently.
+  4. Wire docs/rules so the assistant executes the same pattern consistently, including a prerelease `README.md` audit that follows `README_EDITING.md`.
   5. Run readiness preparation once to establish a baseline report.
 - Acceptance criteria:
   - `pnpm release:prepare` exists and writes a readiness report.
   - Readiness findings are tracked in `TASKS.md`, not GitHub issues.
+  - Prerelease workflow includes explicit `README.md` audit guidance that references `README_EDITING.md`.
   - Release strategy references readiness handoff criteria.
   - Workflow/rule docs are present and aligned.
 - Dependencies: T018, T025, T033.
+
+## T042 - Add release readiness preflight for pending changesets
+- Status: [ ] not done
+- Priority: P1
+- Goal: Catch missing changeset release inputs during readiness instead of failing late in the release workflow.
+- Files: `scripts/release-prepare-readiness.mjs`, release docs/tests, optional helper script.
+- Steps:
+  1. Add a readiness preflight that checks for pending `.changeset` entries relevant to the target release scope.
+  2. Emit a deterministic medium/high finding when no releaseable changeset input is present.
+  3. Include actionable remediation guidance in the readiness report.
+  4. Add tests for has-changeset and no-changeset paths.
+- Acceptance criteria:
+  - Readiness report clearly flags missing changeset input before release dispatch.
+  - Release preflight outcome is deterministic and test-covered.
+  - Guidance points contributors to create or merge a changeset entry.
+- Dependencies: T025, T041.
+
+## T043 - Add CI check for package manager config consistency
+- Status: [ ] not done
+- Priority: P1
+- Goal: Prevent workflow failures from mismatched package manager version declarations across repo config and CI workflows.
+- Files: workflow files, validation scripts, docs.
+- Steps:
+  1. Define policy for package manager version source of truth (for example `package.json#packageManager`).
+  2. Add a CI validation step that checks workflows/scripts against this policy.
+  3. Fail CI when inconsistent package manager version settings are detected.
+  4. Document remediation and ownership for consistency failures.
+- Acceptance criteria:
+  - CI catches package manager config drift before merge.
+  - Version source-of-truth policy is documented.
+  - Validation step is reproducible locally and in CI.
+- Dependencies: T015, T033.
+
+## T044 - Reduce release readiness report churn from timestamp-only updates
+- Status: [ ] not done
+- Priority: P2
+- Goal: Avoid noisy repo diffs when release readiness state is unchanged across runs.
+- Files: `scripts/release-prepare-readiness.mjs`, `docs/release-readiness-report.md`, docs.
+- Steps:
+  1. Define output strategy for readiness reporting (stable summary file, artifact-only details, or both).
+  2. Prevent timestamp-only rewrites when report content is otherwise unchanged.
+  3. Preserve enough metadata for auditing while minimizing unnecessary commits.
+  4. Document expected local and CI output behavior.
+- Acceptance criteria:
+  - Re-running readiness without state changes does not create noisy diffs.
+  - Report output remains actionable and auditable.
+  - Behavior is documented and test-covered where practical.
+- Dependencies: T041.
+
+## T045 - Add single-command release handoff wrapper
+- Status: [ ] not done
+- Priority: P2
+- Goal: Provide one command that validates readiness state and dispatches release workflow with required inputs.
+- Files: scripts, package scripts, release docs.
+- Steps:
+  1. Add a release handoff command that checks readiness report status and required inputs.
+  2. Trigger the release workflow dispatch only when readiness gate passes (or explicit override is provided).
+  3. Emit clear terminal output for handoff success, block reasons, and next actions.
+  4. Document expected usage for phase-scoped and full-product release flows.
+- Acceptance criteria:
+  - Contributors can execute release handoff through a single command path.
+  - Handoff command enforces readiness gating behavior.
+  - Failure messaging is deterministic and actionable.
+- Dependencies: T018, T041, T042.
+
+## T046 - Publish installable release assets on GitHub releases
+- Status: [ ] not done
+- Priority: P1
+- Goal: Ensure GitHub releases include installable artifacts rather than source-only outputs.
+- Files: `.github/workflows/release.yml`, packaging scripts, release docs.
+- Steps:
+  1. Build VSIX and OpenClaw installable artifacts during release workflow.
+  2. Attach generated artifacts to the GitHub release.
+  3. Validate artifact naming/versioning consistency with release tag.
+  4. Document where users should download/install each asset.
+- Acceptance criteria:
+  - Release page includes installable assets for supported hosts.
+  - Asset filenames and versions match release tag/version.
+  - Release workflow fails when expected assets are missing.
+- Dependencies: T016, T017, T018.
+
+## T047 - Add curated user-focused release notes layer
+- Status: [ ] not done
+- Priority: P1
+- Goal: Improve release note quality so published notes emphasize user-impactful changes over internal implementation noise.
+- Files: release workflow/docs/changelog templates, `.changeset` policy docs.
+- Steps:
+  1. Define structure for user-facing highlights, breaking changes, and upgrade notes.
+  2. Add workflow/doc logic to include curated notes in release publication.
+  3. Keep generated PR lists as supporting detail, not the primary release narrative.
+  4. Add contributor guidance for writing concise user-impact summaries.
+- Acceptance criteria:
+  - Published release notes include a clear user-facing summary section.
+  - Internal-only maintenance changes are de-emphasized or grouped.
+  - Release note quality expectations are documented for contributors.
+- Dependencies: T025, T041.
+
+## T048 - Publish release integrity metadata (checksums/SBOM)
+- Status: [ ] not done
+- Priority: P2
+- Goal: Improve trust and auditability of published release artifacts.
+- Files: release workflow files, scripts, security docs.
+- Steps:
+  1. Generate checksums for release artifacts and publish alongside assets.
+  2. Add optional SBOM generation for release outputs.
+  3. Attach integrity metadata to GitHub releases.
+  4. Document artifact verification steps for users and operators.
+- Acceptance criteria:
+  - Each release publishes checksum metadata for installable assets.
+  - Integrity metadata is available from the release page.
+  - Verification instructions are documented and repeatable.
+- Dependencies: T046, T028.
+
+## T049 - Define first-public-release version baseline policy
+- Status: [ ] not done
+- Priority: P2
+- Goal: Avoid ambiguity around initial release numbering and future version transitions.
+- Files: `RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, changelog/versioning docs.
+- Steps:
+  1. Define policy for initial public release version (for example `v0.1.0` vs `v0.1.1`) and rationale.
+  2. Document how the policy applies to future release trains.
+  3. Align release automation and contributor docs with the chosen baseline policy.
+  4. Add a lightweight check/review item to enforce policy adherence.
+- Acceptance criteria:
+  - Version baseline policy is explicit and documented.
+  - Contributors can determine the correct next release number deterministically.
+  - Release process docs and automation are aligned with the policy.
+- Dependencies: T025, T041.
 
 ## Task history
 
