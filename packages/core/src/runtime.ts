@@ -56,13 +56,13 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         const template = getTaskTemplate(store, command.taskName)
         if (!template) {
           return {
-            title: 'Task Not Found',
+            title: '[qt:run:not-found] Task Not Found',
             message: `No template exists yet for ${command.taskName}.`
           }
         }
 
         return {
-          title: `Run ${template.taskName}`,
+          title: `[qt:run:executed] Run ${template.taskName}`,
           message: `Template:\n\n${template.body}\n\nUser input:\n${command.userInput}`
         }
       }

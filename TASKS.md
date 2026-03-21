@@ -42,7 +42,7 @@ Working rules for all tasks:
 
 ### Phase 2 - Core behavior and reliability
 - [x] T004 - Implement template creation flow from user instructions
-- [ ] T005 - Implement existing task execution flow
+- [x] T005 - Implement existing task execution flow
 - [ ] T006 - Implement improvement proposal flow
 - [ ] T008 - Define runtime result contract for host adapters
 - [ ] T034 - Define improvement proposal lifecycle contract
@@ -83,6 +83,7 @@ Working rules for all tasks:
 ## Completed tasks (not yet archived)
 
 - [x] T004 - Implement template creation flow from user instructions
+- [x] T005 - Implement existing task execution flow
 
 ## Active task backlog
 
@@ -105,6 +106,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T005 - Implement existing task execution flow
+- Status: [x] complete (not yet archived)
 - Goal: Execute an existing task using stored template instructions plus user input.
 - Files: `packages/core/src/runtime.ts`, supporting core files, tests.
 - Steps:

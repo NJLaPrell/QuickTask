@@ -32,7 +32,7 @@ test('returns task-not-found when running an unknown task', () => {
   try {
     const result = runtime.handle('/qt/does-not-exist example input')
 
-    assert.equal(result.title, 'Task Not Found')
+    assert.equal(result.title, '[qt:run:not-found] Task Not Found')
     assert.equal(result.message, 'No template exists yet for does-not-exist.')
   } finally {
     cleanup()
@@ -47,9 +47,22 @@ test('create then run returns template and user input', () => {
     assert.match(created.message, /- Goal: produce concise bullets/)
 
     const result = runtime.handle('/qt/summarize Team sync notes')
-    assert.equal(result.title, 'Run summarize')
+    assert.equal(result.title, '[qt:run:executed] Run summarize')
     assert.match(result.message, /Template:/)
     assert.match(result.message, /User input:\nTeam sync notes/)
+  } finally {
+    cleanup()
+  }
+})
+
+test('run supports minimal input with empty user input', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt summarize produce concise bullets')
+    const result = runtime.handle('/qt/summarize')
+
+    assert.equal(result.title, '[qt:run:executed] Run summarize')
+    assert.match(result.message, /User input:\n$/)
   } finally {
     cleanup()
   }
