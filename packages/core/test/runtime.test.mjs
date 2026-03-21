@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -242,4 +242,24 @@ test('returns storage error result when template write fails', () => {
   assert.equal(result.code, 'qt:storage:error')
   assert.equal(result.diagnosticCode, 'storage-io-failure')
   assert.match(result.message, /Failed to save task template|ENOTDIR/)
+})
+
+test('returns storage error result and recovers when template file is corrupted', () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-corrupt-runtime-'))
+  try {
+    writeFileSync(
+      path.join(tasksDir, 'broken.md'),
+      '---\nquicktaskVersion: invalid\n---\n# broken template',
+      'utf8'
+    )
+    const runtime = createQtRuntime(createFileTaskStore({ tasksDir }))
+    const result = runtime.handle('/qt/broken input')
+
+    assert.equal(result.kind, 'error')
+    assert.equal(result.code, 'qt:storage:error')
+    assert.equal(result.diagnosticCode, 'storage-io-failure')
+    assert.match(result.message, /is corrupted and was moved to/)
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true })
+  }
 })

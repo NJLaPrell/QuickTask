@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -94,6 +94,21 @@ test('reads legacy unversioned template files', () => {
     const loaded = getTaskTemplate(store, 'legacy')
     assert.equal(loaded?.filename, 'legacy.md')
     assert.equal(loaded?.body, '# legacy\nold-format')
+  } finally {
+    cleanup()
+  }
+})
+
+test('quarantines corrupted template files deterministically', () => {
+  const { store, cleanup } = withTempStoreDir()
+  try {
+    const filePath = path.join(store.tasksDir, 'broken.md')
+    writeFileSync(filePath, '---\nquicktaskVersion: not-a-number\n---\n# broken', 'utf8')
+
+    assert.throws(() => getTaskTemplate(store, 'broken'), /is corrupted and was moved to/)
+    const files = readdirSync(store.tasksDir)
+    assert.ok(files.some((entry) => entry.startsWith('broken.md.corrupt.') && entry.endsWith('.bak')))
+    assert.ok(!files.includes('broken.md'))
   } finally {
     cleanup()
   }

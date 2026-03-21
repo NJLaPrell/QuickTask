@@ -50,7 +50,7 @@ Working rules for all tasks:
 - [x] T022 - Define stable core API surface for adapters
 - [x] T023 - Harden file-backed storage error handling
 - [ ] T029 - Define runtime diagnostics and error observability
-- [ ] T030 - Add persisted template corruption recovery strategy
+- [x] T030 - Add persisted template corruption recovery strategy
 - [x] T031 - Add template format versioning and migration path
 
 ### Phase 3 - Host integrations
@@ -91,6 +91,7 @@ Working rules for all tasks:
 - [x] T022 - Define stable core API surface for adapters
 - [x] T023 - Harden file-backed storage error handling
 - [x] T031 - Add template format versioning and migration path
+- [x] T030 - Add persisted template corruption recovery strategy
 
 ## Active task backlog
 
@@ -457,6 +458,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022, T023.
 
 ## T030 - Add persisted template corruption recovery strategy
+- Status: [x] complete (not yet archived)
 - Goal: Prevent data loss and provide recovery behavior for corrupted task template files.
 - Files: `packages/core/src/store.ts`, runtime/docs/tests, scripts if needed.
 - Steps:

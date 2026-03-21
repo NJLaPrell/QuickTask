@@ -105,6 +105,13 @@ function encodeTemplateContent(taskName: string, body: string): string {
   ].join('\n')
 }
 
+function quarantineCorruptTemplate(templatePath: string): string {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+  const backupPath = `${templatePath}.corrupt.${timestamp}.bak`
+  renameSync(templatePath, backupPath)
+  return backupPath
+}
+
 export function createFileTaskStore(options: CreateFileTaskStoreOptions = {}): FileTaskStore {
   return {
     tasksDir: resolveTasksDir(options)
@@ -132,11 +139,20 @@ export function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTem
     )
   }
 
-  const decoded = decodeTemplateContent(body)
-  return {
-    taskName: cleanTaskName,
-    filename,
-    body: decoded.body
+  try {
+    const decoded = decodeTemplateContent(body)
+    return {
+      taskName: cleanTaskName,
+      filename,
+      body: decoded.body
+    }
+  } catch (error) {
+    const backupPath = quarantineCorruptTemplate(templatePath)
+    throw new Error(
+      `Template ${filename} is corrupted and was moved to ${path.basename(backupPath)}: ${
+        error instanceof Error ? error.message : 'unknown error'
+      }`
+    )
   }
 }
 
