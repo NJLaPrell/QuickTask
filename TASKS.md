@@ -68,11 +68,11 @@ Working rules for all tasks:
 
 ### Phase 3 - Host integrations
 - Success measure: `/qt` works end-to-end in VS Code, Cursor, and OpenClaw via the shared core runtime with no duplicated task logic.
-- [x] T010 - Wire the VS Code extension to the core runtime (P0)
-- [x] T011 - Implement native VS Code `/qt` chat command (P0)
-- [x] T012 - Refine Cursor command integration around the core runtime (P0)
-- [x] T013 - Wire the OpenClaw adapter to the core runtime (P0)
-- [x] T014 - Implement native OpenClaw `/qt` command flow (P0)
+- [h] T010 - Wire the VS Code extension to the core runtime (P0)
+- [h] T011 - Implement native VS Code `/qt` chat command (P0)
+- [h] T012 - Refine Cursor command integration around the core runtime (P0)
+- [h] T013 - Wire the OpenClaw adapter to the core runtime (P0)
+- [h] T014 - Implement native OpenClaw `/qt` command flow (P0)
 
 ### Phase 4 - CI and quality controls
 - Success measure: CI enforces build/test/lint/security/compatibility standards and blocks regressions before merge.
@@ -126,11 +126,6 @@ Working rules for all tasks:
 - [x] T039 - Define concurrent template write policy and tests (P1)
 - [x] T040 - Add stale write-lock recovery policy and tests (P1)
 - [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
-- [x] T010 - Wire the VS Code extension to the core runtime (P0)
-- [x] T011 - Implement native VS Code `/qt` chat command (P0)
-- [x] T012 - Refine Cursor command integration around the core runtime (P0)
-- [x] T013 - Wire the OpenClaw adapter to the core runtime (P0)
-- [x] T014 - Implement native OpenClaw `/qt` command flow (P0)
 
 ## Active task backlog
 
@@ -217,88 +212,6 @@ Working rules for all tasks:
   - Runtime returns only documented result shapes.
   - Tests validate key result types.
 - Dependencies: T004, T005, T006.
-
-## T010 - Wire the VS Code extension to the core runtime
-- Status: [x] complete (not yet archived)
-- Priority: P0
-- Goal: Replace the VS Code scaffold with a real integration point to QuickTask core.
-- Files: `packages/vscode-extension/*`, core files as needed, tests.
-- Steps:
-  1. Add dependency wiring from the extension to `@quicktask/core`.
-  2. Invoke the runtime from the extension entrypoint.
-  3. Keep the extension structure aligned with exact native `/qt` behavior as the target.
-  4. Add extension-level tests where practical.
-- Acceptance criteria:
-  - The extension uses the shared core runtime.
-  - No task logic is duplicated in the extension.
-  - Tests cover the adapter boundary where practical.
-- Dependencies: T008, T009, T022.
-
-## T011 - Implement native VS Code `/qt` chat command
-- Status: [x] complete (not yet archived)
-- Priority: P0
-- Goal: Support QuickTask through a native VS Code chat command flow.
-- Files: `packages/vscode-extension/*`, docs/tests.
-- Steps:
-  1. Register the native VS Code chat participant or slash-command mechanism.
-  2. Map `/qt` requests into the core runtime.
-  3. Render help/create/run/improve/confirmation results naturally in chat.
-  4. Ensure improvement acceptance overwrites the template.
-- Acceptance criteria:
-  - `/qt` works natively in VS Code chat.
-  - Help/create/run/improve flows are reachable.
-  - Accepting an improvement overwrites the stored template.
-  - Tests or validation steps are documented.
-- Dependencies: T010.
-
-## T012 - Refine Cursor command integration around the core runtime
-- Status: [x] complete (not yet archived)
-- Priority: P0
-- Goal: Turn the current Cursor stub into a practical exact-UX integration around the shared runtime.
-- Files: `.cursor/commands/qt.md`, supporting docs or scripts, tests if practical.
-- Steps:
-  1. Review what exact native behavior is feasible in Cursor.
-  2. Update the command wrapper to align with the core runtime contract.
-  3. Document any unavoidable Cursor-specific limits without changing the core behavior.
-  4. Keep the command experience as close to native `/qt` as possible.
-- Acceptance criteria:
-  - Cursor integration points to the shared runtime behavior.
-  - Known Cursor limitations are documented.
-  - No duplicate task logic exists outside the core.
-- Dependencies: T008.
-
-## T013 - Wire the OpenClaw adapter to the core runtime
-- Status: [x] complete (not yet archived)
-- Priority: P0
-- Goal: Replace the OpenClaw scaffold with a real integration point to QuickTask core.
-- Files: `packages/openclaw-plugin/*`, core files as needed, tests/docs.
-- Steps:
-  1. Add dependency wiring from the OpenClaw package to `@quicktask/core`.
-  2. Invoke the runtime from the OpenClaw entrypoint.
-  3. Keep the package aligned with exact native `/qt` behavior as the target.
-  4. Add adapter-level tests where practical.
-- Acceptance criteria:
-  - The OpenClaw package uses the shared core runtime.
-  - No task logic is duplicated in the adapter.
-  - Tests cover the adapter boundary where practical.
-- Dependencies: T008, T009, T022.
-
-## T014 - Implement native OpenClaw `/qt` command flow
-- Status: [x] complete (not yet archived)
-- Priority: P0
-- Goal: Support QuickTask through a native OpenClaw slash-command flow.
-- Files: `packages/openclaw-plugin/*`, docs/tests.
-- Steps:
-  1. Register or wire the native OpenClaw slash-command path.
-  2. Map `/qt` requests into the core runtime.
-  3. Render help/create/run/improve/confirmation flows appropriately.
-  4. Ensure accepted improvements overwrite stored templates.
-- Acceptance criteria:
-  - `/qt` works natively in OpenClaw.
-  - Help/create/run/improve flows are reachable.
-  - Accepting an improvement overwrites the stored template.
-  - Validation steps are documented.
-- Dependencies: T013.
 
 ## T015 - Add repo-wide build and test workflow
 - Priority: P0
@@ -851,6 +764,88 @@ Working rules for all tasks:
 - Dependencies: T025, T041.
 
 ## Task history
+
+### [h] T010 - Wire the VS Code extension to the core runtime
+- Status: [h] archived complete
+- Priority: P0
+- Goal: Replace the VS Code scaffold with a real integration point to QuickTask core.
+- Files: `packages/vscode-extension/*`, core files as needed, tests.
+- Steps:
+  1. Add dependency wiring from the extension to `@quicktask/core`.
+  2. Invoke the runtime from the extension entrypoint.
+  3. Keep the extension structure aligned with exact native `/qt` behavior as the target.
+  4. Add extension-level tests where practical.
+- Acceptance criteria:
+  - The extension uses the shared core runtime.
+  - No task logic is duplicated in the extension.
+  - Tests cover the adapter boundary where practical.
+- Dependencies: T008, T009, T022.
+
+### [h] T011 - Implement native VS Code `/qt` chat command
+- Status: [h] archived complete
+- Priority: P0
+- Goal: Support QuickTask through a native VS Code chat command flow.
+- Files: `packages/vscode-extension/*`, docs/tests.
+- Steps:
+  1. Register the native VS Code chat participant or slash-command mechanism.
+  2. Map `/qt` requests into the core runtime.
+  3. Render help/create/run/improve/confirmation results naturally in chat.
+  4. Ensure improvement acceptance overwrites the template.
+- Acceptance criteria:
+  - `/qt` works natively in VS Code chat.
+  - Help/create/run/improve flows are reachable.
+  - Accepting an improvement overwrites the stored template.
+  - Tests or validation steps are documented.
+- Dependencies: T010.
+
+### [h] T012 - Refine Cursor command integration around the core runtime
+- Status: [h] archived complete
+- Priority: P0
+- Goal: Turn the current Cursor stub into a practical exact-UX integration around the shared runtime.
+- Files: `.cursor/commands/qt.md`, supporting docs or scripts, tests if practical.
+- Steps:
+  1. Review what exact native behavior is feasible in Cursor.
+  2. Update the command wrapper to align with the core runtime contract.
+  3. Document any unavoidable Cursor-specific limits without changing the core behavior.
+  4. Keep the command experience as close to native `/qt` as possible.
+- Acceptance criteria:
+  - Cursor integration points to the shared runtime behavior.
+  - Known Cursor limitations are documented.
+  - No duplicate task logic exists outside the core.
+- Dependencies: T008.
+
+### [h] T013 - Wire the OpenClaw adapter to the core runtime
+- Status: [h] archived complete
+- Priority: P0
+- Goal: Replace the OpenClaw scaffold with a real integration point to QuickTask core.
+- Files: `packages/openclaw-plugin/*`, core files as needed, tests/docs.
+- Steps:
+  1. Add dependency wiring from the OpenClaw package to `@quicktask/core`.
+  2. Invoke the runtime from the OpenClaw entrypoint.
+  3. Keep the package aligned with exact native `/qt` behavior as the target.
+  4. Add adapter-level tests where practical.
+- Acceptance criteria:
+  - The OpenClaw package uses the shared core runtime.
+  - No task logic is duplicated in the adapter.
+  - Tests cover the adapter boundary where practical.
+- Dependencies: T008, T009, T022.
+
+### [h] T014 - Implement native OpenClaw `/qt` command flow
+- Status: [h] archived complete
+- Priority: P0
+- Goal: Support QuickTask through a native OpenClaw slash-command flow.
+- Files: `packages/openclaw-plugin/*`, docs/tests.
+- Steps:
+  1. Register or wire the native OpenClaw slash-command path.
+  2. Map `/qt` requests into the core runtime.
+  3. Render help/create/run/improve/confirmation flows appropriately.
+  4. Ensure accepted improvements overwrite stored templates.
+- Acceptance criteria:
+  - `/qt` works natively in OpenClaw.
+  - Help/create/run/improve flows are reachable.
+  - Accepting an improvement overwrites the stored template.
+  - Validation steps are documented.
+- Dependencies: T013.
 
 ### [h] T001 - Decide persistent task storage layout
 - Status: [h] archived complete
