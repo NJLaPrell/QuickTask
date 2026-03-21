@@ -45,7 +45,7 @@ Working rules for all tasks:
 - [x] T005 - Implement existing task execution flow
 - [x] T006 - Implement improvement proposal flow
 - [x] T008 - Define runtime result contract for host adapters
-- [ ] T034 - Define improvement proposal lifecycle contract
+- [x] T034 - Define improvement proposal lifecycle contract
 - [ ] T007 - Implement improvement acceptance and overwrite behavior
 - [ ] T022 - Define stable core API surface for adapters
 - [ ] T023 - Harden file-backed storage error handling
@@ -86,6 +86,7 @@ Working rules for all tasks:
 - [x] T005 - Implement existing task execution flow
 - [x] T006 - Implement improvement proposal flow
 - [x] T008 - Define runtime result contract for host adapters
+- [x] T034 - Define improvement proposal lifecycle contract
 
 ## Active task backlog
 
@@ -506,6 +507,7 @@ Working rules for all tasks:
 - Dependencies: T015, T025.
 
 ## T034 - Define improvement proposal lifecycle contract
+- Status: [x] complete (not yet archived)
 - Goal: Standardize how improvement proposals are identified, accepted, rejected, or abandoned across hosts.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, adapter docs/tests.
 - Steps:

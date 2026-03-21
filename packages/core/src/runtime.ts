@@ -1,9 +1,18 @@
 import { parseQtCommand } from './parser.js'
 import { createFileTaskStore, getTaskTemplate, saveTaskTemplate, type FileTaskStore } from './store.js'
 import { createTaskTemplate, proposeTemplateImprovement } from './templates.js'
-import type { QtRuntimeResult } from './types.js'
+import type { ImprovementProposalStatus, QtRuntimeResult } from './types.js'
+
+type PendingProposal = {
+  taskName: string
+  oldTemplate: string
+  proposedTemplate: string
+  status: ImprovementProposalStatus
+}
 
 export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
+  const proposals = new Map<string, PendingProposal>()
+
   return {
     store,
     handle(input: string): QtRuntimeResult {
@@ -63,6 +72,57 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
       }
 
+      if (command.kind === 'improve_action') {
+        const proposal = proposals.get(command.proposalId)
+        if (!proposal || proposal.taskName !== command.taskName) {
+          return {
+            kind: 'not_found',
+            code: 'qt:improve:proposal-not-found',
+            taskName: command.taskName,
+            message: `No proposal exists for ${command.taskName} with ID ${command.proposalId}.`
+          }
+        }
+
+        if (proposal.status !== 'proposed') {
+          return {
+            kind: 'improve_action',
+            code: 'qt:improve:already-finalized',
+            taskName: proposal.taskName,
+            action: command.action,
+            proposalId: command.proposalId,
+            status: proposal.status,
+            message: `Proposal ${command.proposalId} is already ${proposal.status}.`
+          }
+        }
+
+        if (command.action === 'accept') {
+          proposal.status = 'accepted'
+          return {
+            kind: 'improve_action',
+            code: 'qt:improve:accept:ready',
+            taskName: proposal.taskName,
+            action: command.action,
+            proposalId: command.proposalId,
+            status: proposal.status,
+            message: `Proposal ${command.proposalId} accepted and ready to apply.`
+          }
+        }
+
+        proposal.status = command.action === 'reject' ? 'rejected' : 'abandoned'
+        return {
+          kind: 'improve_action',
+          code:
+            command.action === 'reject'
+              ? 'qt:improve:reject:recorded'
+              : 'qt:improve:abandon:recorded',
+          taskName: proposal.taskName,
+          action: command.action,
+          proposalId: command.proposalId,
+          status: proposal.status,
+          message: `Proposal ${command.proposalId} ${proposal.status}.`
+        }
+      }
+
       if (command.kind === 'run') {
         const template = getTaskTemplate(store, command.taskName)
         if (!template) {
@@ -98,6 +158,12 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         template.body,
         command.userInput
       )
+      proposals.set(proposal.proposalId, {
+        taskName: command.taskName,
+        oldTemplate: proposal.oldTemplate,
+        proposedTemplate: proposal.proposedTemplate,
+        status: 'proposed'
+      })
 
       return {
         kind: 'improve_proposed',

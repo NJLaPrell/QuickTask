@@ -20,10 +20,19 @@ export type QtImproveCommand = {
   userInput?: string
 }
 
+export type QtImproveAction = 'accept' | 'reject' | 'abandon'
+
+export type QtImproveActionCommand = {
+  kind: 'improve_action'
+  action: QtImproveAction
+  taskName: string
+  proposalId: string
+}
+
 export type QtIncompleteCommand = {
   kind: 'incomplete'
-  reason: 'missing-improve-task'
-  usage: '/qt improve [task] [input]'
+  reason: 'missing-improve-task' | 'missing-improve-action-details'
+  usage: '/qt improve [task] [input]' | '/qt improve <accept|reject|abandon> [task] [proposal-id]'
 }
 
 export type QtCommand =
@@ -31,6 +40,7 @@ export type QtCommand =
   | QtCreateCommand
   | QtRunCommand
   | QtImproveCommand
+  | QtImproveActionCommand
   | QtIncompleteCommand
 
 export type TaskTemplate = {
@@ -45,6 +55,8 @@ export type ImprovementProposal = {
   oldTemplate: string
   proposedTemplate: string
 }
+
+export type ImprovementProposalStatus = 'proposed' | 'accepted' | 'rejected' | 'abandoned'
 
 export type QtRuntimeResult =
   | {
@@ -80,7 +92,7 @@ export type QtRuntimeResult =
     }
   | {
       kind: 'not_found'
-      code: 'qt:run:not-found' | 'qt:improve:not-found'
+      code: 'qt:run:not-found' | 'qt:improve:not-found' | 'qt:improve:proposal-not-found'
       taskName: string
       message: string
     }
@@ -99,4 +111,17 @@ export type QtRuntimeResult =
       source: 'explicit' | 'inferred'
       oldTemplate: string
       proposedTemplate: string
+    }
+  | {
+      kind: 'improve_action'
+      code:
+        | 'qt:improve:accept:ready'
+        | 'qt:improve:reject:recorded'
+        | 'qt:improve:abandon:recorded'
+        | 'qt:improve:already-finalized'
+      taskName: string
+      action: QtImproveAction
+      proposalId: string
+      status: ImprovementProposalStatus
+      message: string
     }
