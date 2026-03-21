@@ -105,10 +105,40 @@ test('improve returns old and proposed templates for existing task', () => {
     runtime.handle('/qt summarize produce concise bullets')
 
     const result = runtime.handle('/qt improve summarize emphasize owners')
-    assert.equal(result.title, 'Improve summarize')
+    assert.equal(result.title, '[qt:improve:proposed] Improve summarize')
+    assert.match(result.message, /Proposal ID: [a-f0-9]{12}/)
+    assert.match(result.message, /Source: explicit/)
     assert.match(result.message, /Old template:/)
     assert.match(result.message, /Proposed template:/)
     assert.match(result.message, /Improvement note for summarize: emphasize owners/)
+  } finally {
+    cleanup()
+  }
+})
+
+test('improve without user input uses inferred proposal source', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt summarize produce concise bullets')
+    const result = runtime.handle('/qt improve summarize')
+
+    assert.equal(result.title, '[qt:improve:proposed] Improve summarize')
+    assert.match(result.message, /Source: inferred/)
+    assert.match(
+      result.message,
+      /Improvement note for summarize: refine this template to better handle explicit user input\./
+    )
+  } finally {
+    cleanup()
+  }
+})
+
+test('improve handles missing tasks cleanly', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    const result = runtime.handle('/qt improve missing-task make it better')
+    assert.equal(result.title, '[qt:improve:not-found] Task Not Found')
+    assert.equal(result.message, 'No template exists yet for missing-task.')
   } finally {
     cleanup()
   }

@@ -70,7 +70,7 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
       const template = getTaskTemplate(store, command.taskName)
       if (!template) {
         return {
-          title: 'Task Not Found',
+          title: '[qt:improve:not-found] Task Not Found',
           message: `No template exists yet for ${command.taskName}.`
         }
       }
@@ -82,8 +82,19 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
       )
 
       return {
-        title: `Improve ${command.taskName}`,
-        message: `Old template:\n\n${proposal.oldTemplate}\n\nProposed template:\n\n${proposal.proposedTemplate}`
+        title: `[qt:improve:proposed] Improve ${command.taskName}`,
+        message: [
+          `Proposal ID: ${proposal.proposalId}`,
+          `Source: ${proposal.source}`,
+          '',
+          'Old template:',
+          '',
+          proposal.oldTemplate,
+          '',
+          'Proposed template:',
+          '',
+          proposal.proposedTemplate
+        ].join('\n')
       }
     }
   }

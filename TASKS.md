@@ -43,7 +43,7 @@ Working rules for all tasks:
 ### Phase 2 - Core behavior and reliability
 - [x] T004 - Implement template creation flow from user instructions
 - [x] T005 - Implement existing task execution flow
-- [ ] T006 - Implement improvement proposal flow
+- [x] T006 - Implement improvement proposal flow
 - [ ] T008 - Define runtime result contract for host adapters
 - [ ] T034 - Define improvement proposal lifecycle contract
 - [ ] T007 - Implement improvement acceptance and overwrite behavior
@@ -84,6 +84,7 @@ Working rules for all tasks:
 
 - [x] T004 - Implement template creation flow from user instructions
 - [x] T005 - Implement existing task execution flow
+- [x] T006 - Implement improvement proposal flow
 
 ## Active task backlog
 
@@ -122,6 +123,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T006 - Implement improvement proposal flow
+- Status: [x] complete (not yet archived)
 - Goal: Generate old-versus-new template proposals for `/qt improve`.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
 - Steps:
