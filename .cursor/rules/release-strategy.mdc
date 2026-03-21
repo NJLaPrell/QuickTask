@@ -11,6 +11,7 @@ Use `RELEASE_STRATEGY.md` as the source of truth for production releases.
 
 - Release from `main` using manual workflow dispatch.
 - Use Changesets for versioning and changelog generation.
+- Run pre-release readiness (`pnpm release:prepare`) before release workflow handoff.
 - Keep package versions lockstep unless the user explicitly changes this policy.
 - Tag releases as `vMAJOR.MINOR.PATCH`.
 - Publish GitHub Releases from the tagged release commit.
@@ -38,3 +39,8 @@ Block release if any of these fail:
 
 - Current release scope is source-only unless user asks to include packaged artifacts.
 - Keep prerelease channels disabled unless explicitly requested.
+
+## Readiness finding tracking
+
+- Track readiness findings in `TASKS.md`, not GitHub issues.
+- Treat `medium` and `high` readiness findings as blocking until resolved or explicitly accepted by the user.

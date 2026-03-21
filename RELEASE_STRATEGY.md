@@ -28,21 +28,35 @@ Each release-relevant PR should include:
    - files under `docs/` for contract/reference behavior changes.
 3. Test/typecheck/lint/build checks passing.
 
+## Pre-release readiness gate (chat-triggered)
+
+Before running the `Release` workflow, run pre-release readiness:
+
+1. Ask the assistant to prepare release readiness, or run `pnpm release:prepare`.
+2. Review `docs/release-readiness-report.md`.
+3. Treat medium/high findings as blocking.
+4. Convert findings into `TASKS.md` updates:
+   - update existing tasks when applicable,
+   - add new tasks with manual phase/priority assignment when unmapped.
+
+This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
+
 ## Release checklist (manual dispatch)
 
 1. Confirm all intended PRs are merged into `main`.
-2. Run `Release` workflow manually with docs sync inputs.
-3. Workflow gates:
+2. Confirm pre-release readiness gate is green (or explicitly accepted by the user).
+3. Run `Release` workflow manually with docs sync inputs.
+4. Workflow gates:
    - run `pnpm check`
    - run `pnpm test`
    - run `pnpm build`
    - run `pnpm release:docs-check`
-4. Workflow versions packages and changelogs with `pnpm release:version`.
-5. Workflow creates:
+5. Workflow versions packages and changelogs with `pnpm release:version`.
+6. Workflow creates:
    - release commit on `main`
    - semantic tag `vX.Y.Z`
    - published GitHub Release for `vX.Y.Z`
-6. Release notes come from GitHub generated notes and the repository changelogs.
+7. Release notes come from GitHub generated notes and the repository changelogs.
 
 ## Docs sync gate policy
 

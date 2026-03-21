@@ -9,6 +9,7 @@
     "test": "pnpm -r --if-present test",
     "clean": "pnpm -r clean",
     "changeset": "changeset",
+    "release:prepare": "node scripts/release-prepare-readiness.mjs",
     "release:version": "changeset version",
     "release:docs-check": "node scripts/release-docs-check.mjs"
   },

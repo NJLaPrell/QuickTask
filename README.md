@@ -12,6 +12,7 @@ For commit and PR workflow conventions, see `COMMIT_STRATEGY.md`.
 For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
 For task execution loop conventions, see `TASK_PR_DELIVERY_WORKFLOW.md`.
 For production release policy, see `RELEASE_STRATEGY.md`.
+For pre-release preparation flow, see `PRE_RELEASE_READINESS_WORKFLOW.md`.
 For the canonical command/result contract, see `docs/qt-command-result-contract.md`.
 For adapter rendering behavior per host, see `docs/qt-adapter-rendering-matrix.md`.
 
@@ -81,6 +82,12 @@ pnpm changeset
 ### Run a production release
 
 Use the GitHub `Release` workflow (`workflow_dispatch`) from `main`.
+
+Before dispatching release, run:
+
+```bash
+pnpm release:prepare
+```
 
 The workflow will:
 
