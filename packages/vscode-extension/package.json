@@ -1,14 +1,16 @@
 {
   "name": "quicktask-vscode",
   "displayName": "QuickTask",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "publisher": "njlaprell",
   "engines": {
     "vscode": "^1.100.0"
   },
   "main": "dist/extension.js",
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
