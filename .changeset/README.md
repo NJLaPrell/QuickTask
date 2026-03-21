@@ -16,15 +16,19 @@ Use this template in the changeset body:
 
 ```md
 ## New Features
+
 - <user-facing capability added>
 
 ## Bug Fixes
+
 - <user-facing bug fix>
 
 ## Internal Improvements
+
 - <refactor/tooling/docs/internal change>
 
 ## Breaking Changes
+
 - None.
 ```
 

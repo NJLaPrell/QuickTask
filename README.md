@@ -69,6 +69,22 @@ Expected behavior:
 - Host integrations for VS Code, Cursor, and OpenClaw are wired to the shared runtime.
 - Installable release artifacts and marketplace distribution are tracked as open work in `TASKS.md`.
 
+## Support Matrix
+
+| Surface                                 | Minimum supported                                    | Validation coverage                                              |
+| --------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| Node.js runtime                         | 22.x LTS                                             | CI (`check`, `test`, `build`)                                    |
+| pnpm                                    | 10.x                                                 | CI package-manager consistency check                             |
+| VS Code adapter (`quicktask-vscode`)    | VS Code `^1.100.0`                                   | Adapter tests + host smoke tests                                 |
+| Cursor command wrapper                  | Current Cursor command-file support                  | Command contract smoke check                                     |
+| OpenClaw adapter (`quicktask-openclaw`) | Current OpenClaw plugin runtime                      | Adapter tests + host smoke tests                                 |
+| Operating systems                       | Ubuntu Linux (baseline), macOS/Windows (best-effort) | Core CI runs on Ubuntu; runtime is host-agnostic TypeScript/Node |
+
+Compatibility policy:
+
+- Breaking compatibility changes must be documented in `TASKS.md` and release notes before merge.
+- Update this matrix in the same PR as any support-floor changes.
+
 ## Project Structure
 
 - `packages/core` - parser, runtime, storage, and shared types/contracts.

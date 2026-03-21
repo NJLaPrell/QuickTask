@@ -44,6 +44,7 @@ Before running the `Release` workflow, run pre-release readiness:
 1. Ask the assistant to prepare release readiness, or run `pnpm release:prepare`.
    - Scope is always full-product (`all phases`); there is no per-phase mode.
 2. Review `docs/release-readiness-report.md`.
+   - Readiness now includes a changeset preflight check (`pending .changeset/*.md`).
 3. Run a prerelease README audit:
    - update `README.md` to cover any missing user-facing documentation for shipped behavior,
    - follow `README_EDITING.md` while editing `README.md`.

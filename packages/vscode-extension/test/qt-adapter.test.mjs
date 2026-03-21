@@ -1,49 +1,52 @@
-import assert from 'node:assert/strict'
-import test from 'node:test'
+import assert from "node:assert/strict";
+import test from "node:test";
 
 import {
   handleQtChatPrompt,
   renderQtRuntimeResult,
   toQtCommandTextFromChatPrompt
-} from '../dist/qtAdapter.js'
+} from "../dist/qtAdapter.js";
 
-test('normalizes plain prompt into /qt create command', () => {
-  assert.equal(toQtCommandTextFromChatPrompt('summarize create bullets'), '/qt summarize create bullets')
-})
+test("normalizes plain prompt into /qt create command", () => {
+  assert.equal(
+    toQtCommandTextFromChatPrompt("summarize create bullets"),
+    "/qt summarize create bullets"
+  );
+});
 
-test('keeps explicit /qt command unchanged', () => {
-  assert.equal(toQtCommandTextFromChatPrompt('/qt/summarize notes'), '/qt/summarize notes')
-})
+test("keeps explicit /qt command unchanged", () => {
+  assert.equal(toQtCommandTextFromChatPrompt("/qt/summarize notes"), "/qt/summarize notes");
+});
 
-test('returns proposal id in improve rendering', () => {
+test("returns proposal id in improve rendering", () => {
   const markdown = renderQtRuntimeResult({
-    kind: 'improve_proposed',
-    code: 'qt:improve:proposed',
-    taskName: 'summarize',
-    proposalId: 'p_123',
-    source: 'explicit',
-    oldTemplate: 'old',
-    proposedTemplate: 'new'
-  })
+    kind: "improve_proposed",
+    code: "qt:improve:proposed",
+    taskName: "summarize",
+    proposalId: "p_123",
+    source: "explicit",
+    oldTemplate: "old",
+    proposedTemplate: "new"
+  });
 
-  assert.match(markdown, /Proposal ID: `p_123`/)
-})
+  assert.match(markdown, /Proposal ID: `p_123`/);
+});
 
-test('delegates prompt handling to runtime boundary', () => {
+test("delegates prompt handling to runtime boundary", () => {
   const runtime = {
     handle(input) {
-      assert.equal(input, '/qt summarize write concise bullets')
+      assert.equal(input, "/qt summarize write concise bullets");
       return {
-        kind: 'created',
-        code: 'qt:create:created',
-        taskName: 'summarize',
-        filename: 'summarize.md',
-        templateBody: '- Goal: write concise bullets'
-      }
+        kind: "created",
+        code: "qt:create:created",
+        taskName: "summarize",
+        filename: "summarize.md",
+        templateBody: "- Goal: write concise bullets"
+      };
     }
-  }
+  };
 
-  const response = handleQtChatPrompt('summarize write concise bullets', runtime)
-  assert.equal(response.result.code, 'qt:create:created')
-  assert.match(response.markdown, /Created template `summarize`/)
-})
+  const response = handleQtChatPrompt("summarize write concise bullets", runtime);
+  assert.equal(response.result.code, "qt:create:created");
+  assert.match(response.markdown, /Created template `summarize`/);
+});

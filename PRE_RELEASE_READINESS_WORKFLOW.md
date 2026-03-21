@@ -24,6 +24,8 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
    - `pnpm release:prepare`
    - Scope is always full-product (`all phases`); there is no per-phase mode.
 2. Review `docs/release-readiness-report.md`.
+   - Includes changeset preflight (`pending .changeset/*.md` entries).
+   - Report writes are stable: timestamp-only deltas do not rewrite the file.
 3. Perform a README prerelease audit:
    - update `README.md` with any missing user-facing documentation for shipped behavior,
    - follow `README_EDITING.md` while editing.
@@ -44,6 +46,7 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 - `pnpm test`
 - `pnpm build`
 - `pnpm release:docs-check` (with readiness defaults)
+- pending `.changeset/*.md` release inputs
 - Existing open `TASKS.md` tasks across all phases.
 
 ## Task system policy (required)

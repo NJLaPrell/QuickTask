@@ -29,6 +29,7 @@
   - `P2` valuable follow-through (improves adoption/operability)
 
 Working rules for all tasks:
+
 - Create one branch per task and open one PR per task.
 - Keep changes scoped to the task only.
 - Add or update tests where practical for every implementation task.
@@ -40,6 +41,7 @@ Working rules for all tasks:
 ## Milestone execution order
 
 ### Phase 1 - Core foundations
+
 - Success measure: Core `/qt` parsing, persistence, and tests pass locally with deterministic behavior.
 - [h] T001 - Decide persistent task storage layout (P0)
 - [h] T003 - Tighten command parsing against the current spec (P0)
@@ -47,11 +49,13 @@ Working rules for all tasks:
 - [h] T002 - Replace in-memory store with file-backed task store (P0)
 
 ### Phase 2 - Core behavior and reliability
+
 - Success measure: All core create/run/improve lifecycles are contract-stable, failure-safe, and fully test-backed.
 - [x] T004 - Implement template creation flow from user instructions (P0)
 - [x] T005 - Implement existing task execution flow (P0)
 - [x] T006 - Implement improvement proposal flow (P0)
 - [x] T008 - Define runtime result contract for host adapters (P0)
+- [x] T015 - Add repo-wide build and test workflow (P0)
 - [x] T034 - Define improvement proposal lifecycle contract (P0)
 - [x] T007 - Implement improvement acceptance and overwrite behavior (P0)
 - [x] T022 - Define stable core API surface for adapters (P0)
@@ -67,6 +71,7 @@ Working rules for all tasks:
 - [x] T040 - Add stale write-lock recovery policy and tests (P1)
 
 ### Phase 3 - Host integrations
+
 - Success measure: `/qt` works end-to-end in VS Code, Cursor, and OpenClaw via the shared core runtime with no duplicated task logic.
 - [h] T010 - Wire the VS Code extension to the core runtime (P0)
 - [h] T011 - Implement native VS Code `/qt` chat command (P0)
@@ -75,19 +80,21 @@ Working rules for all tasks:
 - [h] T014 - Implement native OpenClaw `/qt` command flow (P0)
 
 ### Phase 4 - CI and quality controls
+
 - Success measure: CI enforces build/test/lint/security/compatibility standards and blocks regressions before merge.
-- [ ] T015 - Add repo-wide build and test workflow (P0)
-- [ ] T021 - Add linting and formatting quality gates (P1)
-- [ ] T024 - Add host-level end-to-end smoke tests (P1)
-- [ ] T027 - Define support matrix and compatibility policy (P1)
-- [ ] T028 - Add dependency and supply-chain security scanning (P1)
-- [ ] T033 - Add repository governance and release guardrails (P1)
+- [x] T015 - Add repo-wide build and test workflow (P0)
+- [x] T021 - Add linting and formatting quality gates (P1)
+- [x] T024 - Add host-level end-to-end smoke tests (P1)
+- [x] T027 - Define support matrix and compatibility policy (P1)
+- [x] T028 - Add dependency and supply-chain security scanning (P1)
+- [x] T033 - Add repository governance and release guardrails (P1)
 - [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
-- [ ] T042 - Add release readiness preflight for pending changesets (P1)
-- [ ] T043 - Add CI check for package manager config consistency (P1)
-- [ ] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
+- [x] T042 - Add release readiness preflight for pending changesets (P1)
+- [x] T043 - Add CI check for package manager config consistency (P1)
+- [x] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
 
 ### Phase 5 - Packaging and release operations
+
 - Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
 - [ ] T016 - Add VSIX packaging for the VS Code extension (P1)
 - [ ] T017 - Add OpenClaw package build artifact (P1)
@@ -102,6 +109,7 @@ Working rules for all tasks:
 - [ ] T049 - Define first-public-release version baseline policy (P2)
 
 ### Phase 6 - Distribution and docs
+
 - Success measure: Users can discover, install, and upgrade QuickTask across hosts using clear docs and repeatable publishing paths.
 - [ ] T019 - Add VS Code Marketplace publishing workflow (P2)
 - [ ] T020 - Write installation and release documentation (P2)
@@ -125,11 +133,21 @@ Working rules for all tasks:
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
 - [x] T039 - Define concurrent template write policy and tests (P1)
 - [x] T040 - Add stale write-lock recovery policy and tests (P1)
+- [x] T015 - Add repo-wide build and test workflow (P0)
+- [x] T021 - Add linting and formatting quality gates (P1)
+- [x] T024 - Add host-level end-to-end smoke tests (P1)
+- [x] T027 - Define support matrix and compatibility policy (P1)
+- [x] T028 - Add dependency and supply-chain security scanning (P1)
+- [x] T033 - Add repository governance and release guardrails (P1)
 - [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
+- [x] T042 - Add release readiness preflight for pending changesets (P1)
+- [x] T043 - Add CI check for package manager config consistency (P1)
+- [x] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
 
 ## Active task backlog
 
 ## T004 - Implement template creation flow from user instructions
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Generate new task templates from user-provided instructions using the current spec.
@@ -149,6 +167,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T005 - Implement existing task execution flow
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Execute an existing task using stored template instructions plus user input.
@@ -166,6 +185,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T006 - Implement improvement proposal flow
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Generate old-versus-new template proposals for `/qt improve`.
@@ -183,6 +203,7 @@ Working rules for all tasks:
 - Dependencies: T002, T003.
 
 ## T007 - Implement improvement acceptance and overwrite behavior
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: When an improvement is accepted, overwrite the existing task template on disk.
@@ -199,6 +220,7 @@ Working rules for all tasks:
 - Dependencies: T002, T006, T008, T034.
 
 ## T008 - Define runtime result contract for host adapters
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Standardize the response shapes that VS Code, Cursor, and OpenClaw adapters consume.
@@ -214,6 +236,8 @@ Working rules for all tasks:
 - Dependencies: T004, T005, T006.
 
 ## T015 - Add repo-wide build and test workflow
+
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Add GitHub Actions CI for install, test, and build.
 - Files: `.github/workflows/*`, package scripts/config as needed.
@@ -228,6 +252,7 @@ Working rules for all tasks:
 - Dependencies: T009.
 
 ## T016 - Add VSIX packaging for the VS Code extension
+
 - Priority: P1
 - Goal: Produce a VSIX artifact from the repo build.
 - Files: extension package/config, build scripts, workflow files.
@@ -242,6 +267,7 @@ Working rules for all tasks:
 - Dependencies: T011, T015.
 
 ## T017 - Add OpenClaw package build artifact
+
 - Priority: P1
 - Goal: Produce an installable package artifact for OpenClaw.
 - Files: OpenClaw package/config, build scripts, workflow files.
@@ -256,6 +282,7 @@ Working rules for all tasks:
 - Dependencies: T014, T015.
 
 ## T018 - Add release workflow for GitHub Releases
+
 - Priority: P1
 - Goal: Publish release artifacts from tags or release events.
 - Files: `.github/workflows/*`, docs/scripts as needed.
@@ -271,6 +298,7 @@ Working rules for all tasks:
 - Dependencies: T016, T017.
 
 ## T019 - Add VS Code Marketplace publishing workflow
+
 - Priority: P2
 - Goal: Prepare and automate publishing to the VS Code Marketplace.
 - Files: extension metadata, workflow files, docs.
@@ -285,6 +313,7 @@ Working rules for all tasks:
 - Dependencies: T016, T018.
 
 ## T020 - Write installation and release documentation
+
 - Priority: P2
 - Goal: Document install and release flows for VS Code, Cursor, and OpenClaw.
 - Files: `README.md`, optionally supporting docs.
@@ -300,6 +329,8 @@ Working rules for all tasks:
 - Dependencies: T018, T019, T027.
 
 ## T021 - Add linting and formatting quality gates
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Add repository-wide lint and formatting checks that run locally and in CI.
 - Files: root/package configs, package-level configs, workflow files, docs as needed.
@@ -315,6 +346,7 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T022 - Define stable core API surface for adapters
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Ensure host adapters consume a documented, stable `@quicktask/core` API.
@@ -331,6 +363,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009.
 
 ## T023 - Harden file-backed storage error handling
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Make template persistence robust across common filesystem failure modes.
@@ -350,6 +383,8 @@ Working rules for all tasks:
 - Dependencies: T002, T008, T009.
 
 ## T024 - Add host-level end-to-end smoke tests
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Validate working `/qt` flows through host adapters using built artifacts.
 - Files: host test harness files, workflow files, docs as needed.
@@ -365,6 +400,7 @@ Working rules for all tasks:
 - Dependencies: T011, T012, T014, T015.
 
 ## T025 - Add release versioning and changelog workflow
+
 - Priority: P1
 - Goal: Standardize semantic versioning and changelog generation for releases.
 - Files: release docs/config/scripts/workflow files.
@@ -380,6 +416,7 @@ Working rules for all tasks:
 - Dependencies: T018.
 
 ## T026 - Add post-release install verification checks
+
 - Priority: P1
 - Goal: Confirm published artifacts are installable and usable after release.
 - Files: workflow/check scripts, release docs.
@@ -395,6 +432,8 @@ Working rules for all tasks:
 - Dependencies: T016, T017, T018.
 
 ## T027 - Define support matrix and compatibility policy
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Set clear compatibility expectations across hosts, OSes, and runtime versions.
 - Files: `README.md`, `ARCHITECTURE.md`, CI configs as needed.
@@ -410,6 +449,8 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T028 - Add dependency and supply-chain security scanning
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Detect vulnerable dependencies and risky supply-chain changes early.
 - Files: workflow files, dependency policies/docs, package configs as needed.
@@ -425,6 +466,7 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T029 - Define runtime diagnostics and error observability
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Make runtime and adapter failures diagnosable in development and support scenarios.
@@ -441,6 +483,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022, T023.
 
 ## T030 - Add persisted template corruption recovery strategy
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Prevent data loss and provide recovery behavior for corrupted task template files.
@@ -457,6 +500,7 @@ Working rules for all tasks:
 - Dependencies: T002, T023.
 
 ## T031 - Add template format versioning and migration path
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Ensure persisted templates can evolve without breaking existing user data.
@@ -473,6 +517,7 @@ Working rules for all tasks:
 - Dependencies: T002, T023, T030.
 
 ## T032 - Add release-candidate validation workflow
+
 - Priority: P1
 - Goal: Validate release artifacts in a staged RC process before final publication.
 - Files: release workflow files, docs, optional validation scripts.
@@ -488,6 +533,8 @@ Working rules for all tasks:
 - Dependencies: T018, T024, T026.
 
 ## T033 - Add repository governance and release guardrails
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Enforce review, ownership, and quality controls on high-impact changes.
 - Files: `CODEOWNERS`, workflow files, contributing docs.
@@ -504,6 +551,7 @@ Working rules for all tasks:
 - Dependencies: T015, T025.
 
 ## T034 - Define improvement proposal lifecycle contract
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Standardize how improvement proposals are identified, accepted, rejected, or abandoned across hosts.
@@ -521,6 +569,7 @@ Working rules for all tasks:
 - Dependencies: T006, T008.
 
 ## T035 - Publish canonical command and result contract docs
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Keep user-facing and adapter-facing command/contract docs aligned with actual runtime behavior.
@@ -537,6 +586,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022, T034.
 
 ## T036 - Define proposal persistence and TTL policy
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Ensure improve proposal IDs behave deterministically across runtime restarts and long-running sessions.
@@ -553,6 +603,7 @@ Working rules for all tasks:
 - Dependencies: T006, T007, T034.
 
 ## T037 - Return structured runtime errors for parse failures
+
 - Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Ensure `createQtRuntime().handle()` never throws for invalid input and always returns structured error results.
@@ -569,6 +620,7 @@ Working rules for all tasks:
 - Dependencies: T003, T008, T029.
 
 ## T038 - Add adapter rendering matrix from result contract
+
 - Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Define exactly how each host should render each runtime result code and required user actions.
@@ -585,6 +637,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022.
 
 ## T039 - Define concurrent template write policy and tests
+
 - Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent inconsistent template state when multiple host processes write the same task concurrently.
@@ -601,6 +654,7 @@ Working rules for all tasks:
 - Dependencies: T023, T030, T031.
 
 ## T040 - Add stale write-lock recovery policy and tests
+
 - Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Ensure lock-file based concurrency control can recover safely when a host process crashes and leaves stale locks behind.
@@ -617,6 +671,7 @@ Working rules for all tasks:
 - Dependencies: T039.
 
 ## T041 - Add pre-release readiness workflow and report pipeline
+
 - Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Standardize chat-triggered pre-release preparation with full-hardening validation and `TASKS.md`-based finding tracking before release workflow handoff.
@@ -636,7 +691,8 @@ Working rules for all tasks:
 - Dependencies: T018, T025, T033.
 
 ## T042 - Add release readiness preflight for pending changesets
-- Status: [ ] not done
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Catch missing changeset release inputs during readiness instead of failing late in the release workflow.
 - Files: `scripts/release-prepare-readiness.mjs`, release docs/tests, optional helper script.
@@ -652,7 +708,8 @@ Working rules for all tasks:
 - Dependencies: T025, T041.
 
 ## T043 - Add CI check for package manager config consistency
-- Status: [ ] not done
+
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent workflow failures from mismatched package manager version declarations across repo config and CI workflows.
 - Files: workflow files, validation scripts, docs.
@@ -668,7 +725,8 @@ Working rules for all tasks:
 - Dependencies: T015, T033.
 
 ## T044 - Reduce release readiness report churn from timestamp-only updates
-- Status: [ ] not done
+
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Avoid noisy repo diffs when release readiness state is unchanged across runs.
 - Files: `scripts/release-prepare-readiness.mjs`, `docs/release-readiness-report.md`, docs.
@@ -684,6 +742,7 @@ Working rules for all tasks:
 - Dependencies: T041.
 
 ## T045 - Add single-command release handoff wrapper
+
 - Status: [ ] not done
 - Priority: P2
 - Goal: Provide one command that validates readiness state and dispatches release workflow with required inputs.
@@ -700,6 +759,7 @@ Working rules for all tasks:
 - Dependencies: T018, T041, T042.
 
 ## T046 - Publish installable release assets on GitHub releases
+
 - Status: [ ] not done
 - Priority: P1
 - Goal: Ensure GitHub releases include installable artifacts rather than source-only outputs.
@@ -716,6 +776,7 @@ Working rules for all tasks:
 - Dependencies: T016, T017, T018.
 
 ## T047 - Add curated user-focused release notes layer
+
 - Status: [ ] not done
 - Priority: P1
 - Goal: Improve release note quality so published notes emphasize user-impactful changes over internal implementation noise.
@@ -732,6 +793,7 @@ Working rules for all tasks:
 - Dependencies: T025, T041.
 
 ## T048 - Publish release integrity metadata (checksums/SBOM)
+
 - Status: [ ] not done
 - Priority: P2
 - Goal: Improve trust and auditability of published release artifacts.
@@ -748,6 +810,7 @@ Working rules for all tasks:
 - Dependencies: T046, T028.
 
 ## T049 - Define first-public-release version baseline policy
+
 - Status: [ ] not done
 - Priority: P2
 - Goal: Avoid ambiguity around initial release numbering and future version transitions.
@@ -766,6 +829,7 @@ Working rules for all tasks:
 ## Task history
 
 ### [h] T010 - Wire the VS Code extension to the core runtime
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Replace the VS Code scaffold with a real integration point to QuickTask core.
@@ -782,6 +846,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009, T022.
 
 ### [h] T011 - Implement native VS Code `/qt` chat command
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Support QuickTask through a native VS Code chat command flow.
@@ -799,6 +864,7 @@ Working rules for all tasks:
 - Dependencies: T010.
 
 ### [h] T012 - Refine Cursor command integration around the core runtime
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Turn the current Cursor stub into a practical exact-UX integration around the shared runtime.
@@ -815,6 +881,7 @@ Working rules for all tasks:
 - Dependencies: T008.
 
 ### [h] T013 - Wire the OpenClaw adapter to the core runtime
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Replace the OpenClaw scaffold with a real integration point to QuickTask core.
@@ -831,6 +898,7 @@ Working rules for all tasks:
 - Dependencies: T008, T009, T022.
 
 ### [h] T014 - Implement native OpenClaw `/qt` command flow
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Support QuickTask through a native OpenClaw slash-command flow.
@@ -848,6 +916,7 @@ Working rules for all tasks:
 - Dependencies: T013.
 
 ### [h] T001 - Decide persistent task storage layout
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Choose and document the repository path and naming rules for persisted `[task].md` files.
@@ -866,6 +935,7 @@ Working rules for all tasks:
 - Dependencies: none.
 
 ### [h] T002 - Replace in-memory store with file-backed task store
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Persist task templates as markdown files instead of using the in-memory store.
@@ -884,6 +954,7 @@ Working rules for all tasks:
 - Dependencies: T001.
 
 ### [h] T003 - Tighten command parsing against the current spec
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Make the parser behavior match the agreed command forms exactly.
@@ -900,6 +971,7 @@ Working rules for all tasks:
 - Dependencies: none.
 
 ### [h] T009 - Add core unit test harness
+
 - Status: [h] archived complete
 - Priority: P0
 - Goal: Establish a clean test setup for the core package.

@@ -75,3 +75,18 @@ This guarantees no partial/corrupted template state while making conflict behavi
 ## Current state
 
 The core runtime now uses a file-backed task store that reads and writes markdown templates on disk using the documented `tasks/` path and lookup rules.
+
+## Compatibility and support policy
+
+QuickTask support floors are defined in `README.md` and validated in CI:
+
+- Node.js 22.x and pnpm 10.x are the repository runtime baseline.
+- VS Code support is tied to the extension engine declaration (`^1.100.0`).
+- Cursor support is command-wrapper based and validated against canonical contract docs.
+- OpenClaw support follows the plugin adapter package runtime.
+
+Policy for compatibility changes:
+
+1. Treat support-floor changes as release-significant.
+2. Update `README.md` support matrix and contributor docs in the same change.
+3. Include release-note/changelog coverage via changeset when user-visible compatibility changes occur.

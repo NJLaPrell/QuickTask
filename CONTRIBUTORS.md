@@ -35,8 +35,12 @@ pnpm install
 
 ```bash
 pnpm check
+pnpm lint
+pnpm format:check
 pnpm test
+pnpm test:smoke
 pnpm build
+pnpm check:package-manager
 pnpm clean
 ```
 
@@ -102,6 +106,8 @@ These tests validate command normalization, runtime-boundary routing, and result
 At minimum for implementation PRs:
 
 - `pnpm check`
+- `pnpm lint`
+- `pnpm format:check`
 - `pnpm test`
 - `pnpm build` when build outputs are affected
 
@@ -150,6 +156,33 @@ Once readiness is green (or explicitly accepted), hand off to the release strate
 3. Provide required docs sync inputs (`readme_status`, `docs_status`, `docs_sync_notes`).
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
+
+## Security checks
+
+QuickTask enforces dependency and supply-chain checks in CI:
+
+- `Security / dependency-review` validates dependency and lockfile changes on PRs.
+- `Security / audit` fails on known high/critical vulnerabilities.
+
+Run locally before opening a dependency-heavy PR:
+
+```bash
+pnpm audit --prod --audit-level high
+```
+
+## Governance and guardrails
+
+Repository governance is codified through:
+
+- `CODEOWNERS` for critical path ownership
+- `.github/workflows/pr-guardrails.yml` for release-note/changeset checks on release-relevant PRs
+- `docs/repository-settings-checklist.md` for required branch protection and check settings
+
+Package manager policy:
+
+- Source of truth is `package.json#packageManager`.
+- CI and release workflows must pin the same `pnpm` version.
+- Validate with `pnpm check:package-manager`.
 
 ## Changelog and release-note writing standard
 

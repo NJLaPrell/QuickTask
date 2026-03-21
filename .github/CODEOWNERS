@@ -1,0 +1,17 @@
+* @nicklaprell
+
+# Core runtime and contracts
+/packages/core/ @nicklaprell
+/docs/qt-command-result-contract.md @nicklaprell
+/docs/qt-adapter-rendering-matrix.md @nicklaprell
+
+# Host adapters
+/packages/vscode-extension/ @nicklaprell
+/packages/openclaw-plugin/ @nicklaprell
+/.cursor/commands/ @nicklaprell
+
+# CI/release/governance
+/.github/workflows/ @nicklaprell
+/RELEASE_STRATEGY.md @nicklaprell
+/PRE_RELEASE_READINESS_WORKFLOW.md @nicklaprell
+/TASKS.md @nicklaprell
