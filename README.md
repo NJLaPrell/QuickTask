@@ -11,6 +11,7 @@ This is the current development quick start based on what is implemented today.
 For commit and PR workflow conventions, see `COMMIT_STRATEGY.md`.
 For PR review and merge policy, see `PR_REVIEW_MERGE_STRATEGY.md`.
 For task execution loop conventions, see `TASK_PR_DELIVERY_WORKFLOW.md`.
+For the canonical command/result contract, see `docs/qt-command-result-contract.md`.
 
 ### Prerequisites
 
@@ -67,12 +68,15 @@ pnpm --filter quicktask-openclaw build
 
 ### What `/qt` does
 
-QuickTask supports four primary command forms:
+QuickTask supports these command forms:
 
 - `/qt` - show command help.
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task with user input.
 - `/qt improve [task] [input]` - propose an improvement to an existing task.
+- `/qt improve accept [task] [proposal-id]` - accept and apply a proposal.
+- `/qt improve reject [task] [proposal-id]` - reject a proposal.
+- `/qt improve abandon [task] [proposal-id]` - abandon a proposal.
 
 ### Command behavior
 

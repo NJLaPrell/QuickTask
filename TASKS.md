@@ -59,7 +59,7 @@ Working rules for all tasks:
 - [x] T029 - Define runtime diagnostics and error observability (P0)
 - [x] T030 - Add persisted template corruption recovery strategy (P0)
 - [x] T031 - Add template format versioning and migration path (P0)
-- [ ] T035 - Publish canonical command and result contract docs (P0)
+- [x] T035 - Publish canonical command and result contract docs (P0)
 - [ ] T036 - Define proposal persistence and TTL policy (P0)
 - [ ] T037 - Return structured runtime errors for parse failures (P0)
 - [ ] T038 - Add adapter rendering matrix from result contract (P1)
@@ -109,6 +109,7 @@ Working rules for all tasks:
 - [x] T031 - Add template format versioning and migration path (P0)
 - [x] T030 - Add persisted template corruption recovery strategy (P0)
 - [x] T029 - Define runtime diagnostics and error observability (P0)
+- [x] T035 - Publish canonical command and result contract docs (P0)
 
 ## Active task backlog
 
@@ -581,6 +582,7 @@ Working rules for all tasks:
 - Dependencies: T006, T008.
 
 ## T035 - Publish canonical command and result contract docs
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Keep user-facing and adapter-facing command/contract docs aligned with actual runtime behavior.
 - Files: `README.md`, `ARCHITECTURE.md`, `packages/core/src/types.ts`, new docs under `docs/` as needed.
