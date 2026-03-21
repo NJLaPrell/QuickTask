@@ -1,4 +1,13 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  closeSync,
+  existsSync,
+  mkdirSync,
+  openSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync
+} from 'node:fs'
 import path from 'node:path'
 
 import type { TaskTemplate } from './types.js'
@@ -112,6 +121,32 @@ function quarantineCorruptTemplate(templatePath: string): string {
   return backupPath
 }
 
+function acquireTemplateWriteLock(templatePath: string): () => void {
+  const lockPath = `${templatePath}.lock`
+  let lockFd: number
+  try {
+    lockFd = openSync(lockPath, 'wx')
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === 'EEXIST'
+    ) {
+      throw new Error(`Concurrent write in progress for ${path.basename(templatePath)}.`)
+    }
+    throw error
+  }
+
+  return () => {
+    try {
+      closeSync(lockFd)
+    } finally {
+      rmSync(lockPath, { force: true })
+    }
+  }
+}
+
 export function createFileTaskStore(options: CreateFileTaskStoreOptions = {}): FileTaskStore {
   return {
     tasksDir: resolveTasksDir(options)
@@ -162,6 +197,7 @@ export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): 
   const templatePath = path.join(store.tasksDir, filename)
 
   mkdirSync(store.tasksDir, { recursive: true })
+  const releaseLock = acquireTemplateWriteLock(templatePath)
   const tempPath = `${templatePath}.${process.pid}.${Date.now()}.tmp`
 
   try {
@@ -172,6 +208,8 @@ export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): 
     throw new Error(
       `Failed to save task template ${filename}: ${error instanceof Error ? error.message : 'unknown error'}`
     )
+  } finally {
+    releaseLock()
   }
 
   return {

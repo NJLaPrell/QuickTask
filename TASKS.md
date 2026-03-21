@@ -63,7 +63,8 @@ Working rules for all tasks:
 - [x] T036 - Define proposal persistence and TTL policy (P0)
 - [x] T037 - Return structured runtime errors for parse failures (P0)
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
-- [ ] T039 - Define concurrent template write policy and tests (P1)
+- [x] T039 - Define concurrent template write policy and tests (P1)
+- [ ] T040 - Add stale write-lock recovery policy and tests (P1)
 
 ### Phase 3 - Host integrations
 - Success measure: `/qt` works end-to-end in VS Code, Cursor, and OpenClaw via the shared core runtime with no duplicated task logic.
@@ -113,6 +114,7 @@ Working rules for all tasks:
 - [x] T036 - Define proposal persistence and TTL policy (P0)
 - [x] T037 - Return structured runtime errors for parse failures (P0)
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
+- [x] T039 - Define concurrent template write policy and tests (P1)
 
 ## Active task backlog
 
@@ -649,7 +651,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022.
 
 ## T039 - Define concurrent template write policy and tests
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent inconsistent template state when multiple host processes write the same task concurrently.
 - Files: `packages/core/src/store.ts`, runtime/store tests, docs.
@@ -663,6 +665,22 @@ Working rules for all tasks:
   - No partial/corrupted state from concurrent write attempts.
   - Conflict or overwrite outcomes are test-covered.
 - Dependencies: T023, T030, T031.
+
+## T040 - Add stale write-lock recovery policy and tests
+- Status: [ ] not done
+- Priority: P1
+- Goal: Ensure lock-file based concurrency control can recover safely when a host process crashes and leaves stale locks behind.
+- Files: `packages/core/src/store.ts`, runtime/store tests, docs.
+- Steps:
+  1. Define stale-lock detection semantics (age, metadata, or explicit cleanup command).
+  2. Implement deterministic stale-lock recovery while preserving concurrent-write safety.
+  3. Add tests for stale lock recovery and active lock no-bypass behavior.
+  4. Document host-facing conflict/recovery UX expectations.
+- Acceptance criteria:
+  - Stale lock files do not permanently block template writes.
+  - Active concurrent writes remain blocked with deterministic error behavior.
+  - Recovery behavior is documented and test-covered.
+- Dependencies: T039.
 
 ## Task history
 
