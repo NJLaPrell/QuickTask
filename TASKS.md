@@ -49,7 +49,7 @@ Working rules for all tasks:
 - [x] T007 - Implement improvement acceptance and overwrite behavior
 - [x] T022 - Define stable core API surface for adapters
 - [x] T023 - Harden file-backed storage error handling
-- [ ] T029 - Define runtime diagnostics and error observability
+- [x] T029 - Define runtime diagnostics and error observability
 - [x] T030 - Add persisted template corruption recovery strategy
 - [x] T031 - Add template format versioning and migration path
 
@@ -92,6 +92,7 @@ Working rules for all tasks:
 - [x] T023 - Harden file-backed storage error handling
 - [x] T031 - Add template format versioning and migration path
 - [x] T030 - Add persisted template corruption recovery strategy
+- [x] T029 - Define runtime diagnostics and error observability
 
 ## Active task backlog
 
@@ -444,6 +445,7 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T029 - Define runtime diagnostics and error observability
+- Status: [x] complete (not yet archived)
 - Goal: Make runtime and adapter failures diagnosable in development and support scenarios.
 - Files: core runtime/types files, adapter integration files, docs/tests.
 - Steps:
