@@ -1,11 +1,7 @@
 import { parseQtCommand } from './parser.js'
 import { createFileTaskStore, getTaskTemplate, saveTaskTemplate, type FileTaskStore } from './store.js'
 import { createTaskTemplate, proposeTemplateImprovement } from './templates.js'
-
-export type QtRuntimeResult = {
-  title: string
-  message: string
-}
+import type { QtRuntimeResult } from './types.js'
 
 export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
   return {
@@ -15,24 +11,34 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
 
       if (command.kind === 'menu') {
         return {
-          title: 'QuickTask Help',
-          message:
-            'Use /qt to view help, /qt [task] [instructions] to define a task, /qt/[task] [input] to run a task, and /qt improve [task] [input] to propose a template improvement.'
+          kind: 'help',
+          code: 'qt:help',
+          usage: [
+            '/qt',
+            '/qt [task] [instructions]',
+            '/qt/[task] [input]',
+            '/qt improve [task] [input]'
+          ]
         }
       }
 
       if (command.kind === 'create') {
         if (!command.instructions.trim()) {
           return {
-            title: '[qt:create:clarify] Clarification Needed',
-            message: `Please provide instructions for ${command.taskName}. Usage: /qt ${command.taskName} [instructions]`
+            kind: 'clarification',
+            code: 'qt:create:clarify',
+            taskName: command.taskName,
+            usage: `/qt ${command.taskName} [instructions]`,
+            message: `Please provide instructions for ${command.taskName}.`
           }
         }
 
         const existingTemplate = getTaskTemplate(store, command.taskName)
         if (existingTemplate) {
           return {
-            title: '[qt:create:already-exists] Task Already Exists',
+            kind: 'already_exists',
+            code: 'qt:create:already-exists',
+            taskName: command.taskName,
             message: `A template already exists for ${command.taskName}. Use /qt/${command.taskName} [input] to run it or /qt improve ${command.taskName} [input] to propose changes.`
           }
         }
@@ -40,14 +46,19 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         const template = createTaskTemplate(command.taskName, command.instructions)
         saveTaskTemplate(store, template)
         return {
-          title: `[qt:create:created] Created ${template.filename}`,
-          message: template.body
+          kind: 'created',
+          code: 'qt:create:created',
+          taskName: template.taskName,
+          filename: template.filename,
+          templateBody: template.body
         }
       }
 
       if (command.kind === 'incomplete') {
         return {
-          title: 'Incomplete Command',
+          kind: 'incomplete',
+          code: 'qt:incomplete',
+          usage: command.usage,
           message: `Missing required input. Usage: ${command.usage}`
         }
       }
@@ -56,21 +67,28 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         const template = getTaskTemplate(store, command.taskName)
         if (!template) {
           return {
-            title: '[qt:run:not-found] Task Not Found',
+            kind: 'not_found',
+            code: 'qt:run:not-found',
+            taskName: command.taskName,
             message: `No template exists yet for ${command.taskName}.`
           }
         }
 
         return {
-          title: `[qt:run:executed] Run ${template.taskName}`,
-          message: `Template:\n\n${template.body}\n\nUser input:\n${command.userInput}`
+          kind: 'run_executed',
+          code: 'qt:run:executed',
+          taskName: template.taskName,
+          templateBody: template.body,
+          userInput: command.userInput
         }
       }
 
       const template = getTaskTemplate(store, command.taskName)
       if (!template) {
         return {
-          title: '[qt:improve:not-found] Task Not Found',
+          kind: 'not_found',
+          code: 'qt:improve:not-found',
+          taskName: command.taskName,
           message: `No template exists yet for ${command.taskName}.`
         }
       }
@@ -82,19 +100,13 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
       )
 
       return {
-        title: `[qt:improve:proposed] Improve ${command.taskName}`,
-        message: [
-          `Proposal ID: ${proposal.proposalId}`,
-          `Source: ${proposal.source}`,
-          '',
-          'Old template:',
-          '',
-          proposal.oldTemplate,
-          '',
-          'Proposed template:',
-          '',
-          proposal.proposedTemplate
-        ].join('\n')
+        kind: 'improve_proposed',
+        code: 'qt:improve:proposed',
+        taskName: command.taskName,
+        proposalId: proposal.proposalId,
+        source: proposal.source,
+        oldTemplate: proposal.oldTemplate,
+        proposedTemplate: proposal.proposedTemplate
       }
     }
   }
