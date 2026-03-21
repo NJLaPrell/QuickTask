@@ -8,7 +8,7 @@ alwaysApply: true
 When the user asks to complete a task, treat `TASKS.md` as the active source of truth and `TASKS_ARCHIVED.md` as historical context.
 Follow this flow:
 
-1. Read relevant active task context from `TASKS.md` (goal, steps, acceptance criteria, dependencies, status, blockers).
+1. Read relevant active task context from `TASKS.md` (goal, steps, acceptance criteria, dependencies, status, blockers, and `Current execution state`).
 2. If historical context is needed, consult `TASKS_ARCHIVED.md` without restoring archived records back into `TASKS.md`.
 3. Propose the best implementation options and ask clarifying questions that materially affect approach.
 4. Use the user's answers to refine the plan before coding.
@@ -16,15 +16,16 @@ Follow this flow:
 6. Add or update tests (including unit tests when appropriate).
 7. Validate changes within reason (run relevant checks/tests/build commands).
 8. Execute the PR delivery loop from `TASK_PR_DELIVERY_WORKFLOW.md`.
-9. Update task status and evidence in `TASKS.md`, and summarize what changed.
-10. After closing a task, assess whether follow-on tasks are needed and add/update them immediately.
-11. During archive cadence, move closed records from `TASKS.md` to `TASKS_ARCHIVED.md` and mark them `[h]`.
+9. Update task status and evidence in `TASKS.md`.
+10. Update `Current execution state` in `TASKS.md` (active phase, current milestone target, active implementation list, next tasks) so it remains source-of-truth.
+11. After closing a task, assess whether follow-on tasks are needed and add/update them immediately.
+12. During archive cadence, move closed records from `TASKS.md` to `TASKS_ARCHIVED.md` and mark them `[h]`.
 
 ## Task tracker maintenance requirements
 
 - Keep task IDs stable; never renumber existing tasks.
 - Update task status markers consistently:
-  - `[p]` proposed (auto-discovered, pending promotion)
+  - `[p]` ready-proposed (triaged and ready for implementation)
   - `[ ]` not done
   - `[~]` in progress
   - `[!]` blocked (must include `Blocked by` and `Unblock plan`)
@@ -32,3 +33,4 @@ Follow this flow:
   - `[h]` archived in `TASKS_ARCHIVED.md`
 - Keep `TASKS.md` concise and active-focused.
 - Keep archived records in `TASKS_ARCHIVED.md`; do not duplicate full archived task bodies in `TASKS.md`.
+- Keep `TASKS.md` `Current execution state` accurate; use it to answer "where are we now?" and "what are next steps?".

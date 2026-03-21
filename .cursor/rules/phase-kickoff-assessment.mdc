@@ -19,9 +19,13 @@ When work starts on a new phase (or the user asks to begin/complete a phase), ru
 4. Identify gaps discovered during kickoff and convert them into `TASKS.md` updates before coding:
    - add new tasks if scope gaps or prerequisite work are missing,
    - update existing tasks if acceptance criteria/dependencies are incomplete,
-   - assign phase and priority (`P0`/`P1`/`P2`) manually,
+  - assign phase and priority (`P0` through `P5`) manually,
    - mark blocked tasks `[!]` with explicit `Blocked by` + `Unblock plan`.
-5. Share a short kickoff summary with:
+5. Update `TASKS.md` `Current execution state` with:
+   - current phase in execution,
+   - milestone target for this phase,
+   - ordered next tasks.
+6. Share a short kickoff summary with:
    - what was reviewed,
    - what tasks were added/updated,
    - what work remains in the phase.

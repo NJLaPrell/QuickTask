@@ -84,13 +84,14 @@ Working defaults:
 
 - Keep IDs stable; never renumber.
 - Use statuses consistently:
-  - `[p]` proposed (discovered, pending triage/promotion)
+  - `[p]` ready-proposed (triaged and ready for implementation)
   - `[ ]` not done
   - `[~]` in progress
   - `[!]` blocked (must include blocker + unblock plan)
   - `[x]` complete (not yet archived)
   - `[h]` archived complete (in `TASKS_ARCHIVED.md`)
 - When a task closes, assess for gaps and add/update follow-up tasks immediately.
+- Keep `TASKS.md` `Current execution state` accurate (active phase, milestone target, in-progress list, and next tasks).
 
 Task discovery:
 

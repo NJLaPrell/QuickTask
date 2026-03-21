@@ -6,13 +6,13 @@ This workflow codifies how the agent discovers and proposes new development task
 
 - Triggered when the user asks to discover new tasks for development.
 - Reviews project docs and code to identify high-value improvement work.
-- Automatically appends discovered tasks to `TASKS.md` with status `[p]` (proposed).
+- Automatically appends discovered tasks to `TASKS.md` with status `[p]` (ready-proposed).
 - Keeps discovery scoped to actionable product improvement work.
 
 ## Discovery defaults
 
 - Run mode: manual (only when user asks).
-- Auto-intake: enabled (append to `TASKS.md` as proposed).
+- Auto-intake: enabled (append to `TASKS.md` as ready-proposed).
 - Maximum new tasks per run: 10.
 - Discovery scope: both incremental improvements and larger roadmap features.
 - Severity field: optional for discovered tasks.
@@ -50,7 +50,7 @@ Each run should include a balanced mix across:
 Every newly appended proposed task must include:
 
 - task ID (`T###`) and concise title
-- status `[p]` and priority (`P0`/`P1`/`P2`)
+- status `[p]` and priority (`P0` through `P5`)
 - goal and expected user/developer impact
 - likely files/systems touched
 - dependencies/blockers (or `none`)
@@ -64,6 +64,7 @@ Every newly appended proposed task must include:
 3. Place proposed tasks in the active backlog's proposed section.
 4. Avoid duplicates with existing open/proposed tasks.
 5. Cap the run at 10 proposed tasks unless the user overrides.
+6. Update `TASKS.md` `Current execution state` snapshot (ready queue count + suggested next tasks).
 
 ## Output expectations
 
@@ -75,6 +76,6 @@ After intake, report:
 
 ## Promotion guidance
 
-- `[p]` -> `[ ]` when user approves backlog intake.
+- `[p]` -> `[ ]` when user approves promotion from ready queue into scheduled backlog.
 - `[ ]` -> `[~]` when active implementation starts.
 - `[~]` -> `[x]` when done and validated.

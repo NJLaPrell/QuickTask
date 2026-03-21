@@ -16,7 +16,7 @@ This workflow applies to all tasks unless the user explicitly overrides it.
 6. Merge to `main` only when:
    - required checks are green (tests, typecheck, lint/format),
    - no blocking findings remain.
-7. Update `TASKS.md` status/evidence and provide a user summary.
+7. Update `TASKS.md` status/evidence and `Current execution state`, then provide a user summary.
 8. Archive completed records during archive cadence by moving them to `TASKS_ARCHIVED.md`.
 9. After task closure, review the implemented changes for scope impact; create follow-up tasks or update existing tasks in `TASKS.md` when gaps are discovered.
 

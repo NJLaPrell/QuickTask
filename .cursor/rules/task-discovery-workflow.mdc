@@ -12,11 +12,12 @@ Apply this when the user asks to discover new tasks for development.
 1. Run `TASK_DISCOVERY_WORKFLOW.md`.
 2. Review required docs and active tracker context before proposing tasks.
 3. Review code hotspots and quality signals to ground discoveries in repository reality.
-4. Auto-add discovered tasks to `TASKS.md` with status `[p]` (proposed).
+4. Auto-add discovered tasks to `TASKS.md` with status `[p]` (ready-proposed).
 5. Add at most 10 tasks per run unless the user explicitly overrides.
 6. Include a balanced set across refactor, UX, feature, and workspace/CI cleanup work.
 7. Avoid duplicate or overlapping tasks already in `TASKS.md`.
 8. Keep severity optional unless user asks to require it.
+9. Update `TASKS.md` `Current execution state` backlog snapshot and next-task recommendations after intake.
 
 ## Task format requirements
 

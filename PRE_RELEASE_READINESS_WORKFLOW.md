@@ -34,7 +34,7 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
    - If no task exists, add a new task to `TASKS.md`.
 5. For any newly added task:
    - assign phase manually,
-   - assign priority manually (`P0`/`P1`/`P2`),
+   - assign priority manually (`P0` through `P5`),
    - include dependency links where relevant.
 6. Re-run `pnpm release:prepare` after changes.
 7. When report has no new medium/high findings for the current release phase, handoff to release:
