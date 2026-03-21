@@ -156,8 +156,13 @@ test('improve lifecycle records action states by proposal id', () => {
 
     const acceptResult = runtime.handle(`/qt improve accept summarize ${proposalId}`)
     assert.equal(acceptResult.kind, 'improve_action')
-    assert.equal(acceptResult.code, 'qt:improve:accept:ready')
+    assert.equal(acceptResult.code, 'qt:improve:accept:applied')
     assert.equal(acceptResult.status, 'accepted')
+    assert.match(acceptResult.message, /accepted and applied/)
+
+    const runAfterAccept = runtime.handle('/qt/summarize follow-up input')
+    assert.equal(runAfterAccept.kind, 'run_executed')
+    assert.match(runAfterAccept.templateBody, /Improvement note for summarize: emphasize owners/)
 
     const repeatAccept = runtime.handle(`/qt improve accept summarize ${proposalId}`)
     assert.equal(repeatAccept.kind, 'improve_action')
@@ -175,6 +180,28 @@ test('improve lifecycle handles proposal not found', () => {
     assert.equal(result.kind, 'not_found')
     assert.equal(result.code, 'qt:improve:proposal-not-found')
     assert.equal(result.taskName, 'summarize')
+  } finally {
+    cleanup()
+  }
+})
+
+test('improve reject and abandon do not apply template changes', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt summarize baseline instructions')
+    const rejectProposal = runtime.handle('/qt improve summarize add rejection change')
+    assert.equal(rejectProposal.kind, 'improve_proposed')
+    runtime.handle(`/qt improve reject summarize ${rejectProposal.proposalId}`)
+
+    const abandonProposal = runtime.handle('/qt improve summarize add abandon change')
+    assert.equal(abandonProposal.kind, 'improve_proposed')
+    runtime.handle(`/qt improve abandon summarize ${abandonProposal.proposalId}`)
+
+    const runResult = runtime.handle('/qt/summarize verify unchanged')
+    assert.equal(runResult.kind, 'run_executed')
+    assert.match(runResult.templateBody, /baseline instructions/)
+    assert.doesNotMatch(runResult.templateBody, /add rejection change/)
+    assert.doesNotMatch(runResult.templateBody, /add abandon change/)
   } finally {
     cleanup()
   }

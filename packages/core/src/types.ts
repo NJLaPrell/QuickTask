@@ -115,7 +115,7 @@ export type QtRuntimeResult =
   | {
       kind: 'improve_action'
       code:
-        | 'qt:improve:accept:ready'
+        | 'qt:improve:accept:applied'
         | 'qt:improve:reject:recorded'
         | 'qt:improve:abandon:recorded'
         | 'qt:improve:already-finalized'

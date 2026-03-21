@@ -96,15 +96,20 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
         }
 
         if (command.action === 'accept') {
+          saveTaskTemplate(store, {
+            taskName: proposal.taskName,
+            filename: '',
+            body: proposal.proposedTemplate
+          })
           proposal.status = 'accepted'
           return {
             kind: 'improve_action',
-            code: 'qt:improve:accept:ready',
+            code: 'qt:improve:accept:applied',
             taskName: proposal.taskName,
             action: command.action,
             proposalId: command.proposalId,
             status: proposal.status,
-            message: `Proposal ${command.proposalId} accepted and ready to apply.`
+            message: `Proposal ${command.proposalId} accepted and applied to ${proposal.taskName}.`
           }
         }
 
