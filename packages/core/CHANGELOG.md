@@ -1,5 +1,21 @@
 # @quicktask/core
 
+## 0.2.4
+
+### Patch Changes
+
+- 7207bdb: ## New Features
+  - Align VS Code Marketplace extension identity with publisher `nicklaprell` and display name `QuickTask Workflows`.
+
+  ## Bug Fixes
+  - Fix Marketplace publish failure caused by display-name conflict on `QuickTask`.
+
+  ## Internal Improvements
+  - Update release/install docs to reference the current marketplace publisher identity.
+
+  ## Breaking Changes
+  - None.
+
 ## 0.2.3
 
 ### Patch Changes
