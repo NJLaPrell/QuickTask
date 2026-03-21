@@ -33,6 +33,8 @@ Each release-relevant PR should include:
 Before running the `Release` workflow, run pre-release readiness:
 
 1. Ask the assistant to prepare release readiness, or run `pnpm release:prepare`.
+   - Default scope is `phase-2` (Phase 1 + Phase 2 tasks).
+   - Use `RELEASE_PREP_SCOPE=all-phases pnpm release:prepare` for full-product readiness.
 2. Review `docs/release-readiness-report.md`.
 3. Treat medium/high findings as blocking.
 4. Convert findings into `TASKS.md` updates:

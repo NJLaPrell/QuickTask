@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 
 const reportPath = "docs/release-readiness-report.md";
 const timestamp = new Date().toISOString();
+const releasePrepScope = (process.env.RELEASE_PREP_SCOPE ?? "phase-2").trim().toLowerCase();
 
 const commandChecks = [
   {
@@ -42,27 +43,20 @@ const commandChecks = [
   }
 ];
 
-const releaseReadinessTaskIds = new Set([
-  "T010",
-  "T011",
-  "T012",
-  "T013",
-  "T014",
-  "T015",
-  "T016",
-  "T017",
-  "T018",
-  "T019",
-  "T020",
-  "T021",
-  "T024",
-  "T025",
-  "T026",
-  "T027",
-  "T028",
-  "T032",
-  "T033"
-]);
+const scopeToPhases = {
+  "phase-2": new Set(["Phase 1", "Phase 2"]),
+  "all-phases": new Set(["Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5", "Phase 6"])
+};
+
+function resolveTargetPhases() {
+  const phases = scopeToPhases[releasePrepScope];
+  if (!phases) {
+    throw new Error(
+      `Unsupported RELEASE_PREP_SCOPE "${releasePrepScope}". Use one of: ${Object.keys(scopeToPhases).join(", ")}`
+    );
+  }
+  return phases;
+}
 
 function runCheck(check) {
   const startedAt = Date.now();
@@ -85,20 +79,40 @@ function runCheck(check) {
 
 function readOpenReleaseReadinessTasks() {
   const content = readFileSync("TASKS.md", "utf8");
+  const targetPhases = resolveTargetPhases();
+  const milestoneStart = content.indexOf("## Milestone execution order");
+  const milestoneEnd = content.indexOf("## Completed tasks (not yet archived)");
+  const milestoneSection =
+    milestoneStart !== -1 && milestoneEnd !== -1
+      ? content.slice(milestoneStart, milestoneEnd)
+      : content;
+  const lines = milestoneSection.split("\n");
   const openTasks = [];
-  const lineRegex = /^- \[ \] (T\d+) - (.+) \((P\d)\)$/gm;
-  let match;
-  while ((match = lineRegex.exec(content)) !== null) {
-    const taskId = match[1];
-    if (!releaseReadinessTaskIds.has(taskId)) {
+  let currentPhase = "";
+  const phaseRegex = /^### (Phase \d+) - /;
+  const openTaskRegex = /^- \[ \] (T\d+) - (.+) \((P\d)\)$/;
+
+  for (const line of lines) {
+    const phaseMatch = line.match(phaseRegex);
+    if (phaseMatch) {
+      currentPhase = phaseMatch[1];
       continue;
     }
+
+    const taskMatch = line.match(openTaskRegex);
+    if (!taskMatch || !targetPhases.has(currentPhase)) {
+      continue;
+    }
+
+    const taskId = taskMatch[1];
     openTasks.push({
       taskId,
-      title: match[2],
-      priority: match[3]
+      title: taskMatch[2],
+      priority: taskMatch[3],
+      phase: currentPhase
     });
   }
+
   return openTasks;
 }
 
@@ -122,7 +136,7 @@ function buildFindings(results, openReadinessTasks) {
       severity: "medium",
       source: "tasks-backlog",
       summary: `Open release-readiness task remains: ${task.taskId}`,
-      details: `${task.taskId} (${task.priority}) - ${task.title}`,
+      details: `${task.phase} | ${task.taskId} (${task.priority}) - ${task.title}`,
       existingTaskId: task.taskId
     });
   }
@@ -136,6 +150,7 @@ function renderReport(results, findings) {
     "# Release Readiness Report",
     "",
     `- Generated at: ${timestamp}`,
+    `- Scope target: ${releasePrepScope}`,
     "- Scope: pre-release readiness checks before `Release` workflow handoff",
     "- Blocking policy: medium/high findings block handoff",
     "",

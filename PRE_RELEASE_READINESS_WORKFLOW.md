@@ -22,6 +22,8 @@ Release handoff is allowed only when there are no medium/high findings.
 
 1. Run:
    - `pnpm release:prepare`
+   - Default scope is `phase-2` (Phase 1 + Phase 2 tasks only).
+   - Optional full-product scope: `RELEASE_PREP_SCOPE=all-phases pnpm release:prepare`
 2. Review `docs/release-readiness-report.md`.
 3. For each finding:
    - If it maps to an existing task, update that task section in `TASKS.md` with validation evidence.
@@ -40,7 +42,9 @@ Release handoff is allowed only when there are no medium/high findings.
 - `pnpm test`
 - `pnpm build`
 - `pnpm release:docs-check` (with readiness defaults)
-- Existing open release-readiness tasks in `TASKS.md` (as medium findings)
+- Existing open `TASKS.md` tasks in the selected scope:
+  - default: Phase 1 + Phase 2 (`phase-2`)
+  - optional: all phases (`all-phases`)
 
 ## Task system policy (required)
 
