@@ -47,7 +47,7 @@ Working rules for all tasks:
 - [x] T008 - Define runtime result contract for host adapters
 - [x] T034 - Define improvement proposal lifecycle contract
 - [x] T007 - Implement improvement acceptance and overwrite behavior
-- [ ] T022 - Define stable core API surface for adapters
+- [x] T022 - Define stable core API surface for adapters
 - [ ] T023 - Harden file-backed storage error handling
 - [ ] T029 - Define runtime diagnostics and error observability
 - [ ] T030 - Add persisted template corruption recovery strategy
@@ -88,6 +88,7 @@ Working rules for all tasks:
 - [x] T008 - Define runtime result contract for host adapters
 - [x] T034 - Define improvement proposal lifecycle contract
 - [x] T007 - Implement improvement acceptance and overwrite behavior
+- [x] T022 - Define stable core API surface for adapters
 
 ## Active task backlog
 
@@ -337,6 +338,7 @@ Working rules for all tasks:
 - Dependencies: T015.
 
 ## T022 - Define stable core API surface for adapters
+- Status: [x] complete (not yet archived)
 - Goal: Ensure host adapters consume a documented, stable `@quicktask/core` API.
 - Files: `packages/core/src/index.ts`, core types/runtime files, tests/docs.
 - Steps:
