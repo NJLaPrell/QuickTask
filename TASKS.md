@@ -62,7 +62,7 @@ Working rules for all tasks:
 - [x] T035 - Publish canonical command and result contract docs (P0)
 - [x] T036 - Define proposal persistence and TTL policy (P0)
 - [x] T037 - Return structured runtime errors for parse failures (P0)
-- [ ] T038 - Add adapter rendering matrix from result contract (P1)
+- [x] T038 - Add adapter rendering matrix from result contract (P1)
 - [ ] T039 - Define concurrent template write policy and tests (P1)
 
 ### Phase 3 - Host integrations
@@ -112,6 +112,7 @@ Working rules for all tasks:
 - [x] T035 - Publish canonical command and result contract docs (P0)
 - [x] T036 - Define proposal persistence and TTL policy (P0)
 - [x] T037 - Return structured runtime errors for parse failures (P0)
+- [x] T038 - Add adapter rendering matrix from result contract (P1)
 
 ## Active task backlog
 
@@ -632,6 +633,7 @@ Working rules for all tasks:
 - Dependencies: T003, T008, T029.
 
 ## T038 - Add adapter rendering matrix from result contract
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Define exactly how each host should render each runtime result code and required user actions.
 - Files: new doc under `docs/`, adapter integration docs in `packages/vscode-extension`, `.cursor/commands`, and `packages/openclaw-plugin` as needed.
@@ -647,6 +649,7 @@ Working rules for all tasks:
 - Dependencies: T008, T022.
 
 ## T039 - Define concurrent template write policy and tests
+- Status: [ ] not done
 - Priority: P1
 - Goal: Prevent inconsistent template state when multiple host processes write the same task concurrently.
 - Files: `packages/core/src/store.ts`, runtime/store tests, docs.

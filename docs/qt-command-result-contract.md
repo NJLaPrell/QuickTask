@@ -6,6 +6,7 @@ This document is the canonical source of truth for:
 - core runtime result codes returned by `@quicktask/core`.
 
 User-facing docs and host adapter docs should reference this file rather than restating behavior independently.
+Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matrix.md`.
 
 ## Command forms
 
@@ -58,4 +59,5 @@ When command parsing or result types change:
 1. Update `packages/core/src/types.ts` and parser/runtime tests.
 2. Update this document in the same PR.
 3. Update `README.md` command examples if user-facing commands changed.
-4. Link host adapter docs to this file instead of duplicating command/result details.
+4. Update `docs/qt-adapter-rendering-matrix.md` when result codes or payload shapes change.
+5. Link host adapter docs to these canonical docs instead of duplicating command/result details.
