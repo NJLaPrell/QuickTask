@@ -20,6 +20,7 @@ jobs:
           files: |
             packages/**
             scripts/**
+            .changeset/**
             .github/workflows/release.yml
             RELEASE_STRATEGY.md
             README.md
