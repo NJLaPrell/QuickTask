@@ -99,6 +99,10 @@ This provides hard gating: the release cannot proceed without explicit docs sync
 ## Scope notes
 
 - RC builds are validation-only and do not publish final releases.
-- Marketplace publishing is out of scope for this workflow.
+- VS Code Marketplace publication runs through a separate manual workflow:
+  - workflow: `Publish VS Code Marketplace`
+  - dispatch input: `release_tag` (`vX.Y.Z`)
+  - required repository secret: `VSCE_PAT` (Visual Studio Marketplace personal access token with publish scope)
+  - behavior: checks out the release tag, validates the tag matches `packages/vscode-extension/package.json` version, packages VSIX, and publishes with `vsce`.
 
-Those flows are tracked by release backlog tasks in `TASKS.md`.
+Marketplace publishing remains decoupled from the GitHub release workflow so release tagging/publication and marketplace rollout can be controlled independently.

@@ -1,9 +1,15 @@
 {
   "name": "quicktask-vscode",
   "displayName": "QuickTask",
+  "description": "Reusable /qt task workflows for AI chat in VS Code.",
   "version": "0.2.2",
   "private": true,
   "publisher": "njlaprell",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NJLaPrell/QuickTask.git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -42,7 +48,8 @@
     "check": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist",
     "test": "pnpm run build && node --test test/**/*.test.mjs",
-    "package:vsix": "pnpm run build && mkdir -p ../../artifacts && pnpm exec vsce package --follow-symlinks --allow-missing-repository --out ../../artifacts/quicktask-vscode-v$npm_package_version.vsix"
+    "package:vsix": "pnpm run build && mkdir -p ../../artifacts && pnpm exec vsce package --follow-symlinks --allow-missing-repository --out ../../artifacts/quicktask-vscode-v$npm_package_version.vsix",
+    "publish:marketplace": "pnpm run package:vsix && pnpm exec vsce publish --packagePath ../../artifacts/quicktask-vscode-v$npm_package_version.vsix"
   },
   "dependencies": {
     "@quicktask/core": "file:../core"
