@@ -322,6 +322,23 @@ test('returns storage error result when template write fails', () => {
   assert.match(result.message, /Failed to save task template|ENOTDIR/)
 })
 
+test('returns storage error result when a concurrent write lock exists', () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-lock-runtime-'))
+  try {
+    writeFileSync(path.join(tasksDir, 'summarize.md.lock'), `${process.pid}`, 'utf8')
+    const runtime = createQtRuntime(createFileTaskStore({ tasksDir }))
+    const result = runtime.handle('/qt summarize cannot write while locked')
+
+    assert.equal(result.kind, 'error')
+    assert.equal(result.code, 'qt:storage:error')
+    assert.equal(result.diagnosticCode, 'storage-io-failure')
+    assert.match(result.requestId, /^qt-/)
+    assert.match(result.message, /Concurrent write in progress/)
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true })
+  }
+})
+
 test('returns storage error result and recovers when template file is corrupted', () => {
   const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-corrupt-runtime-'))
   try {

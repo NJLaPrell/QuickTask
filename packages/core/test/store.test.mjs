@@ -85,6 +85,28 @@ test('overwrite writes updated content to disk', () => {
   }
 })
 
+test('fails fast when a concurrent write lock exists', () => {
+  const { store, cleanup } = withTempStoreDir()
+  const template = {
+    taskName: 'summarize',
+    filename: 'summarize.md',
+    body: '# summarize\nlocked write'
+  }
+
+  try {
+    const lockPath = path.join(store.tasksDir, 'summarize.md.lock')
+    writeFileSync(lockPath, `${process.pid}`, 'utf8')
+
+    assert.throws(
+      () => saveTaskTemplate(store, template),
+      /Concurrent write in progress/
+    )
+    assert.equal(getTaskTemplate(store, 'summarize'), undefined)
+  } finally {
+    cleanup()
+  }
+})
+
 test('reads legacy unversioned template files', () => {
   const { store, cleanup } = withTempStoreDir()
   try {
