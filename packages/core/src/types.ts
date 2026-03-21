@@ -56,7 +56,12 @@ export type ImprovementProposal = {
   proposedTemplate: string
 }
 
-export type ImprovementProposalStatus = 'proposed' | 'accepted' | 'rejected' | 'abandoned'
+export type ImprovementProposalStatus =
+  | 'proposed'
+  | 'accepted'
+  | 'rejected'
+  | 'abandoned'
+  | 'expired'
 
 export type RuntimeDiagnosticEvent = {
   requestId: string
@@ -126,6 +131,7 @@ export type QtRuntimeResult =
         | 'qt:improve:accept:applied'
         | 'qt:improve:reject:recorded'
         | 'qt:improve:abandon:recorded'
+        | 'qt:improve:proposal-expired'
         | 'qt:improve:already-finalized'
       taskName: string
       action: QtImproveAction

@@ -8,12 +8,23 @@ type PendingProposal = {
   oldTemplate: string
   proposedTemplate: string
   status: ImprovementProposalStatus
+  createdAtMs: number
 }
 
-export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
+export type CreateQtRuntimeOptions = {
+  proposalTtlMs?: number
+  now?: () => number
+}
+
+export function createQtRuntime(
+  store: FileTaskStore = createFileTaskStore(),
+  options: CreateQtRuntimeOptions = {}
+) {
   const proposals = new Map<string, PendingProposal>()
   const diagnostics: RuntimeDiagnosticEvent[] = []
   let requestCounter = 0
+  const proposalTtlMs = options.proposalTtlMs ?? 30 * 60 * 1000
+  const now = options.now ?? (() => Date.now())
 
   function nextRequestId(): string {
     requestCounter += 1
@@ -40,6 +51,10 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
       code: result.code
     })
     return result
+  }
+
+  function isProposalExpired(proposal: PendingProposal): boolean {
+    return now() - proposal.createdAtMs > proposalTtlMs
   }
 
   return {
@@ -119,7 +134,21 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
               kind: 'not_found',
               code: 'qt:improve:proposal-not-found',
               taskName: command.taskName,
-              message: `No proposal exists for ${command.taskName} with ID ${command.proposalId}.`
+              message: `No active proposal exists for ${command.taskName} with ID ${command.proposalId}. Proposals are session-scoped and may expire or be cleared after restart.`
+            })
+          }
+
+          if (isProposalExpired(proposal)) {
+            proposal.status = 'expired'
+            proposals.delete(command.proposalId)
+            return finalizeResult(requestId, command.kind, {
+              kind: 'improve_action',
+              code: 'qt:improve:proposal-expired',
+              taskName: proposal.taskName,
+              action: command.action,
+              proposalId: command.proposalId,
+              status: proposal.status,
+              message: `Proposal ${command.proposalId} expired before action. Create a new proposal with /qt improve ${proposal.taskName} [input].`
             })
           }
 
@@ -207,7 +236,8 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
           taskName: command.taskName,
           oldTemplate: proposal.oldTemplate,
           proposedTemplate: proposal.proposedTemplate,
-          status: 'proposed'
+          status: 'proposed',
+          createdAtMs: now()
         })
 
         return finalizeResult(requestId, command.kind, {

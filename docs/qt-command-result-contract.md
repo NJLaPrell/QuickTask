@@ -39,8 +39,16 @@ User-facing docs and host adapter docs should reference this file rather than re
 - `qt:improve:accept:applied`
 - `qt:improve:reject:recorded`
 - `qt:improve:abandon:recorded`
+- `qt:improve:proposal-expired`
 - `qt:improve:already-finalized`
 - `qt:storage:error`
+
+## Proposal lifecycle storage policy
+
+- Improve proposals are session-scoped in runtime memory.
+- Proposals are not persisted across runtime restarts.
+- Proposal actions use a TTL window (default 30 minutes in runtime) and return `qt:improve:proposal-expired` when stale.
+- When no active proposal exists (including restart/lifecycle reset), runtime returns `qt:improve:proposal-not-found`.
 
 ## Lightweight drift-check checklist
 

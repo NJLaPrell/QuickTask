@@ -202,6 +202,47 @@ test('improve lifecycle handles proposal not found', () => {
   }
 })
 
+test('improve lifecycle proposal IDs are session-scoped across restart', () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-runtime-session-'))
+  try {
+    const runtimeA = createQtRuntime(createFileTaskStore({ tasksDir }))
+    runtimeA.handle('/qt summarize baseline instructions')
+    const proposal = runtimeA.handle('/qt improve summarize session scoped change')
+    assert.equal(proposal.kind, 'improve_proposed')
+
+    const runtimeB = createQtRuntime(createFileTaskStore({ tasksDir }))
+    const result = runtimeB.handle(`/qt improve accept summarize ${proposal.proposalId}`)
+    assert.equal(result.kind, 'not_found')
+    assert.equal(result.code, 'qt:improve:proposal-not-found')
+    assert.match(result.message, /session-scoped/)
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true })
+  }
+})
+
+test('improve lifecycle returns proposal-expired when ttl is exceeded', () => {
+  let currentTime = 1_000
+  const now = () => currentTime
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-runtime-ttl-'))
+  try {
+    const runtime = createQtRuntime(createFileTaskStore({ tasksDir }), {
+      proposalTtlMs: 1000,
+      now
+    })
+    runtime.handle('/qt summarize baseline instructions')
+    const proposal = runtime.handle('/qt improve summarize ttl change')
+    assert.equal(proposal.kind, 'improve_proposed')
+
+    currentTime += 2000
+    const result = runtime.handle(`/qt improve accept summarize ${proposal.proposalId}`)
+    assert.equal(result.kind, 'improve_action')
+    assert.equal(result.code, 'qt:improve:proposal-expired')
+    assert.equal(result.status, 'expired')
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true })
+  }
+})
+
 test('improve reject and abandon do not apply template changes', () => {
   const { runtime, cleanup } = createRuntimeForTest()
   try {
