@@ -122,19 +122,14 @@ Run:
 pnpm release:prepare
 ```
 
-Default release-prep scope is `phase-2` (Phase 1 + Phase 2 tasks only).
-For full-product readiness across all phases, run:
-
-```bash
-RELEASE_PREP_SCOPE=all-phases pnpm release:prepare
-```
+Release-prep scope is full-product across all phases.
 
 This command:
 
 - runs full-hardening checks (`check`, `test`, `build`, docs gate),
 - writes `docs/release-readiness-report.md`,
-- treats `medium` and `high` findings as blocking,
-- reports open `TASKS.md` tasks from the selected readiness scope.
+- treats only new `medium`/`high` findings for the current release phase as blocking,
+- reports open `TASKS.md` tasks from all phases.
 
 After each run:
 
