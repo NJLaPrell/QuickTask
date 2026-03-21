@@ -7,6 +7,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "pnpm run build && node --test test/**/*.test.mjs"
+  },
+  "dependencies": {
+    "@quicktask/core": "workspace:*"
   }
 }

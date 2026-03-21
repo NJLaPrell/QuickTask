@@ -86,6 +86,17 @@ Keep behavior aligned with canonical docs:
 
 When command/result behavior changes, update contracts and tests in the same PR.
 
+## Host adapter validation (Phase 3)
+
+For VS Code and OpenClaw adapter boundary updates:
+
+```bash
+pnpm --filter quicktask-vscode test
+pnpm --filter quicktask-openclaw test
+```
+
+These tests validate command normalization, runtime-boundary routing, and result rendering behavior without duplicating core task logic.
+
 ## Validation expectations
 
 At minimum for implementation PRs:

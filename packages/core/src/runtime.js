@@ -1,56 +1,233 @@
 import { parseQtCommand } from './parser.js';
-import { createInMemoryTaskStore, getTaskTemplate, saveTaskTemplate } from './store.js';
+import { createFileTaskStore, getTaskTemplate, saveTaskTemplate } from './store.js';
 import { createTaskTemplate, proposeTemplateImprovement } from './templates.js';
-export function createQtRuntime(store = createInMemoryTaskStore()) {
+export function createQtRuntime(store = createFileTaskStore(), options = {}) {
+    const proposals = new Map();
+    const diagnostics = [];
+    let requestCounter = 0;
+    const proposalTtlMs = options.proposalTtlMs ?? 30 * 60 * 1000;
+    const now = options.now ?? (() => Date.now());
+    function nextRequestId() {
+        requestCounter += 1;
+        return `qt-${Date.now().toString(36)}-${requestCounter.toString(36)}`;
+    }
+    function recordDiagnostic(event) {
+        diagnostics.push(event);
+        if (diagnostics.length > 100) {
+            diagnostics.shift();
+        }
+    }
+    function finalizeResult(requestId, commandKind, result) {
+        recordDiagnostic({
+            requestId,
+            timestamp: new Date().toISOString(),
+            phase: 'command.completed',
+            commandKind,
+            code: result.code
+        });
+        return result;
+    }
+    function isProposalExpired(proposal) {
+        return now() - proposal.createdAtMs > proposalTtlMs;
+    }
     return {
         store,
+        getDiagnostics() {
+            return diagnostics.slice();
+        },
         handle(input) {
-            const command = parseQtCommand(input);
-            if (command.kind === 'menu') {
-                return {
-                    title: 'QuickTask Help',
-                    message: 'Use /qt to view help, /qt [task] [instructions] to define a task, /qt/[task] [input] to run a task, and /qt improve [task] [input] to propose a template improvement.'
-                };
-            }
-            if (command.kind === 'create') {
-                const template = createTaskTemplate(command.taskName, command.instructions);
-                saveTaskTemplate(store, template);
-                return {
-                    title: `Created ${template.filename}`,
-                    message: template.body
-                };
-            }
-            if (command.kind === 'incomplete') {
-                return {
-                    title: 'Incomplete Command',
-                    message: `Missing required input. Usage: ${command.usage}`
-                };
-            }
-            if (command.kind === 'run') {
+            const requestId = nextRequestId();
+            let commandKind = 'invalid_input';
+            try {
+                const command = parseQtCommand(input);
+                commandKind = command.kind;
+                recordDiagnostic({
+                    requestId,
+                    timestamp: new Date().toISOString(),
+                    phase: 'command.received',
+                    commandKind
+                });
+                if (command.kind === 'menu') {
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'help',
+                        code: 'qt:help',
+                        usage: [
+                            '/qt',
+                            '/qt [task] [instructions]',
+                            '/qt/[task] [input]',
+                            '/qt improve [task] [input]'
+                        ]
+                    });
+                }
+                if (command.kind === 'create') {
+                    if (!command.instructions.trim()) {
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'clarification',
+                            code: 'qt:create:clarify',
+                            taskName: command.taskName,
+                            usage: `/qt ${command.taskName} [instructions]`,
+                            message: `Please provide instructions for ${command.taskName}.`
+                        });
+                    }
+                    const existingTemplate = getTaskTemplate(store, command.taskName);
+                    if (existingTemplate) {
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'already_exists',
+                            code: 'qt:create:already-exists',
+                            taskName: command.taskName,
+                            message: `A template already exists for ${command.taskName}. Use /qt/${command.taskName} [input] to run it or /qt improve ${command.taskName} [input] to propose changes.`
+                        });
+                    }
+                    const template = createTaskTemplate(command.taskName, command.instructions);
+                    saveTaskTemplate(store, template);
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'created',
+                        code: 'qt:create:created',
+                        taskName: template.taskName,
+                        filename: template.filename,
+                        templateBody: template.body
+                    });
+                }
+                if (command.kind === 'incomplete') {
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'incomplete',
+                        code: 'qt:incomplete',
+                        usage: command.usage,
+                        message: `Missing required input. Usage: ${command.usage}`
+                    });
+                }
+                if (command.kind === 'improve_action') {
+                    const proposal = proposals.get(command.proposalId);
+                    if (!proposal || proposal.taskName !== command.taskName) {
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'not_found',
+                            code: 'qt:improve:proposal-not-found',
+                            taskName: command.taskName,
+                            message: `No active proposal exists for ${command.taskName} with ID ${command.proposalId}. Proposals are session-scoped and may expire or be cleared after restart.`
+                        });
+                    }
+                    if (isProposalExpired(proposal)) {
+                        proposal.status = 'expired';
+                        proposals.delete(command.proposalId);
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'improve_action',
+                            code: 'qt:improve:proposal-expired',
+                            taskName: proposal.taskName,
+                            action: command.action,
+                            proposalId: command.proposalId,
+                            status: proposal.status,
+                            message: `Proposal ${command.proposalId} expired before action. Create a new proposal with /qt improve ${proposal.taskName} [input].`
+                        });
+                    }
+                    if (proposal.status !== 'proposed') {
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'improve_action',
+                            code: 'qt:improve:already-finalized',
+                            taskName: proposal.taskName,
+                            action: command.action,
+                            proposalId: command.proposalId,
+                            status: proposal.status,
+                            message: `Proposal ${command.proposalId} is already ${proposal.status}.`
+                        });
+                    }
+                    if (command.action === 'accept') {
+                        saveTaskTemplate(store, {
+                            taskName: proposal.taskName,
+                            filename: '',
+                            body: proposal.proposedTemplate
+                        });
+                        proposal.status = 'accepted';
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'improve_action',
+                            code: 'qt:improve:accept:applied',
+                            taskName: proposal.taskName,
+                            action: command.action,
+                            proposalId: command.proposalId,
+                            status: proposal.status,
+                            message: `Proposal ${command.proposalId} accepted and applied to ${proposal.taskName}.`
+                        });
+                    }
+                    proposal.status = command.action === 'reject' ? 'rejected' : 'abandoned';
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'improve_action',
+                        code: command.action === 'reject'
+                            ? 'qt:improve:reject:recorded'
+                            : 'qt:improve:abandon:recorded',
+                        taskName: proposal.taskName,
+                        action: command.action,
+                        proposalId: command.proposalId,
+                        status: proposal.status,
+                        message: `Proposal ${command.proposalId} ${proposal.status}.`
+                    });
+                }
+                if (command.kind === 'run') {
+                    const template = getTaskTemplate(store, command.taskName);
+                    if (!template) {
+                        return finalizeResult(requestId, command.kind, {
+                            kind: 'not_found',
+                            code: 'qt:run:not-found',
+                            taskName: command.taskName,
+                            message: `No template exists yet for ${command.taskName}.`
+                        });
+                    }
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'run_executed',
+                        code: 'qt:run:executed',
+                        taskName: template.taskName,
+                        templateBody: template.body,
+                        userInput: command.userInput
+                    });
+                }
                 const template = getTaskTemplate(store, command.taskName);
                 if (!template) {
-                    return {
-                        title: 'Task Not Found',
+                    return finalizeResult(requestId, command.kind, {
+                        kind: 'not_found',
+                        code: 'qt:improve:not-found',
+                        taskName: command.taskName,
                         message: `No template exists yet for ${command.taskName}.`
-                    };
+                    });
                 }
+                const proposal = proposeTemplateImprovement(command.taskName, template.body, command.userInput);
+                proposals.set(proposal.proposalId, {
+                    taskName: command.taskName,
+                    oldTemplate: proposal.oldTemplate,
+                    proposedTemplate: proposal.proposedTemplate,
+                    status: 'proposed',
+                    createdAtMs: now()
+                });
+                return finalizeResult(requestId, command.kind, {
+                    kind: 'improve_proposed',
+                    code: 'qt:improve:proposed',
+                    taskName: command.taskName,
+                    proposalId: proposal.proposalId,
+                    source: proposal.source,
+                    oldTemplate: proposal.oldTemplate,
+                    proposedTemplate: proposal.proposedTemplate
+                });
+            }
+            catch (error) {
+                const isParseError = error instanceof Error && error.message === 'Input is not a QuickTask command.';
+                const errorCode = isParseError
+                    ? 'qt:parse:error'
+                    : 'qt:storage:error';
+                const diagnosticCode = isParseError
+                    ? 'parse-invalid-input'
+                    : 'storage-io-failure';
+                recordDiagnostic({
+                    requestId,
+                    timestamp: new Date().toISOString(),
+                    phase: 'command.failed',
+                    commandKind,
+                    code: errorCode
+                });
                 return {
-                    title: `Run ${template.taskName}`,
-                    message: `Template:\n\n${template.body}\n\nUser input:\n${command.userInput}`
+                    kind: 'error',
+                    code: errorCode,
+                    diagnosticCode,
+                    requestId,
+                    message: error instanceof Error ? error.message : 'An unknown runtime error occurred while handling QuickTask command.'
                 };
             }
-            const template = getTaskTemplate(store, command.taskName);
-            if (!template) {
-                return {
-                    title: 'Task Not Found',
-                    message: `No template exists yet for ${command.taskName}.`
-                };
-            }
-            const proposal = proposeTemplateImprovement(command.taskName, template.body, command.userInput);
-            return {
-                title: `Improve ${command.taskName}`,
-                message: `Old template:\n\n${proposal.oldTemplate}\n\nProposed template:\n\n${proposal.proposedTemplate}`
-            };
         }
     };
 }
