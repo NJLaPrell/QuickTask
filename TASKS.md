@@ -51,24 +51,24 @@ Working rules for all tasks:
 ### Phase 2 - Core behavior and reliability
 
 - Success measure: All core create/run/improve lifecycles are contract-stable, failure-safe, and fully test-backed.
-- [x] T004 - Implement template creation flow from user instructions (P0)
-- [x] T005 - Implement existing task execution flow (P0)
-- [x] T006 - Implement improvement proposal flow (P0)
-- [x] T008 - Define runtime result contract for host adapters (P0)
-- [x] T015 - Add repo-wide build and test workflow (P0)
-- [x] T034 - Define improvement proposal lifecycle contract (P0)
-- [x] T007 - Implement improvement acceptance and overwrite behavior (P0)
-- [x] T022 - Define stable core API surface for adapters (P0)
-- [x] T023 - Harden file-backed storage error handling (P0)
-- [x] T029 - Define runtime diagnostics and error observability (P0)
-- [x] T030 - Add persisted template corruption recovery strategy (P0)
-- [x] T031 - Add template format versioning and migration path (P0)
-- [x] T035 - Publish canonical command and result contract docs (P0)
-- [x] T036 - Define proposal persistence and TTL policy (P0)
-- [x] T037 - Return structured runtime errors for parse failures (P0)
-- [x] T038 - Add adapter rendering matrix from result contract (P1)
-- [x] T039 - Define concurrent template write policy and tests (P1)
-- [x] T040 - Add stale write-lock recovery policy and tests (P1)
+- [h] T004 - Implement template creation flow from user instructions (P0)
+- [h] T005 - Implement existing task execution flow (P0)
+- [h] T006 - Implement improvement proposal flow (P0)
+- [h] T008 - Define runtime result contract for host adapters (P0)
+- [h] T015 - Add repo-wide build and test workflow (P0)
+- [h] T034 - Define improvement proposal lifecycle contract (P0)
+- [h] T007 - Implement improvement acceptance and overwrite behavior (P0)
+- [h] T022 - Define stable core API surface for adapters (P0)
+- [h] T023 - Harden file-backed storage error handling (P0)
+- [h] T029 - Define runtime diagnostics and error observability (P0)
+- [h] T030 - Add persisted template corruption recovery strategy (P0)
+- [h] T031 - Add template format versioning and migration path (P0)
+- [h] T035 - Publish canonical command and result contract docs (P0)
+- [h] T036 - Define proposal persistence and TTL policy (P0)
+- [h] T037 - Return structured runtime errors for parse failures (P0)
+- [h] T038 - Add adapter rendering matrix from result contract (P1)
+- [h] T039 - Define concurrent template write policy and tests (P1)
+- [h] T040 - Add stale write-lock recovery policy and tests (P1)
 
 ### Phase 3 - Host integrations
 
@@ -82,84 +82,47 @@ Working rules for all tasks:
 ### Phase 4 - CI and quality controls
 
 - Success measure: CI enforces build/test/lint/security/compatibility standards and blocks regressions before merge.
-- [x] T015 - Add repo-wide build and test workflow (P0)
-- [x] T021 - Add linting and formatting quality gates (P1)
-- [x] T024 - Add host-level end-to-end smoke tests (P1)
-- [x] T027 - Define support matrix and compatibility policy (P1)
-- [x] T028 - Add dependency and supply-chain security scanning (P1)
-- [x] T033 - Add repository governance and release guardrails (P1)
-- [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
-- [x] T042 - Add release readiness preflight for pending changesets (P1)
-- [x] T043 - Add CI check for package manager config consistency (P1)
-- [x] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
+- [h] T015 - Add repo-wide build and test workflow (P0)
+- [h] T021 - Add linting and formatting quality gates (P1)
+- [h] T024 - Add host-level end-to-end smoke tests (P1)
+- [h] T027 - Define support matrix and compatibility policy (P1)
+- [h] T028 - Add dependency and supply-chain security scanning (P1)
+- [h] T033 - Add repository governance and release guardrails (P1)
+- [h] T041 - Add pre-release readiness workflow and report pipeline (P1)
+- [h] T042 - Add release readiness preflight for pending changesets (P1)
+- [h] T043 - Add CI check for package manager config consistency (P1)
+- [h] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
 
 ### Phase 5 - Packaging and release operations
 
 - Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
-- [x] T016 - Add VSIX packaging for the VS Code extension (P1)
-- [x] T017 - Add OpenClaw package build artifact (P1)
-- [x] T018 - Add release workflow for GitHub Releases (P1)
-- [x] T025 - Add release versioning and changelog workflow (P1)
-- [x] T026 - Add post-release install verification checks (P1)
-- [x] T032 - Add release-candidate validation workflow (P1)
-- [x] T045 - Add single-command release handoff wrapper (P2)
-- [x] T046 - Publish installable release assets on GitHub releases (P1)
-- [x] T047 - Add curated user-focused release notes layer (P1)
-- [x] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
-- [x] T049 - Define first-public-release version baseline policy (P2)
+- [h] T016 - Add VSIX packaging for the VS Code extension (P1)
+- [h] T017 - Add OpenClaw package build artifact (P1)
+- [h] T018 - Add release workflow for GitHub Releases (P1)
+- [h] T025 - Add release versioning and changelog workflow (P1)
+- [h] T026 - Add post-release install verification checks (P1)
+- [h] T032 - Add release-candidate validation workflow (P1)
+- [h] T045 - Add single-command release handoff wrapper (P2)
+- [h] T046 - Publish installable release assets on GitHub releases (P1)
+- [h] T047 - Add curated user-focused release notes layer (P1)
+- [h] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
+- [h] T049 - Define first-public-release version baseline policy (P2)
 
 ### Phase 6 - Distribution and docs
 
 - Success measure: Users can discover, install, and upgrade QuickTask across hosts using clear docs and repeatable publishing paths.
-- [ ] T019 - Add VS Code Marketplace publishing workflow (P2)
-- [ ] T020 - Write installation and release documentation (P2)
+- [h] T019 - Add VS Code Marketplace publishing workflow (P2)
+- [h] T020 - Write installation and release documentation (P2)
 
 ## Completed tasks (not yet archived)
 
-- [x] T004 - Implement template creation flow from user instructions (P0)
-- [x] T005 - Implement existing task execution flow (P0)
-- [x] T006 - Implement improvement proposal flow (P0)
-- [x] T008 - Define runtime result contract for host adapters (P0)
-- [x] T034 - Define improvement proposal lifecycle contract (P0)
-- [x] T007 - Implement improvement acceptance and overwrite behavior (P0)
-- [x] T022 - Define stable core API surface for adapters (P0)
-- [x] T023 - Harden file-backed storage error handling (P0)
-- [x] T031 - Add template format versioning and migration path (P0)
-- [x] T030 - Add persisted template corruption recovery strategy (P0)
-- [x] T029 - Define runtime diagnostics and error observability (P0)
-- [x] T035 - Publish canonical command and result contract docs (P0)
-- [x] T036 - Define proposal persistence and TTL policy (P0)
-- [x] T037 - Return structured runtime errors for parse failures (P0)
-- [x] T038 - Add adapter rendering matrix from result contract (P1)
-- [x] T039 - Define concurrent template write policy and tests (P1)
-- [x] T040 - Add stale write-lock recovery policy and tests (P1)
-- [x] T015 - Add repo-wide build and test workflow (P0)
-- [x] T016 - Add VSIX packaging for the VS Code extension (P1)
-- [x] T017 - Add OpenClaw package build artifact (P1)
-- [x] T018 - Add release workflow for GitHub Releases (P1)
-- [x] T021 - Add linting and formatting quality gates (P1)
-- [x] T024 - Add host-level end-to-end smoke tests (P1)
-- [x] T025 - Add release versioning and changelog workflow (P1)
-- [x] T026 - Add post-release install verification checks (P1)
-- [x] T027 - Define support matrix and compatibility policy (P1)
-- [x] T028 - Add dependency and supply-chain security scanning (P1)
-- [x] T032 - Add release-candidate validation workflow (P1)
-- [x] T033 - Add repository governance and release guardrails (P1)
-- [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
-- [x] T042 - Add release readiness preflight for pending changesets (P1)
-- [x] T043 - Add CI check for package manager config consistency (P1)
-- [x] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
-- [x] T045 - Add single-command release handoff wrapper (P2)
-- [x] T046 - Publish installable release assets on GitHub releases (P1)
-- [x] T047 - Add curated user-focused release notes layer (P1)
-- [x] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
-- [x] T049 - Define first-public-release version baseline policy (P2)
+- None.
 
 ## Active task backlog
 
 ## T004 - Implement template creation flow from user instructions
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Generate new task templates from user-provided instructions using the current spec.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
@@ -179,7 +142,7 @@ Working rules for all tasks:
 
 ## T005 - Implement existing task execution flow
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Execute an existing task using stored template instructions plus user input.
 - Files: `packages/core/src/runtime.ts`, supporting core files, tests.
@@ -197,7 +160,7 @@ Working rules for all tasks:
 
 ## T006 - Implement improvement proposal flow
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Generate old-versus-new template proposals for `/qt improve`.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
@@ -215,7 +178,7 @@ Working rules for all tasks:
 
 ## T007 - Implement improvement acceptance and overwrite behavior
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: When an improvement is accepted, overwrite the existing task template on disk.
 - Files: core runtime/store files, tests, docs if needed.
@@ -232,7 +195,7 @@ Working rules for all tasks:
 
 ## T008 - Define runtime result contract for host adapters
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Standardize the response shapes that VS Code, Cursor, and OpenClaw adapters consume.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, tests/docs.
@@ -248,7 +211,7 @@ Working rules for all tasks:
 
 ## T015 - Add repo-wide build and test workflow
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Add GitHub Actions CI for install, test, and build.
 - Files: `.github/workflows/*`, package scripts/config as needed.
@@ -264,7 +227,7 @@ Working rules for all tasks:
 
 ## T016 - Add VSIX packaging for the VS Code extension
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Produce a VSIX artifact from the repo build.
 - Files: extension package/config, build scripts, workflow files.
@@ -280,7 +243,7 @@ Working rules for all tasks:
 
 ## T017 - Add OpenClaw package build artifact
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Produce an installable package artifact for OpenClaw.
 - Files: OpenClaw package/config, build scripts, workflow files.
@@ -296,7 +259,7 @@ Working rules for all tasks:
 
 ## T018 - Add release workflow for GitHub Releases
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Publish release artifacts from tags or release events.
 - Files: `.github/workflows/*`, docs/scripts as needed.
@@ -313,6 +276,7 @@ Working rules for all tasks:
 
 ## T019 - Add VS Code Marketplace publishing workflow
 
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Prepare and automate publishing to the VS Code Marketplace.
 - Files: extension metadata, workflow files, docs.
@@ -325,9 +289,14 @@ Working rules for all tasks:
   - Required secrets and steps are documented.
   - Publish automation is wired or clearly staged.
 - Dependencies: T016, T018.
+- Validation evidence:
+  - Added workflow `.github/workflows/vscode-marketplace-publish.yml` with manual dispatch input `release_tag`, `VSCE_PAT` guard, release-tag/version parity check, and publish step.
+  - Added extension publish script `publish:marketplace` and publish-ready metadata in `packages/vscode-extension/package.json`.
+  - Documented secret and post-release publish procedure in `RELEASE_STRATEGY.md` and `CONTRIBUTORS.md`.
 
 ## T020 - Write installation and release documentation
 
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Document install and release flows for VS Code, Cursor, and OpenClaw.
 - Files: `README.md`, optionally supporting docs.
@@ -341,10 +310,14 @@ Working rules for all tasks:
   - Release flow is documented.
   - Marketplace publishing notes are documented.
 - Dependencies: T018, T019, T027.
+- Validation evidence:
+  - Added `README.md` install sections for VS Code Marketplace, VSIX manual install, Cursor VSIX install, and OpenClaw package install.
+  - Added `README.md` release workflow and post-release Marketplace publishing steps including required `VSCE_PAT` secret.
+  - Linked release/install reference docs for follow-through (`RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, and `docs/release-assets-and-verification.md`).
 
 ## T021 - Add linting and formatting quality gates
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Add repository-wide lint and formatting checks that run locally and in CI.
 - Files: root/package configs, package-level configs, workflow files, docs as needed.
@@ -361,7 +334,7 @@ Working rules for all tasks:
 
 ## T022 - Define stable core API surface for adapters
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Ensure host adapters consume a documented, stable `@quicktask/core` API.
 - Files: `packages/core/src/index.ts`, core types/runtime files, tests/docs.
@@ -378,7 +351,7 @@ Working rules for all tasks:
 
 ## T023 - Harden file-backed storage error handling
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Make template persistence robust across common filesystem failure modes.
 - Files: `packages/core/src/store.ts`, `packages/core/src/runtime.ts`, tests/docs.
@@ -398,7 +371,7 @@ Working rules for all tasks:
 
 ## T024 - Add host-level end-to-end smoke tests
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Validate working `/qt` flows through host adapters using built artifacts.
 - Files: host test harness files, workflow files, docs as needed.
@@ -415,7 +388,7 @@ Working rules for all tasks:
 
 ## T025 - Add release versioning and changelog workflow
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Standardize semantic versioning and changelog generation for releases.
 - Files: release docs/config/scripts/workflow files.
@@ -432,7 +405,7 @@ Working rules for all tasks:
 
 ## T026 - Add post-release install verification checks
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Confirm published artifacts are installable and usable after release.
 - Files: workflow/check scripts, release docs.
@@ -449,7 +422,7 @@ Working rules for all tasks:
 
 ## T027 - Define support matrix and compatibility policy
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Set clear compatibility expectations across hosts, OSes, and runtime versions.
 - Files: `README.md`, `ARCHITECTURE.md`, CI configs as needed.
@@ -466,7 +439,7 @@ Working rules for all tasks:
 
 ## T028 - Add dependency and supply-chain security scanning
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Detect vulnerable dependencies and risky supply-chain changes early.
 - Files: workflow files, dependency policies/docs, package configs as needed.
@@ -483,7 +456,7 @@ Working rules for all tasks:
 
 ## T029 - Define runtime diagnostics and error observability
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Make runtime and adapter failures diagnosable in development and support scenarios.
 - Files: core runtime/types files, adapter integration files, docs/tests.
@@ -500,7 +473,7 @@ Working rules for all tasks:
 
 ## T030 - Add persisted template corruption recovery strategy
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Prevent data loss and provide recovery behavior for corrupted task template files.
 - Files: `packages/core/src/store.ts`, runtime/docs/tests, scripts if needed.
@@ -517,7 +490,7 @@ Working rules for all tasks:
 
 ## T031 - Add template format versioning and migration path
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Ensure persisted templates can evolve without breaking existing user data.
 - Files: core store/runtime files, migration utilities, tests/docs.
@@ -534,7 +507,7 @@ Working rules for all tasks:
 
 ## T032 - Add release-candidate validation workflow
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Validate release artifacts in a staged RC process before final publication.
 - Files: release workflow files, docs, optional validation scripts.
@@ -551,7 +524,7 @@ Working rules for all tasks:
 
 ## T033 - Add repository governance and release guardrails
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Enforce review, ownership, and quality controls on high-impact changes.
 - Files: `CODEOWNERS`, workflow files, contributing docs.
@@ -569,7 +542,7 @@ Working rules for all tasks:
 
 ## T034 - Define improvement proposal lifecycle contract
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Standardize how improvement proposals are identified, accepted, rejected, or abandoned across hosts.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, adapter docs/tests.
@@ -587,7 +560,7 @@ Working rules for all tasks:
 
 ## T035 - Publish canonical command and result contract docs
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Keep user-facing and adapter-facing command/contract docs aligned with actual runtime behavior.
 - Files: `README.md`, `ARCHITECTURE.md`, `packages/core/src/types.ts`, new docs under `docs/` as needed.
@@ -604,7 +577,7 @@ Working rules for all tasks:
 
 ## T036 - Define proposal persistence and TTL policy
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Ensure improve proposal IDs behave deterministically across runtime restarts and long-running sessions.
 - Files: `packages/core/src/runtime.ts`, `packages/core/src/store.ts`, `packages/core/src/types.ts`, tests/docs.
@@ -621,7 +594,7 @@ Working rules for all tasks:
 
 ## T037 - Return structured runtime errors for parse failures
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P0
 - Goal: Ensure `createQtRuntime().handle()` never throws for invalid input and always returns structured error results.
 - Files: `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, parser/runtime tests.
@@ -638,7 +611,7 @@ Working rules for all tasks:
 
 ## T038 - Add adapter rendering matrix from result contract
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Define exactly how each host should render each runtime result code and required user actions.
 - Files: new doc under `docs/`, adapter integration docs in `packages/vscode-extension`, `.cursor/commands`, and `packages/openclaw-plugin` as needed.
@@ -655,7 +628,7 @@ Working rules for all tasks:
 
 ## T039 - Define concurrent template write policy and tests
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Prevent inconsistent template state when multiple host processes write the same task concurrently.
 - Files: `packages/core/src/store.ts`, runtime/store tests, docs.
@@ -672,7 +645,7 @@ Working rules for all tasks:
 
 ## T040 - Add stale write-lock recovery policy and tests
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Ensure lock-file based concurrency control can recover safely when a host process crashes and leaves stale locks behind.
 - Files: `packages/core/src/store.ts`, runtime/store tests, docs.
@@ -689,7 +662,7 @@ Working rules for all tasks:
 
 ## T041 - Add pre-release readiness workflow and report pipeline
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Standardize chat-triggered pre-release preparation with full-hardening validation and `TASKS.md`-based finding tracking before release workflow handoff.
 - Files: `package.json`, `scripts/release-prepare-readiness.mjs`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `.cursor/rules/`, `.cursor/commands/`, `RELEASE_STRATEGY.md`, `README.md`, `docs/release-readiness-report.md`.
@@ -709,7 +682,7 @@ Working rules for all tasks:
 
 ## T042 - Add release readiness preflight for pending changesets
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Catch missing changeset release inputs during readiness instead of failing late in the release workflow.
 - Files: `scripts/release-prepare-readiness.mjs`, release docs/tests, optional helper script.
@@ -726,7 +699,7 @@ Working rules for all tasks:
 
 ## T043 - Add CI check for package manager config consistency
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Prevent workflow failures from mismatched package manager version declarations across repo config and CI workflows.
 - Files: workflow files, validation scripts, docs.
@@ -743,7 +716,7 @@ Working rules for all tasks:
 
 ## T044 - Reduce release readiness report churn from timestamp-only updates
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Avoid noisy repo diffs when release readiness state is unchanged across runs.
 - Files: `scripts/release-prepare-readiness.mjs`, `docs/release-readiness-report.md`, docs.
@@ -760,7 +733,7 @@ Working rules for all tasks:
 
 ## T045 - Add single-command release handoff wrapper
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Provide one command that validates readiness state and dispatches release workflow with required inputs.
 - Files: scripts, package scripts, release docs.
@@ -777,7 +750,7 @@ Working rules for all tasks:
 
 ## T046 - Publish installable release assets on GitHub releases
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Ensure GitHub releases include installable artifacts rather than source-only outputs.
 - Files: `.github/workflows/release.yml`, packaging scripts, release docs.
@@ -794,7 +767,7 @@ Working rules for all tasks:
 
 ## T047 - Add curated user-focused release notes layer
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P1
 - Goal: Improve release note quality so published notes emphasize user-impactful changes over internal implementation noise.
 - Files: release workflow/docs/changelog templates, `.changeset` policy docs.
@@ -811,7 +784,7 @@ Working rules for all tasks:
 
 ## T048 - Publish release integrity metadata (checksums/SBOM)
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Improve trust and auditability of published release artifacts.
 - Files: release workflow files, scripts, security docs.
@@ -828,7 +801,7 @@ Working rules for all tasks:
 
 ## T049 - Define first-public-release version baseline policy
 
-- Status: [x] complete (not yet archived)
+- Status: [h] archived complete
 - Priority: P2
 - Goal: Avoid ambiguity around initial release numbering and future version transitions.
 - Files: `RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, changelog/versioning docs.
