@@ -1,10 +1,10 @@
 {
   "name": "quicktask-vscode",
-  "displayName": "QuickTask",
+  "displayName": "QuickTask Workflows",
   "description": "Reusable /qt task workflows for AI chat in VS Code.",
   "version": "0.2.3",
   "private": true,
-  "publisher": "njlaprell",
+  "publisher": "nicklaprell",
   "repository": {
     "type": "git",
     "url": "https://github.com/NJLaPrell/QuickTask.git"
