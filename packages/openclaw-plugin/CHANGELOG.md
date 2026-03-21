@@ -1,5 +1,21 @@
 # quicktask-openclaw
 
+## 0.2.3
+
+### Patch Changes
+
+- 281a771: ## New Features
+  - Add host-specific installation guidance for VS Code Marketplace, VSIX installs, Cursor, and OpenClaw in `README.md`.
+
+  ## Bug Fixes
+  - None.
+
+  ## Internal Improvements
+  - Document the release workflow sequence from RC validation through release dispatch and post-release Marketplace publication.
+
+  ## Breaking Changes
+  - None.
+
 ## 0.2.2
 
 ### Patch Changes
