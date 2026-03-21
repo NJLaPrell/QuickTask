@@ -1,0 +1,87 @@
+name: Release Candidate Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_label:
+        description: "Human-readable candidate label (for logs/artifacts)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-rc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce main branch RC validation
+        run: |
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "RC validation must run from main. Current ref: ${GITHUB_REF}"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Package manager consistency
+        run: pnpm check:package-manager
+
+      - name: Workspace checks
+        run: pnpm check
+
+      - name: Workspace tests
+        run: pnpm test
+
+      - name: Workspace build
+        run: pnpm build
+
+      - name: Validate pending changeset structure
+        run: pnpm release:validate-changesets
+
+      - name: Generate release notes snapshot
+        run: pnpm release:notes
+
+      - name: Build candidate artifacts
+        run: pnpm package:release
+
+      - name: Verify candidate artifacts
+        run: pnpm release:verify-local-artifacts
+
+      - name: Upload candidate assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc-assets-${{ inputs.candidate_label }}
+          path: |
+            artifacts/*.vsix
+            artifacts/*.tgz
+            artifacts/checksums.txt
+            artifacts/release-integrity-metadata.json
+            artifacts/sbom.json
+            artifacts/release-notes.md
+          if-no-files-found: error
+
+      - name: RC validation summary
+        run: |
+          echo "RC validation completed for label: ${{ inputs.candidate_label }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo "Workflow run ID: ${{ github.run_id }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo "Use this run ID as rc_run_id when dispatching Release." >> "${GITHUB_STEP_SUMMARY}"

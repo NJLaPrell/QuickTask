@@ -96,17 +96,17 @@ Working rules for all tasks:
 ### Phase 5 - Packaging and release operations
 
 - Success measure: Reproducible, versioned release artifacts are generated, validated, and published through an auditable release flow.
-- [ ] T016 - Add VSIX packaging for the VS Code extension (P1)
-- [ ] T017 - Add OpenClaw package build artifact (P1)
-- [ ] T018 - Add release workflow for GitHub Releases (P1)
-- [ ] T025 - Add release versioning and changelog workflow (P1)
-- [ ] T026 - Add post-release install verification checks (P1)
-- [ ] T032 - Add release-candidate validation workflow (P1)
-- [ ] T045 - Add single-command release handoff wrapper (P2)
-- [ ] T046 - Publish installable release assets on GitHub releases (P1)
-- [ ] T047 - Add curated user-focused release notes layer (P1)
-- [ ] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
-- [ ] T049 - Define first-public-release version baseline policy (P2)
+- [x] T016 - Add VSIX packaging for the VS Code extension (P1)
+- [x] T017 - Add OpenClaw package build artifact (P1)
+- [x] T018 - Add release workflow for GitHub Releases (P1)
+- [x] T025 - Add release versioning and changelog workflow (P1)
+- [x] T026 - Add post-release install verification checks (P1)
+- [x] T032 - Add release-candidate validation workflow (P1)
+- [x] T045 - Add single-command release handoff wrapper (P2)
+- [x] T046 - Publish installable release assets on GitHub releases (P1)
+- [x] T047 - Add curated user-focused release notes layer (P1)
+- [x] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
+- [x] T049 - Define first-public-release version baseline policy (P2)
 
 ### Phase 6 - Distribution and docs
 
@@ -134,15 +134,26 @@ Working rules for all tasks:
 - [x] T039 - Define concurrent template write policy and tests (P1)
 - [x] T040 - Add stale write-lock recovery policy and tests (P1)
 - [x] T015 - Add repo-wide build and test workflow (P0)
+- [x] T016 - Add VSIX packaging for the VS Code extension (P1)
+- [x] T017 - Add OpenClaw package build artifact (P1)
+- [x] T018 - Add release workflow for GitHub Releases (P1)
 - [x] T021 - Add linting and formatting quality gates (P1)
 - [x] T024 - Add host-level end-to-end smoke tests (P1)
+- [x] T025 - Add release versioning and changelog workflow (P1)
+- [x] T026 - Add post-release install verification checks (P1)
 - [x] T027 - Define support matrix and compatibility policy (P1)
 - [x] T028 - Add dependency and supply-chain security scanning (P1)
+- [x] T032 - Add release-candidate validation workflow (P1)
 - [x] T033 - Add repository governance and release guardrails (P1)
 - [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
 - [x] T042 - Add release readiness preflight for pending changesets (P1)
 - [x] T043 - Add CI check for package manager config consistency (P1)
 - [x] T044 - Reduce release readiness report churn from timestamp-only updates (P2)
+- [x] T045 - Add single-command release handoff wrapper (P2)
+- [x] T046 - Publish installable release assets on GitHub releases (P1)
+- [x] T047 - Add curated user-focused release notes layer (P1)
+- [x] T048 - Publish release integrity metadata (checksums/SBOM) (P2)
+- [x] T049 - Define first-public-release version baseline policy (P2)
 
 ## Active task backlog
 
@@ -253,6 +264,7 @@ Working rules for all tasks:
 
 ## T016 - Add VSIX packaging for the VS Code extension
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Produce a VSIX artifact from the repo build.
 - Files: extension package/config, build scripts, workflow files.
@@ -268,6 +280,7 @@ Working rules for all tasks:
 
 ## T017 - Add OpenClaw package build artifact
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Produce an installable package artifact for OpenClaw.
 - Files: OpenClaw package/config, build scripts, workflow files.
@@ -283,6 +296,7 @@ Working rules for all tasks:
 
 ## T018 - Add release workflow for GitHub Releases
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Publish release artifacts from tags or release events.
 - Files: `.github/workflows/*`, docs/scripts as needed.
@@ -401,6 +415,7 @@ Working rules for all tasks:
 
 ## T025 - Add release versioning and changelog workflow
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Standardize semantic versioning and changelog generation for releases.
 - Files: release docs/config/scripts/workflow files.
@@ -417,6 +432,7 @@ Working rules for all tasks:
 
 ## T026 - Add post-release install verification checks
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Confirm published artifacts are installable and usable after release.
 - Files: workflow/check scripts, release docs.
@@ -518,6 +534,7 @@ Working rules for all tasks:
 
 ## T032 - Add release-candidate validation workflow
 
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Validate release artifacts in a staged RC process before final publication.
 - Files: release workflow files, docs, optional validation scripts.
@@ -743,7 +760,7 @@ Working rules for all tasks:
 
 ## T045 - Add single-command release handoff wrapper
 
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Provide one command that validates readiness state and dispatches release workflow with required inputs.
 - Files: scripts, package scripts, release docs.
@@ -760,7 +777,7 @@ Working rules for all tasks:
 
 ## T046 - Publish installable release assets on GitHub releases
 
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Ensure GitHub releases include installable artifacts rather than source-only outputs.
 - Files: `.github/workflows/release.yml`, packaging scripts, release docs.
@@ -777,7 +794,7 @@ Working rules for all tasks:
 
 ## T047 - Add curated user-focused release notes layer
 
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve release note quality so published notes emphasize user-impactful changes over internal implementation noise.
 - Files: release workflow/docs/changelog templates, `.changeset` policy docs.
@@ -794,7 +811,7 @@ Working rules for all tasks:
 
 ## T048 - Publish release integrity metadata (checksums/SBOM)
 
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve trust and auditability of published release artifacts.
 - Files: release workflow files, scripts, security docs.
@@ -811,7 +828,7 @@ Working rules for all tasks:
 
 ## T049 - Define first-public-release version baseline policy
 
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Avoid ambiguity around initial release numbering and future version transitions.
 - Files: `RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, changelog/versioning docs.

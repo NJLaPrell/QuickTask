@@ -21,9 +21,14 @@ on:
         description: "Required if any status is no-change"
         required: false
         type: string
+      rc_run_id:
+        description: "Successful Release Candidate Validation run ID"
+        required: true
+        type: string
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: release-main
@@ -37,6 +42,33 @@ jobs:
         run: |
           if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
             echo "Releases must run from main. Current ref: ${GITHUB_REF}"
+            exit 1
+          fi
+
+      - name: Verify RC validation run passed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RC_RUN_ID: ${{ inputs.rc_run_id }}
+        run: |
+          RUN_JSON=$(gh api "repos/${{ github.repository }}/actions/runs/${RC_RUN_ID}")
+          RUN_NAME=$(echo "${RUN_JSON}" | jq -r '.name')
+          RUN_STATUS=$(echo "${RUN_JSON}" | jq -r '.status')
+          RUN_CONCLUSION=$(echo "${RUN_JSON}" | jq -r '.conclusion')
+          RUN_HEAD_BRANCH=$(echo "${RUN_JSON}" | jq -r '.head_branch')
+
+          if [ "${RUN_NAME}" != "Release Candidate Validation" ]; then
+            echo "Expected RC workflow run name 'Release Candidate Validation', got '${RUN_NAME}'."
+            exit 1
+          fi
+
+          if [ "${RUN_STATUS}" != "completed" ] || [ "${RUN_CONCLUSION}" != "success" ]; then
+            echo "RC run ${RC_RUN_ID} must be completed with success."
+            echo "Status=${RUN_STATUS}, conclusion=${RUN_CONCLUSION}"
+            exit 1
+          fi
+
+          if [ "${RUN_HEAD_BRANCH}" != "main" ]; then
+            echo "RC run ${RC_RUN_ID} must target main. Got '${RUN_HEAD_BRANCH}'."
             exit 1
           fi
 
@@ -71,12 +103,18 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Validate pending changeset structure
+        run: pnpm release:validate-changesets
+
       - name: Docs synchronization gate
         env:
           RELEASE_README_STATUS: ${{ inputs.readme_status }}
           RELEASE_DOCS_STATUS: ${{ inputs.docs_status }}
           RELEASE_DOCS_SYNC_NOTES: ${{ inputs.docs_sync_notes }}
         run: pnpm release:docs-check
+
+      - name: Generate curated release notes
+        run: pnpm release:notes
 
       - name: Apply release versions and changelogs
         run: pnpm release:version
@@ -87,6 +125,9 @@ jobs:
           VERSION=$(node -p "require('./packages/core/package.json').version")
           echo "release_version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
+      - name: Enforce release baseline version policy
+        run: pnpm release:check-baseline
+
       - name: Fail when no release changes were produced
         run: |
           if git diff --quiet; then
@@ -94,6 +135,25 @@ jobs:
             echo "Make sure at least one .changeset entry is merged into main."
             exit 1
           fi
+
+      - name: Build release assets and integrity metadata
+        run: pnpm package:release
+
+      - name: Verify built release assets
+        run: pnpm release:verify-local-artifacts
+
+      - name: Upload packaged release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets-v${{ steps.detect_version.outputs.release_version }}
+          path: |
+            artifacts/*.vsix
+            artifacts/*.tgz
+            artifacts/checksums.txt
+            artifacts/release-integrity-metadata.json
+            artifacts/sbom.json
+            artifacts/release-notes.md
+          if-no-files-found: error
 
       - name: Commit release changes
         run: |
@@ -112,4 +172,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.detect_version.outputs.release_version }}
+          body_path: artifacts/release-notes.md
+          files: |
+            artifacts/*.vsix
+            artifacts/*.tgz
+            artifacts/checksums.txt
+            artifacts/release-integrity-metadata.json
+            artifacts/sbom.json
           generate_release_notes: true

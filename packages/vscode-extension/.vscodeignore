@@ -1,0 +1,7 @@
+src/**
+test/**
+tsconfig.json
+**/*.map
+node_modules/@quicktask/core/src/**
+node_modules/@quicktask/core/test/**
+node_modules/@quicktask/core/tsconfig.json

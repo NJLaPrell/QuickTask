@@ -67,7 +67,8 @@ Expected behavior:
 
 - Core runtime behavior for create/run/improve lifecycle is implemented.
 - Host integrations for VS Code, Cursor, and OpenClaw are wired to the shared runtime.
-- Installable release artifacts and marketplace distribution are tracked as open work in `TASKS.md`.
+- Release workflows now build and publish installable VSIX/OpenClaw artifacts with integrity metadata.
+- Marketplace distribution remains tracked work in `TASKS.md`.
 
 ## Support Matrix
 
@@ -100,4 +101,5 @@ Compatibility policy:
 - Contributor guide and local workflow: `CONTRIBUTORS.md`
 - Pre-release readiness workflow: `PRE_RELEASE_READINESS_WORKFLOW.md`
 - Production release strategy: `RELEASE_STRATEGY.md`
+- Release assets and verification reference: `docs/release-assets-and-verification.md`
 - Task tracking source of truth: `TASKS.md`

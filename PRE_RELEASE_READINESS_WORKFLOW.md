@@ -39,6 +39,7 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 6. Re-run `pnpm release:prepare` after changes.
 7. When report has no new medium/high findings for the current release phase, handoff to release:
    - follow `RELEASE_STRATEGY.md` manual release checklist.
+   - optional single-command handoff: `pnpm release:handoff -- --readme-status <updated|no-change> --docs-status <updated|no-change> --docs-sync-notes "<notes>" --rc-run-id <id>`
 
 ## What `pnpm release:prepare` validates
 

@@ -8,6 +8,8 @@ coverage/
 *.tsbuildinfo
 *.vsix
 *.tgz
+artifacts/
+.tmp/
 .env
 .env.*
 !.env.example

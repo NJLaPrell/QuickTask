@@ -40,6 +40,11 @@ pnpm format:check
 pnpm test
 pnpm test:smoke
 pnpm build
+pnpm package:vscode
+pnpm package:openclaw
+pnpm package:release
+pnpm release:verify-local-artifacts
+pnpm release:validate-changesets
 pnpm check:package-manager
 pnpm clean
 ```
@@ -49,7 +54,9 @@ pnpm clean
 ```bash
 pnpm --filter @quicktask/core build
 pnpm --filter quicktask-vscode check
+pnpm --filter quicktask-vscode package:vsix
 pnpm --filter quicktask-openclaw build
+pnpm --filter quicktask-openclaw package:artifact
 ```
 
 ## Contribution workflow
@@ -152,8 +159,11 @@ Do not use GitHub issues for this flow; use `TASKS.md`.
 Once readiness is green (or explicitly accepted), hand off to the release strategy:
 
 1. Confirm intended PRs are merged to `main`.
-2. Trigger GitHub `Release` workflow (`workflow_dispatch`) from `main`.
-3. Provide required docs sync inputs (`readme_status`, `docs_status`, `docs_sync_notes`).
+2. Run `Release Candidate Validation` workflow from `main` and capture `run_id`.
+3. Trigger release via:
+   - `pnpm release:handoff -- --readme-status updated --docs-status updated --docs-sync-notes "docs verified" --rc-run-id <run_id>`
+   - or manual `Release` workflow dispatch with the same inputs.
+4. Provide required docs sync and RC inputs (`readme_status`, `docs_status`, `docs_sync_notes`, `rc_run_id`).
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
 

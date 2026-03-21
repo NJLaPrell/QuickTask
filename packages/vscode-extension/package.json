@@ -41,12 +41,14 @@
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist",
-    "test": "pnpm run build && node --test test/**/*.test.mjs"
+    "test": "pnpm run build && node --test test/**/*.test.mjs",
+    "package:vsix": "pnpm run build && mkdir -p ../../artifacts && pnpm exec vsce package --follow-symlinks --allow-missing-repository --out ../../artifacts/quicktask-vscode-v$npm_package_version.vsix"
   },
   "dependencies": {
-    "@quicktask/core": "workspace:*"
+    "@quicktask/core": "file:../core"
   },
   "devDependencies": {
-    "@types/vscode": "^1.100.0"
+    "@types/vscode": "^1.100.0",
+    "@vscode/vsce": "^3.7.1"
   }
 }
