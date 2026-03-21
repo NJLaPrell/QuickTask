@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -76,8 +76,24 @@ test('overwrite writes updated content to disk', () => {
     saveTaskTemplate(store, second)
 
     const filePath = path.join(store.tasksDir, 'summarize.md')
-    assert.equal(readFileSync(filePath, 'utf8'), second.body)
+    const onDisk = readFileSync(filePath, 'utf8')
+    assert.match(onDisk, /^---\nquicktaskVersion: 1\ntaskName: summarize\n---\n/)
+    assert.match(onDisk, /# summarize\nsecond version/)
     assert.deepEqual(getTaskTemplate(store, 'summarize'), second)
+  } finally {
+    cleanup()
+  }
+})
+
+test('reads legacy unversioned template files', () => {
+  const { store, cleanup } = withTempStoreDir()
+  try {
+    const filePath = path.join(store.tasksDir, 'legacy.md')
+    writeFileSync(filePath, '# legacy\nold-format', 'utf8')
+
+    const loaded = getTaskTemplate(store, 'legacy')
+    assert.equal(loaded?.filename, 'legacy.md')
+    assert.equal(loaded?.body, '# legacy\nold-format')
   } finally {
     cleanup()
   }

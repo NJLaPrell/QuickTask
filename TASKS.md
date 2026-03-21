@@ -51,7 +51,7 @@ Working rules for all tasks:
 - [x] T023 - Harden file-backed storage error handling
 - [ ] T029 - Define runtime diagnostics and error observability
 - [ ] T030 - Add persisted template corruption recovery strategy
-- [ ] T031 - Add template format versioning and migration path
+- [x] T031 - Add template format versioning and migration path
 
 ### Phase 3 - Host integrations
 - [ ] T010 - Wire the VS Code extension to the core runtime
@@ -90,6 +90,7 @@ Working rules for all tasks:
 - [x] T007 - Implement improvement acceptance and overwrite behavior
 - [x] T022 - Define stable core API surface for adapters
 - [x] T023 - Harden file-backed storage error handling
+- [x] T031 - Add template format versioning and migration path
 
 ## Active task backlog
 
@@ -470,6 +471,7 @@ Working rules for all tasks:
 - Dependencies: T002, T023.
 
 ## T031 - Add template format versioning and migration path
+- Status: [x] complete (not yet archived)
 - Goal: Ensure persisted templates can evolve without breaking existing user data.
 - Files: core store/runtime files, migration utilities, tests/docs.
 - Steps:
