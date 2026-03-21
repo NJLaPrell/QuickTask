@@ -44,7 +44,7 @@ Working rules for all tasks:
 - [x] T004 - Implement template creation flow from user instructions
 - [x] T005 - Implement existing task execution flow
 - [x] T006 - Implement improvement proposal flow
-- [ ] T008 - Define runtime result contract for host adapters
+- [x] T008 - Define runtime result contract for host adapters
 - [ ] T034 - Define improvement proposal lifecycle contract
 - [ ] T007 - Implement improvement acceptance and overwrite behavior
 - [ ] T022 - Define stable core API surface for adapters
@@ -85,6 +85,7 @@ Working rules for all tasks:
 - [x] T004 - Implement template creation flow from user instructions
 - [x] T005 - Implement existing task execution flow
 - [x] T006 - Implement improvement proposal flow
+- [x] T008 - Define runtime result contract for host adapters
 
 ## Active task backlog
 
@@ -153,6 +154,7 @@ Working rules for all tasks:
 - Dependencies: T002, T006, T008, T034.
 
 ## T008 - Define runtime result contract for host adapters
+- Status: [x] complete (not yet archived)
 - Goal: Standardize the response shapes that VS Code, Cursor, and OpenClaw adapters consume.
 - Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, tests/docs.
 - Steps:
