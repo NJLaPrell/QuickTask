@@ -146,6 +146,40 @@ test('improve without user input uses inferred proposal source', () => {
   }
 })
 
+test('improve lifecycle records action states by proposal id', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt summarize produce concise bullets')
+    const proposalResult = runtime.handle('/qt improve summarize emphasize owners')
+    assert.equal(proposalResult.kind, 'improve_proposed')
+    const proposalId = proposalResult.proposalId
+
+    const acceptResult = runtime.handle(`/qt improve accept summarize ${proposalId}`)
+    assert.equal(acceptResult.kind, 'improve_action')
+    assert.equal(acceptResult.code, 'qt:improve:accept:ready')
+    assert.equal(acceptResult.status, 'accepted')
+
+    const repeatAccept = runtime.handle(`/qt improve accept summarize ${proposalId}`)
+    assert.equal(repeatAccept.kind, 'improve_action')
+    assert.equal(repeatAccept.code, 'qt:improve:already-finalized')
+    assert.equal(repeatAccept.status, 'accepted')
+  } finally {
+    cleanup()
+  }
+})
+
+test('improve lifecycle handles proposal not found', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    const result = runtime.handle('/qt improve abandon summarize does-not-exist')
+    assert.equal(result.kind, 'not_found')
+    assert.equal(result.code, 'qt:improve:proposal-not-found')
+    assert.equal(result.taskName, 'summarize')
+  } finally {
+    cleanup()
+  }
+})
+
 test('improve handles missing tasks cleanly', () => {
   const { runtime, cleanup } = createRuntimeForTest()
   try {

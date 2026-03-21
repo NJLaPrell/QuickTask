@@ -25,6 +25,29 @@ export function parseQtCommand(input: string): QtCommand {
 
   if (value.startsWith('/qt improve ')) {
     const remainder = value.slice('/qt improve '.length).trim()
+    const improveActionMatch = remainder.match(/^(accept|reject|abandon)\s+/)
+    if (improveActionMatch) {
+      const [, actionMatch] = improveActionMatch
+      const action = actionMatch as 'accept' | 'reject' | 'abandon'
+      const actionRemainder = remainder.slice(action.length).trim()
+      const tokens = actionRemainder.split(' ').filter(Boolean)
+
+      if (tokens.length < 2) {
+        return {
+          kind: 'incomplete',
+          reason: 'missing-improve-action-details',
+          usage: '/qt improve <accept|reject|abandon> [task] [proposal-id]'
+        }
+      }
+
+      return {
+        kind: 'improve_action',
+        action,
+        taskName: tokens[0],
+        proposalId: tokens[1]
+      }
+    }
+
     const firstSpace = remainder.indexOf(' ')
 
     if (firstSpace === -1) {

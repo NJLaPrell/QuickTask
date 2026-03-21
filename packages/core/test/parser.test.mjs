@@ -43,6 +43,23 @@ test('returns structured incomplete result for /qt improve without task', () => 
   })
 })
 
+test('parses improve action command', () => {
+  assert.deepEqual(parseQtCommand('/qt improve accept summarize abc123'), {
+    kind: 'improve_action',
+    action: 'accept',
+    taskName: 'summarize',
+    proposalId: 'abc123'
+  })
+})
+
+test('returns incomplete for improve action missing details', () => {
+  assert.deepEqual(parseQtCommand('/qt improve reject summarize'), {
+    kind: 'incomplete',
+    reason: 'missing-improve-action-details',
+    usage: '/qt improve <accept|reject|abandon> [task] [proposal-id]'
+  })
+})
+
 test('throws for non-quicktask input', () => {
   assert.throws(() => parseQtCommand('hello world'), /Input is not a QuickTask command/)
 })
