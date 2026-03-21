@@ -1,7 +1,12 @@
 import type { TaskTemplate } from './types.js';
-export type InMemoryTaskStore = {
-    tasks: Map<string, TaskTemplate>;
+export type FileTaskStore = {
+    tasksDir: string;
 };
-export declare function createInMemoryTaskStore(): InMemoryTaskStore;
-export declare function getTaskTemplate(store: InMemoryTaskStore, taskName: string): TaskTemplate | undefined;
-export declare function saveTaskTemplate(store: InMemoryTaskStore, template: TaskTemplate): TaskTemplate;
+export type CreateFileTaskStoreOptions = {
+    tasksDir?: string;
+    repoRoot?: string;
+};
+export declare function taskNameToFilename(taskName: string): string;
+export declare function createFileTaskStore(options?: CreateFileTaskStoreOptions): FileTaskStore;
+export declare function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTemplate | undefined;
+export declare function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): TaskTemplate;
