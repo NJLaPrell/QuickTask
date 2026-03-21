@@ -30,7 +30,7 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
         run: |
-          if printf "%s\n" "${ALL_CHANGED_FILES}" | grep -Eq "^\\.changeset/.+\\.md$"; then
+          if printf "%s\n" "${ALL_CHANGED_FILES}" | grep -Eq "(^| )\\.changeset/[^ ]+\\.md( |$)"; then
             echo "Changeset found for release-relevant changes."
             exit 0
           fi
