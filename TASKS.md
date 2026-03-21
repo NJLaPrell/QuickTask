@@ -64,7 +64,7 @@ Working rules for all tasks:
 - [x] T037 - Return structured runtime errors for parse failures (P0)
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
 - [x] T039 - Define concurrent template write policy and tests (P1)
-- [ ] T040 - Add stale write-lock recovery policy and tests (P1)
+- [x] T040 - Add stale write-lock recovery policy and tests (P1)
 
 ### Phase 3 - Host integrations
 - Success measure: `/qt` works end-to-end in VS Code, Cursor, and OpenClaw via the shared core runtime with no duplicated task logic.
@@ -115,6 +115,7 @@ Working rules for all tasks:
 - [x] T037 - Return structured runtime errors for parse failures (P0)
 - [x] T038 - Add adapter rendering matrix from result contract (P1)
 - [x] T039 - Define concurrent template write policy and tests (P1)
+- [x] T040 - Add stale write-lock recovery policy and tests (P1)
 
 ## Active task backlog
 
@@ -667,7 +668,7 @@ Working rules for all tasks:
 - Dependencies: T023, T030, T031.
 
 ## T040 - Add stale write-lock recovery policy and tests
-- Status: [ ] not done
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Ensure lock-file based concurrency control can recover safely when a host process crashes and leaves stale locks behind.
 - Files: `packages/core/src/store.ts`, runtime/store tests, docs.

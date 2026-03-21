@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, rmSync, utimesSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -334,6 +334,23 @@ test('returns storage error result when a concurrent write lock exists', () => {
     assert.equal(result.diagnosticCode, 'storage-io-failure')
     assert.match(result.requestId, /^qt-/)
     assert.match(result.message, /Concurrent write in progress/)
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true })
+  }
+})
+
+test('recovers stale write lock and creates template successfully', () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), 'quicktask-stale-lock-runtime-'))
+  try {
+    const lockPath = path.join(tasksDir, 'summarize.md.lock')
+    writeFileSync(lockPath, `${process.pid}`, 'utf8')
+    const staleSeconds = Math.floor((Date.now() - 10 * 60 * 1000) / 1000)
+    utimesSync(lockPath, staleSeconds, staleSeconds)
+
+    const runtime = createQtRuntime(createFileTaskStore({ tasksDir }))
+    const result = runtime.handle('/qt summarize recovered from stale lock')
+    assert.equal(result.kind, 'created')
+    assert.equal(result.code, 'qt:create:created')
   } finally {
     rmSync(tasksDir, { recursive: true, force: true })
   }

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -102,6 +102,29 @@ test('fails fast when a concurrent write lock exists', () => {
       /Concurrent write in progress/
     )
     assert.equal(getTaskTemplate(store, 'summarize'), undefined)
+  } finally {
+    cleanup()
+  }
+})
+
+test('recovers stale write lock and saves template', () => {
+  const { store, cleanup } = withTempStoreDir()
+  const template = {
+    taskName: 'summarize',
+    filename: 'summarize.md',
+    body: '# summarize\nrecovered write'
+  }
+
+  try {
+    const lockPath = path.join(store.tasksDir, 'summarize.md.lock')
+    writeFileSync(lockPath, `${process.pid}`, 'utf8')
+    const staleSeconds = Math.floor((Date.now() - 10 * 60 * 1000) / 1000)
+    utimesSync(lockPath, staleSeconds, staleSeconds)
+
+    const saved = saveTaskTemplate(store, template)
+    assert.deepEqual(saved, template)
+    assert.deepEqual(getTaskTemplate(store, 'summarize'), template)
+    assert.equal(existsSync(lockPath), false)
   } finally {
     cleanup()
   }

@@ -6,6 +6,7 @@ import {
   readFileSync,
   renameSync,
   rmSync,
+  statSync,
   writeFileSync
 } from 'node:fs'
 import path from 'node:path'
@@ -14,6 +15,7 @@ import type { TaskTemplate } from './types.js'
 
 const TASKS_DIR_ENV_VAR = 'QUICKTASK_TASKS_DIR'
 const CURRENT_TEMPLATE_FORMAT_VERSION = 1
+const STALE_TEMPLATE_LOCK_AGE_MS = 5 * 60 * 1000
 
 export type FileTaskStore = {
   tasksDir: string
@@ -121,21 +123,48 @@ function quarantineCorruptTemplate(templatePath: string): string {
   return backupPath
 }
 
+function isTemplateWriteLockStale(lockPath: string): boolean {
+  try {
+    const lockStats = statSync(lockPath)
+    return Date.now() - lockStats.mtimeMs >= STALE_TEMPLATE_LOCK_AGE_MS
+  } catch {
+    return false
+  }
+}
+
 function acquireTemplateWriteLock(templatePath: string): () => void {
   const lockPath = `${templatePath}.lock`
   let lockFd: number
   try {
     lockFd = openSync(lockPath, 'wx')
   } catch (error) {
-    if (
+    const isAlreadyLocked =
       typeof error === 'object' &&
       error !== null &&
       'code' in error &&
       error.code === 'EEXIST'
-    ) {
+    if (!isAlreadyLocked) {
+      throw error
+    }
+
+    if (isTemplateWriteLockStale(lockPath)) {
+      rmSync(lockPath, { force: true })
+      try {
+        lockFd = openSync(lockPath, 'wx')
+      } catch (retryError) {
+        if (
+          typeof retryError === 'object' &&
+          retryError !== null &&
+          'code' in retryError &&
+          retryError.code === 'EEXIST'
+        ) {
+          throw new Error(`Concurrent write in progress for ${path.basename(templatePath)}.`)
+        }
+        throw retryError
+      }
+    } else {
       throw new Error(`Concurrent write in progress for ${path.basename(templatePath)}.`)
     }
-    throw error
   }
 
   return () => {
