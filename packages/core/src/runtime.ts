@@ -22,10 +22,25 @@ export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
       }
 
       if (command.kind === 'create') {
+        if (!command.instructions.trim()) {
+          return {
+            title: '[qt:create:clarify] Clarification Needed',
+            message: `Please provide instructions for ${command.taskName}. Usage: /qt ${command.taskName} [instructions]`
+          }
+        }
+
+        const existingTemplate = getTaskTemplate(store, command.taskName)
+        if (existingTemplate) {
+          return {
+            title: '[qt:create:already-exists] Task Already Exists',
+            message: `A template already exists for ${command.taskName}. Use /qt/${command.taskName} [input] to run it or /qt improve ${command.taskName} [input] to propose changes.`
+          }
+        }
+
         const template = createTaskTemplate(command.taskName, command.instructions)
         saveTaskTemplate(store, template)
         return {
-          title: `Created ${template.filename}`,
+          title: `[qt:create:created] Created ${template.filename}`,
           message: template.body
         }
       }

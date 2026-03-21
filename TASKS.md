@@ -41,7 +41,7 @@ Working rules for all tasks:
 - [h] T002 - Replace in-memory store with file-backed task store
 
 ### Phase 2 - Core behavior and reliability
-- [ ] T004 - Implement template creation flow from user instructions
+- [x] T004 - Implement template creation flow from user instructions
 - [ ] T005 - Implement existing task execution flow
 - [ ] T006 - Implement improvement proposal flow
 - [ ] T008 - Define runtime result contract for host adapters
@@ -82,11 +82,12 @@ Working rules for all tasks:
 
 ## Completed tasks (not yet archived)
 
-- None currently.
+- [x] T004 - Implement template creation flow from user instructions
 
 ## Active task backlog
 
 ## T004 - Implement template creation flow from user instructions
+- Status: [x] complete (not yet archived)
 - Goal: Generate new task templates from user-provided instructions using the current spec.
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
 - Steps:

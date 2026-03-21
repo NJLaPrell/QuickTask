@@ -42,12 +42,45 @@ test('returns task-not-found when running an unknown task', () => {
 test('create then run returns template and user input', () => {
   const { runtime, cleanup } = createRuntimeForTest()
   try {
-    runtime.handle('/qt summarize produce concise bullets')
+    const created = runtime.handle('/qt summarize produce concise bullets')
+    assert.equal(created.title, '[qt:create:created] Created summarize.md')
+    assert.match(created.message, /- Goal: produce concise bullets/)
 
     const result = runtime.handle('/qt/summarize Team sync notes')
     assert.equal(result.title, 'Run summarize')
     assert.match(result.message, /Template:/)
     assert.match(result.message, /User input:\nTeam sync notes/)
+  } finally {
+    cleanup()
+  }
+})
+
+test('create returns clarification when instructions are missing', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    const result = runtime.handle('/qt summarize')
+    assert.equal(result.title, '[qt:create:clarify] Clarification Needed')
+    assert.equal(
+      result.message,
+      'Please provide instructions for summarize. Usage: /qt summarize [instructions]'
+    )
+  } finally {
+    cleanup()
+  }
+})
+
+test('create does not overwrite an existing task', () => {
+  const { runtime, cleanup } = createRuntimeForTest()
+  try {
+    runtime.handle('/qt summarize first version')
+    const secondCreate = runtime.handle('/qt summarize second version')
+
+    assert.equal(secondCreate.title, '[qt:create:already-exists] Task Already Exists')
+    assert.match(secondCreate.message, /A template already exists for summarize\./)
+
+    const runResult = runtime.handle('/qt/summarize sample input')
+    assert.match(runResult.message, /- Goal: first version/)
+    assert.doesNotMatch(runResult.message, /- Goal: second version/)
   } finally {
     cleanup()
   }
