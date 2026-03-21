@@ -1,5 +1,28 @@
 # QuickTask Tasks
 
+## Agent task maintenance instructions
+
+- Keep task IDs stable forever; never renumber existing tasks.
+- When adding a new task:
+  1. Append it to the backlog with a new sequential ID.
+  2. Add it to the correct phase in milestone execution order.
+  3. Set initial status to `[ ]` (not done).
+- When updating a task:
+  1. Preserve the original task ID and title intent.
+  2. Update goal/steps/acceptance criteria/dependencies in place.
+  3. If scope materially changes, note the change in the task body.
+- When a task is completed:
+  1. Mark it as `[x]` in milestone execution order and in the task section.
+  2. Keep completed tasks in place until related follow-up work settles.
+- When moving tasks to history:
+  1. Move fully completed tasks from the active backlog into `Task history`.
+  2. Change status to `[h]` (archived in history).
+  3. Keep dependencies pointing at the same task ID.
+- Use this status legend consistently:
+  - `[ ]` not done (active backlog)
+  - `[x]` complete (done, not yet archived)
+  - `[h]` completed and archived in history
+
 Working rules for all tasks:
 - Create one branch per task and open one PR per task.
 - Keep changes scoped to the task only.
@@ -12,66 +35,56 @@ Working rules for all tasks:
 ## Milestone execution order
 
 ### Phase 1 - Core foundations
-- T001 - Decide persistent task storage layout
-- T003 - Tighten command parsing against the current spec
-- T009 - Add core unit test harness
-- T002 - Replace in-memory store with file-backed task store
+- [h] T001 - Decide persistent task storage layout
+- [h] T003 - Tighten command parsing against the current spec
+- [h] T009 - Add core unit test harness
+- [ ] T002 - Replace in-memory store with file-backed task store
 
 ### Phase 2 - Core behavior and reliability
-- T004 - Implement template creation flow from user instructions
-- T005 - Implement existing task execution flow
-- T006 - Implement improvement proposal flow
-- T008 - Define runtime result contract for host adapters
-- T034 - Define improvement proposal lifecycle contract
-- T007 - Implement improvement acceptance and overwrite behavior
-- T022 - Define stable core API surface for adapters
-- T023 - Harden file-backed storage error handling
-- T029 - Define runtime diagnostics and error observability
-- T030 - Add persisted template corruption recovery strategy
-- T031 - Add template format versioning and migration path
+- [ ] T004 - Implement template creation flow from user instructions
+- [ ] T005 - Implement existing task execution flow
+- [ ] T006 - Implement improvement proposal flow
+- [ ] T008 - Define runtime result contract for host adapters
+- [ ] T034 - Define improvement proposal lifecycle contract
+- [ ] T007 - Implement improvement acceptance and overwrite behavior
+- [ ] T022 - Define stable core API surface for adapters
+- [ ] T023 - Harden file-backed storage error handling
+- [ ] T029 - Define runtime diagnostics and error observability
+- [ ] T030 - Add persisted template corruption recovery strategy
+- [ ] T031 - Add template format versioning and migration path
 
 ### Phase 3 - Host integrations
-- T010 - Wire the VS Code extension to the core runtime
-- T011 - Implement native VS Code `/qt` chat command
-- T012 - Refine Cursor command integration around the core runtime
-- T013 - Wire the OpenClaw adapter to the core runtime
-- T014 - Implement native OpenClaw `/qt` command flow
+- [ ] T010 - Wire the VS Code extension to the core runtime
+- [ ] T011 - Implement native VS Code `/qt` chat command
+- [ ] T012 - Refine Cursor command integration around the core runtime
+- [ ] T013 - Wire the OpenClaw adapter to the core runtime
+- [ ] T014 - Implement native OpenClaw `/qt` command flow
 
 ### Phase 4 - CI and quality controls
-- T015 - Add repo-wide build and test workflow
-- T021 - Add linting and formatting quality gates
-- T024 - Add host-level end-to-end smoke tests
-- T027 - Define support matrix and compatibility policy
-- T028 - Add dependency and supply-chain security scanning
-- T033 - Add repository governance and release guardrails
+- [ ] T015 - Add repo-wide build and test workflow
+- [ ] T021 - Add linting and formatting quality gates
+- [ ] T024 - Add host-level end-to-end smoke tests
+- [ ] T027 - Define support matrix and compatibility policy
+- [ ] T028 - Add dependency and supply-chain security scanning
+- [ ] T033 - Add repository governance and release guardrails
 
 ### Phase 5 - Packaging and release operations
-- T016 - Add VSIX packaging for the VS Code extension
-- T017 - Add OpenClaw package build artifact
-- T018 - Add release workflow for GitHub Releases
-- T025 - Add release versioning and changelog workflow
-- T026 - Add post-release install verification checks
-- T032 - Add release-candidate validation workflow
+- [ ] T016 - Add VSIX packaging for the VS Code extension
+- [ ] T017 - Add OpenClaw package build artifact
+- [ ] T018 - Add release workflow for GitHub Releases
+- [ ] T025 - Add release versioning and changelog workflow
+- [ ] T026 - Add post-release install verification checks
+- [ ] T032 - Add release-candidate validation workflow
 
 ### Phase 6 - Distribution and docs
-- T019 - Add VS Code Marketplace publishing workflow
-- T020 - Write installation and release documentation
+- [ ] T019 - Add VS Code Marketplace publishing workflow
+- [ ] T020 - Write installation and release documentation
 
-## T001 - Decide persistent task storage layout
-- Goal: Choose and document the repository path and naming rules for persisted `[task].md` files.
-- Files: `ARCHITECTURE.md`, optionally new doc under repo root if needed.
-- Steps:
-  1. Review the current spec and runtime scaffold.
-  2. Decide where task template files should live in the repo.
-  3. Define task-name-to-filename normalization rules.
-  4. Define how host adapters locate the task store.
-  5. Document the decision clearly.
-- Acceptance criteria:
-  - Persistent storage path is explicitly documented.
-  - Filename normalization rules are documented.
-  - Host lookup rules are documented.
-  - No runtime code changes beyond what is needed to support the documentation.
-- Dependencies: none.
+## Completed tasks (not yet archived)
+
+- None currently.
+
+## Active task backlog
 
 ## T002 - Replace in-memory store with file-backed task store
 - Goal: Persist task templates as markdown files instead of using the in-memory store.
@@ -88,20 +101,6 @@ Working rules for all tasks:
   - File contents round-trip correctly.
   - Automated tests cover save/load/overwrite/not-found behavior.
 - Dependencies: T001.
-
-## T003 - Tighten command parsing against the current spec
-- Goal: Make the parser behavior match the agreed command forms exactly.
-- Files: `packages/core/src/parser.ts`, related types/tests.
-- Steps:
-  1. Review supported command forms in the spec.
-  2. Handle `/qt`, `/qt [task] [instructions]`, `/qt/[task] [input]`, and `/qt improve [task] [input]` precisely.
-  3. Return structured parse results for unclear or incomplete input where needed.
-  4. Avoid inventing unsupported command forms.
-- Acceptance criteria:
-  - Parser behavior matches the current spec.
-  - Ambiguous/incomplete input is test-covered.
-  - Tests cover all valid command forms and obvious invalid ones.
-- Dependencies: none.
 
 ## T004 - Implement template creation flow from user instructions
 - Goal: Generate new task templates from user-provided instructions using the current spec.
@@ -176,20 +175,6 @@ Working rules for all tasks:
   - Runtime returns only documented result shapes.
   - Tests validate key result types.
 - Dependencies: T004, T005, T006.
-
-## T009 - Add core unit test harness
-- Goal: Establish a clean test setup for the core package.
-- Files: core package config/tests, root config if needed.
-- Steps:
-  1. Choose and configure a test runner for the monorepo.
-  2. Add package scripts for running core tests.
-  3. Add representative tests for parser, store, and runtime.
-  4. Ensure CI can run the tests later.
-- Acceptance criteria:
-  - Tests run from the repo with a documented command.
-  - Core package tests pass locally in CI-ready form.
-  - Existing implemented behavior is covered at a useful level.
-- Dependencies: none.
 
 ## T010 - Wire the VS Code extension to the core runtime
 - Goal: Replace the VS Code scaffold with a real integration point to QuickTask core.
@@ -543,3 +528,52 @@ Working rules for all tasks:
   - Stale proposal handling is documented and tested.
   - Contract is documented for adapter implementations.
 - Dependencies: T006, T008.
+
+## Task history
+
+### [h] T001 - Decide persistent task storage layout
+- Status: [h] archived complete
+- Goal: Choose and document the repository path and naming rules for persisted `[task].md` files.
+- Files: `ARCHITECTURE.md`, optionally new doc under repo root if needed.
+- Steps:
+  1. Review the current spec and runtime scaffold.
+  2. Decide where task template files should live in the repo.
+  3. Define task-name-to-filename normalization rules.
+  4. Define how host adapters locate the task store.
+  5. Document the decision clearly.
+- Acceptance criteria:
+  - Persistent storage path is explicitly documented.
+  - Filename normalization rules are documented.
+  - Host lookup rules are documented.
+  - No runtime code changes beyond what is needed to support the documentation.
+- Dependencies: none.
+
+### [h] T003 - Tighten command parsing against the current spec
+- Status: [h] archived complete
+- Goal: Make the parser behavior match the agreed command forms exactly.
+- Files: `packages/core/src/parser.ts`, related types/tests.
+- Steps:
+  1. Review supported command forms in the spec.
+  2. Handle `/qt`, `/qt [task] [instructions]`, `/qt/[task] [input]`, and `/qt improve [task] [input]` precisely.
+  3. Return structured parse results for unclear or incomplete input where needed.
+  4. Avoid inventing unsupported command forms.
+- Acceptance criteria:
+  - Parser behavior matches the current spec.
+  - Ambiguous/incomplete input is test-covered.
+  - Tests cover all valid command forms and obvious invalid ones.
+- Dependencies: none.
+
+### [h] T009 - Add core unit test harness
+- Status: [h] archived complete
+- Goal: Establish a clean test setup for the core package.
+- Files: core package config/tests, root config if needed.
+- Steps:
+  1. Choose and configure a test runner for the monorepo.
+  2. Add package scripts for running core tests.
+  3. Add representative tests for parser, store, and runtime.
+  4. Ensure CI can run the tests later.
+- Acceptance criteria:
+  - Tests run from the repo with a documented command.
+  - Core package tests pass locally in CI-ready form.
+  - Existing implemented behavior is covered at a useful level.
+- Dependencies: none.

@@ -1,0 +1,26 @@
+---
+description: Enforce TASKS.md-driven task completion workflow
+alwaysApply: true
+---
+
+# Task Completion Workflow
+
+When the user asks to complete a task, treat `TASKS.md` as the source of truth and follow this flow:
+
+1. Read relevant task context from `TASKS.md` (goal, steps, acceptance criteria, dependencies, status).
+2. Propose the best implementation options and ask clarifying questions that materially affect approach.
+3. Use the user's answers to refine the plan before coding.
+4. Implement the agreed changes with focused scope.
+5. Add or update tests (including unit tests when appropriate).
+6. Validate changes within reason (run relevant checks/tests/build commands).
+7. Update `TASKS.md` status/history and summarize what changed.
+
+## TASKS.md maintenance requirements
+
+- Keep task IDs stable; never renumber existing tasks.
+- Update task status markers consistently:
+  - `[ ]` not done
+  - `[x]` complete (not yet archived)
+  - `[h]` archived in history
+- When a task is completed, mark it complete in milestone order and task details.
+- When archiving completed work, move it to `Task history` and set `[h]`.

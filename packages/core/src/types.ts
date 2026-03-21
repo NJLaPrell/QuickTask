@@ -20,11 +20,18 @@ export type QtImproveCommand = {
   userInput?: string
 }
 
+export type QtIncompleteCommand = {
+  kind: 'incomplete'
+  reason: 'missing-improve-task'
+  usage: '/qt improve [task] [input]'
+}
+
 export type QtCommand =
   | QtMenuCommand
   | QtCreateCommand
   | QtRunCommand
   | QtImproveCommand
+  | QtIncompleteCommand
 
 export type TaskTemplate = {
   taskName: string

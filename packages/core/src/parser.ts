@@ -11,6 +11,18 @@ export function parseQtCommand(input: string): QtCommand {
     return { kind: 'menu' }
   }
 
+  if (value === '/qt/') {
+    return { kind: 'menu' }
+  }
+
+  if (value === '/qt improve') {
+    return {
+      kind: 'incomplete',
+      reason: 'missing-improve-task',
+      usage: '/qt improve [task] [input]'
+    }
+  }
+
   if (value.startsWith('/qt improve ')) {
     const remainder = value.slice('/qt improve '.length).trim()
     const firstSpace = remainder.indexOf(' ')
@@ -31,6 +43,10 @@ export function parseQtCommand(input: string): QtCommand {
 
   if (value.startsWith('/qt/')) {
     const remainder = value.slice('/qt/'.length).trim()
+    if (!remainder) {
+      return { kind: 'menu' }
+    }
+
     const firstSpace = remainder.indexOf(' ')
 
     if (firstSpace === -1) {

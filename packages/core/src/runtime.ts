@@ -30,6 +30,13 @@ export function createQtRuntime(store: InMemoryTaskStore = createInMemoryTaskSto
         }
       }
 
+      if (command.kind === 'incomplete') {
+        return {
+          title: 'Incomplete Command',
+          message: `Missing required input. Usage: ${command.usage}`
+        }
+      }
+
       if (command.kind === 'run') {
         const template = getTaskTemplate(store, command.taskName)
         if (!template) {

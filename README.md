@@ -31,6 +31,12 @@ pnpm check
 pnpm build
 ```
 
+### Run tests
+
+```bash
+pnpm test
+```
+
 ### Clean build outputs
 
 ```bash
