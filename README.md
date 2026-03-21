@@ -149,4 +149,5 @@ Release policy details live in `RELEASE_STRATEGY.md`. Contributor operational st
 - Pre-release readiness workflow: `PRE_RELEASE_READINESS_WORKFLOW.md`
 - Production release strategy: `RELEASE_STRATEGY.md`
 - Release assets and verification reference: `docs/release-assets-and-verification.md`
-- Task tracking source of truth: `TASKS.md`
+- Task tracking source of truth: active board `TASKS.md` + history `TASKS_ARCHIVED.md`
+- Task discovery workflow: `TASK_DISCOVERY_WORKFLOW.md`

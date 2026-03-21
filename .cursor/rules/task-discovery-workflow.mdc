@@ -1,0 +1,40 @@
+---
+description: Enforce doc+code-driven task discovery and proposed-task auto-intake
+alwaysApply: true
+---
+
+# Task Discovery Workflow
+
+Apply this when the user asks to discover new tasks for development.
+
+## Required behavior
+
+1. Run `TASK_DISCOVERY_WORKFLOW.md`.
+2. Review required docs and active tracker context before proposing tasks.
+3. Review code hotspots and quality signals to ground discoveries in repository reality.
+4. Auto-add discovered tasks to `TASKS.md` with status `[p]` (proposed).
+5. Add at most 10 tasks per run unless the user explicitly overrides.
+6. Include a balanced set across refactor, UX, feature, and workspace/CI cleanup work.
+7. Avoid duplicate or overlapping tasks already in `TASKS.md`.
+8. Keep severity optional unless user asks to require it.
+
+## Task format requirements
+
+Discovered tasks must include:
+
+- ID and concise title
+- status `[p]`
+- priority
+- goal and impact
+- likely files/systems touched
+- dependencies/blockers
+- acceptance criteria
+- validation plan
+
+## Reporting requirements
+
+After task discovery intake, summarize:
+
+- tasks added,
+- category coverage,
+- recommended top next tasks to promote from proposed.

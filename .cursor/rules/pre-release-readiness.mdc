@@ -12,14 +12,16 @@ When the user asks to prepare a release (or equivalent), run `PRE_RELEASE_READIN
 1. Run `pnpm release:prepare` (always full-product scope across all phases).
 2. Read `docs/release-readiness-report.md`.
 3. Treat only new `medium` and `high` findings for the current release phase as blocking.
-4. Use `TASKS.md` as the issue system:
+4. Use `TASKS.md` as the active issue system:
    - update existing tasks when findings map to open work,
    - add new tasks when findings are unmapped.
 5. For new tasks, assign phase and priority manually.
-6. Re-run `pnpm release:prepare` after task updates when practical.
-7. Handoff to `RELEASE_STRATEGY.md` only when medium/high findings are cleared or explicitly accepted by the user.
+6. For blocked readiness tasks, set status `[!]` and record both `Blocked by` and `Unblock plan`.
+7. Re-run `pnpm release:prepare` after task updates when practical.
+8. Handoff to `RELEASE_STRATEGY.md` only when medium/high findings are cleared or explicitly accepted by the user.
 
 ## Policy constraints
 
 - Do not create GitHub issues for readiness findings.
 - Do not assign owners/assignees in this flow.
+- Keep `TASKS_ARCHIVED.md` for historical records only; readiness findings belong in active `TASKS.md`.

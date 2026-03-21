@@ -13,7 +13,8 @@ When the user asks to complete a task, follow this loop by default:
 4. Review the PR and leave a findings-first comment.
 5. If review finds blockers, fix, commit, push, comment, and re-review.
 6. Merge only when required checks are green and no blockers remain.
-7. Update `TASKS.md` status/history and summarize completion.
+7. Update `TASKS.md` status/evidence and summarize completion.
+8. Archive only during archive cadence by moving `[x]` records to `TASKS_ARCHIVED.md` as `[h]`.
 
 ## Review comment format
 
@@ -35,3 +36,4 @@ When the user asks to complete a task, follow this loop by default:
 - Keep one task per branch/PR.
 - Use GitHub MCP tools first for PR operations; fall back to CLI only when MCP is unavailable.
 - If the user requests a different flow, follow user direction.
+- If task status is `[!]`, include explicit blocker + unblock plan before PR merge recommendation.

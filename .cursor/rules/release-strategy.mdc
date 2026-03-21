@@ -42,5 +42,6 @@ Block release if any of these fail:
 
 ## Readiness finding tracking
 
-- Track readiness findings in `TASKS.md`, not GitHub issues.
+- Track readiness findings in active `TASKS.md`, not GitHub issues.
+- Keep `TASKS_ARCHIVED.md` as historical context only (do not file new findings there).
 - Treat `medium` and `high` readiness findings as blocking until resolved or explicitly accepted by the user.

@@ -79,14 +79,23 @@ Working defaults:
 
 ## Task tracking policy
 
-`TASKS.md` is the tracker for project work and release-readiness findings.
+`TASKS.md` is the active tracker for project work and release-readiness findings.
+`TASKS_ARCHIVED.md` stores archived (`[h]`) historical task records.
 
 - Keep IDs stable; never renumber.
 - Use statuses consistently:
+  - `[p]` proposed (discovered, pending triage/promotion)
   - `[ ]` not done
+  - `[~]` in progress
+  - `[!]` blocked (must include blocker + unblock plan)
   - `[x]` complete (not yet archived)
-  - `[h]` archived complete
+  - `[h]` archived complete (in `TASKS_ARCHIVED.md`)
 - When a task closes, assess for gaps and add/update follow-up tasks immediately.
+
+Task discovery:
+
+- Use `TASK_DISCOVERY_WORKFLOW.md` when asked to discover new development tasks.
+- Discovery runs manually on user request and can auto-add up to 10 `[p]` proposed tasks.
 
 ## Runtime and adapter contracts
 

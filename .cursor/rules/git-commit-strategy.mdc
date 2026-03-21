@@ -5,7 +5,8 @@ alwaysApply: true
 
 # Git Commit And PR Strategy
 
-Use `TASKS.md` as the source of truth for branch, commit, and PR scope.
+Use `TASKS.md` as the active source of truth for branch, commit, and PR scope.
+Use `TASKS_ARCHIVED.md` only for historical reference.
 
 ## Required workflow
 
@@ -15,7 +16,7 @@ Use `TASKS.md` as the source of truth for branch, commit, and PR scope.
 4. Use branch name format `t###-short-slug`.
 5. Use Conventional Commit messages:
    - `type(scope): short imperative summary`
-6. After implementation and validation, update `TASKS.md` statuses/history.
+6. After implementation and validation, update `TASKS.md` status and validation evidence.
 7. Prepare PR content with:
    - `## Summary` (1-3 bullets)
    - `## Test plan` (checklist)
@@ -30,3 +31,4 @@ Use `TASKS.md` as the source of truth for branch, commit, and PR scope.
 
 - Default intent is to create a task-scoped commit when a task is complete.
 - If platform policy requires explicit approval before commit, request confirmation before running commit commands.
+- Do not move tasks into `TASKS_ARCHIVED.md` as part of routine commits unless archive cadence is explicitly in scope.
