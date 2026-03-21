@@ -10,7 +10,11 @@ export type OpenClawQtResponse = {
   text: string
 }
 
-export function createOpenClawQtRuntime(tasksDir?: string): QtRuntimeLike {
+export function createOpenClawQtRuntime(tasksDir: string): QtRuntimeLike {
+  if (!tasksDir.trim()) {
+    throw new Error('OpenClaw runtime requires an explicit tasksDir.')
+  }
+
   return createQtRuntime(createFileTaskStore({ tasksDir }))
 }
 
@@ -61,7 +65,7 @@ export function renderOpenClawQtResult(result: QtRuntimeResult): string {
 
 export function handleOpenClawQtInput(
   input: string,
-  runtime: QtRuntimeLike = createOpenClawQtRuntime()
+  runtime: QtRuntimeLike
 ): OpenClawQtResponse {
   const commandText = normalizeOpenClawQtInput(input)
   const result = runtime.handle(commandText)

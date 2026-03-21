@@ -63,8 +63,18 @@ function registerChatParticipant(context: vscode.ExtensionContext, runtime: QtRu
   context.subscriptions.push(participant)
 }
 
+function resolveTasksDir(context: vscode.ExtensionContext): string {
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri
+  if (workspaceRoot) {
+    return vscode.Uri.joinPath(workspaceRoot, 'tasks').fsPath
+  }
+
+  const storageRoot = context.storageUri ?? context.globalStorageUri
+  return vscode.Uri.joinPath(storageRoot, 'tasks').fsPath
+}
+
 export function activate(context: vscode.ExtensionContext): void {
-  const runtime = createVsCodeQtRuntime()
+  const runtime = createVsCodeQtRuntime({ tasksDir: resolveTasksDir(context) })
   registerCommand(context, runtime)
   registerChatParticipant(context, runtime)
 }
