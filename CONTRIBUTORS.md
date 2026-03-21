@@ -151,6 +151,24 @@ Once readiness is green (or explicitly accepted), hand off to the release strate
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
 
+## Changelog and release-note writing standard
+
+QuickTask changelog content is produced from Changesets (`pnpm release:version`) and GitHub generated release notes (`.github/release.yml` categories).
+
+When writing a changeset summary, always use these sections:
+
+- `New Features`
+- `Bug Fixes`
+- `Internal Improvements`
+- `Breaking Changes`
+
+Rules:
+
+- Include `- None.` in empty sections.
+- Call out breaking changes explicitly, with migration steps when needed.
+- Prefer plain language focused on user impact over implementation details.
+- Add PR labels that match release categories so generated GitHub notes remain readable.
+
 ## Documentation map
 
 - User-facing usage: `README.md`
