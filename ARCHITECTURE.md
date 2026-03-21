@@ -52,4 +52,4 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 
 ## Current state
 
-The first runtime scaffold currently uses an in-memory store so command behavior can be developed before file persistence is added.
+The core runtime now uses a file-backed task store that reads and writes markdown templates on disk using the documented `tasks/` path and lookup rules.

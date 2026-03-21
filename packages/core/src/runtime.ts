@@ -1,5 +1,5 @@
 import { parseQtCommand } from './parser.js'
-import { createInMemoryTaskStore, getTaskTemplate, saveTaskTemplate, type InMemoryTaskStore } from './store.js'
+import { createFileTaskStore, getTaskTemplate, saveTaskTemplate, type FileTaskStore } from './store.js'
 import { createTaskTemplate, proposeTemplateImprovement } from './templates.js'
 
 export type QtRuntimeResult = {
@@ -7,7 +7,7 @@ export type QtRuntimeResult = {
   message: string
 }
 
-export function createQtRuntime(store: InMemoryTaskStore = createInMemoryTaskStore()) {
+export function createQtRuntime(store: FileTaskStore = createFileTaskStore()) {
   return {
     store,
     handle(input: string): QtRuntimeResult {

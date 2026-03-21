@@ -1,8 +1,5 @@
 import type { ImprovementProposal, TaskTemplate } from './types.js'
-
-function toFilename(taskName: string): string {
-  return `${taskName.trim().replace(/\s+/g, '-')}.md`
-}
+import { taskNameToFilename } from './store.js'
 
 export function createTaskTemplate(taskName: string, instructions: string): TaskTemplate {
   const cleanTaskName = taskName.trim()
@@ -20,7 +17,7 @@ export function createTaskTemplate(taskName: string, instructions: string): Task
 
   return {
     taskName: cleanTaskName,
-    filename: toFilename(cleanTaskName),
+    filename: taskNameToFilename(cleanTaskName),
     body
   }
 }

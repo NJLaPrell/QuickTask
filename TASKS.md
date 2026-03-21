@@ -38,7 +38,7 @@ Working rules for all tasks:
 - [h] T001 - Decide persistent task storage layout
 - [h] T003 - Tighten command parsing against the current spec
 - [h] T009 - Add core unit test harness
-- [ ] T002 - Replace in-memory store with file-backed task store
+- [x] T002 - Replace in-memory store with file-backed task store
 
 ### Phase 2 - Core behavior and reliability
 - [ ] T004 - Implement template creation flow from user instructions
@@ -82,11 +82,12 @@ Working rules for all tasks:
 
 ## Completed tasks (not yet archived)
 
-- None currently.
+- [x] T002 - Replace in-memory store with file-backed task store
 
 ## Active task backlog
 
 ## T002 - Replace in-memory store with file-backed task store
+- Status: [x] complete (not yet archived)
 - Goal: Persist task templates as markdown files instead of using the in-memory store.
 - Files: `packages/core/src/store.ts`, supporting core files, tests.
 - Steps:

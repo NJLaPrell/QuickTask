@@ -1,26 +1,96 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
+
 import type { TaskTemplate } from './types.js'
 
-export type InMemoryTaskStore = {
-  tasks: Map<string, TaskTemplate>
+const TASKS_DIR_ENV_VAR = 'QUICKTASK_TASKS_DIR'
+
+export type FileTaskStore = {
+  tasksDir: string
 }
 
-export function createInMemoryTaskStore(): InMemoryTaskStore {
-  return {
-    tasks: new Map<string, TaskTemplate>()
+export type CreateFileTaskStoreOptions = {
+  tasksDir?: string
+  repoRoot?: string
+}
+
+function normalizeTaskSlug(taskName: string): string {
+  return taskName
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+export function taskNameToFilename(taskName: string): string {
+  const slug = normalizeTaskSlug(taskName)
+  if (!slug) {
+    throw new Error('Task name must include at least one letter or number.')
+  }
+
+  return `${slug}.md`
+}
+
+function resolveTasksDir(options: CreateFileTaskStoreOptions = {}): string {
+  if (options.tasksDir?.trim()) {
+    return path.resolve(options.tasksDir)
+  }
+
+  const envTasksDir = process.env[TASKS_DIR_ENV_VAR]?.trim()
+  if (envTasksDir) {
+    return path.resolve(envTasksDir)
+  }
+
+  return path.resolve(options.repoRoot ?? process.cwd(), 'tasks')
+}
+
+function getTemplatePath(store: FileTaskStore, taskName: string): string | undefined {
+  try {
+    return path.join(store.tasksDir, taskNameToFilename(taskName))
+  } catch {
+    return undefined
   }
 }
 
-export function getTaskTemplate(
-  store: InMemoryTaskStore,
-  taskName: string
-): TaskTemplate | undefined {
-  return store.tasks.get(taskName.trim().toLowerCase())
+export function createFileTaskStore(options: CreateFileTaskStoreOptions = {}): FileTaskStore {
+  return {
+    tasksDir: resolveTasksDir(options)
+  }
 }
 
-export function saveTaskTemplate(
-  store: InMemoryTaskStore,
-  template: TaskTemplate
-): TaskTemplate {
-  store.tasks.set(template.taskName.trim().toLowerCase(), template)
-  return template
+export function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTemplate | undefined {
+  const cleanTaskName = taskName.trim()
+  if (!cleanTaskName) {
+    return undefined
+  }
+
+  const templatePath = getTemplatePath(store, cleanTaskName)
+  if (!templatePath || !existsSync(templatePath)) {
+    return undefined
+  }
+
+  const filename = path.basename(templatePath)
+  const body = readFileSync(templatePath, 'utf8')
+  return {
+    taskName: cleanTaskName,
+    filename,
+    body
+  }
+}
+
+export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): TaskTemplate {
+  const cleanTaskName = template.taskName.trim()
+  const filename = taskNameToFilename(cleanTaskName)
+  const templatePath = path.join(store.tasksDir, filename)
+
+  mkdirSync(store.tasksDir, { recursive: true })
+  writeFileSync(templatePath, template.body, 'utf8')
+
+  return {
+    ...template,
+    taskName: cleanTaskName,
+    filename
+  }
 }
