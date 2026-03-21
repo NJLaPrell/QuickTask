@@ -9,6 +9,54 @@ Working rules for all tasks:
 - For `/qt improve`, accepted changes must overwrite the existing task template.
 - If a task reveals a blocker, document it in the PR and stop at the smallest safe boundary.
 
+## Milestone execution order
+
+### Phase 1 - Core foundations
+- T001 - Decide persistent task storage layout
+- T003 - Tighten command parsing against the current spec
+- T009 - Add core unit test harness
+- T002 - Replace in-memory store with file-backed task store
+
+### Phase 2 - Core behavior and reliability
+- T004 - Implement template creation flow from user instructions
+- T005 - Implement existing task execution flow
+- T006 - Implement improvement proposal flow
+- T008 - Define runtime result contract for host adapters
+- T034 - Define improvement proposal lifecycle contract
+- T007 - Implement improvement acceptance and overwrite behavior
+- T022 - Define stable core API surface for adapters
+- T023 - Harden file-backed storage error handling
+- T029 - Define runtime diagnostics and error observability
+- T030 - Add persisted template corruption recovery strategy
+- T031 - Add template format versioning and migration path
+
+### Phase 3 - Host integrations
+- T010 - Wire the VS Code extension to the core runtime
+- T011 - Implement native VS Code `/qt` chat command
+- T012 - Refine Cursor command integration around the core runtime
+- T013 - Wire the OpenClaw adapter to the core runtime
+- T014 - Implement native OpenClaw `/qt` command flow
+
+### Phase 4 - CI and quality controls
+- T015 - Add repo-wide build and test workflow
+- T021 - Add linting and formatting quality gates
+- T024 - Add host-level end-to-end smoke tests
+- T027 - Define support matrix and compatibility policy
+- T028 - Add dependency and supply-chain security scanning
+- T033 - Add repository governance and release guardrails
+
+### Phase 5 - Packaging and release operations
+- T016 - Add VSIX packaging for the VS Code extension
+- T017 - Add OpenClaw package build artifact
+- T018 - Add release workflow for GitHub Releases
+- T025 - Add release versioning and changelog workflow
+- T026 - Add post-release install verification checks
+- T032 - Add release-candidate validation workflow
+
+### Phase 6 - Distribution and docs
+- T019 - Add VS Code Marketplace publishing workflow
+- T020 - Write installation and release documentation
+
 ## T001 - Decide persistent task storage layout
 - Goal: Choose and document the repository path and naming rules for persisted `[task].md` files.
 - Files: `ARCHITECTURE.md`, optionally new doc under repo root if needed.
@@ -60,14 +108,16 @@ Working rules for all tasks:
 - Files: `packages/core/src/templates.ts`, `packages/core/src/runtime.ts`, tests.
 - Steps:
   1. Implement creation behavior for a non-existent task.
-  2. Keep generated directions very short.
-  3. Prompt for clarification when the request is unclear.
-  4. Save the created template through the file-backed store.
+  2. Return a clear "already exists" result when the task name is already present.
+  3. Keep generated directions very short.
+  4. Prompt for clarification when the request is unclear.
+  5. Save the created template through the file-backed store.
 - Acceptance criteria:
   - New tasks are created only when no existing template exists.
+  - Existing tasks return a deterministic "already exists" response shape.
   - Generated templates are concise markdown instructions.
   - Unclear requests surface a clarification response instead of a bad template.
-  - Tests cover create/success/unclear paths.
+  - Tests cover create/success/already-exists/unclear paths.
 - Dependencies: T002, T003.
 
 ## T005 - Implement existing task execution flow
@@ -112,7 +162,7 @@ Working rules for all tasks:
   - Accepted improvements overwrite the existing template file.
   - Rejected or abandoned proposals do not alter the file.
   - Tests cover accept/reject/abandon paths.
-- Dependencies: T002, T006.
+- Dependencies: T002, T006, T008, T034.
 
 ## T008 - Define runtime result contract for host adapters
 - Goal: Standardize the response shapes that VS Code, Cursor, and OpenClaw adapters consume.
@@ -125,7 +175,7 @@ Working rules for all tasks:
   - Result contract is explicit in code.
   - Runtime returns only documented result shapes.
   - Tests validate key result types.
-- Dependencies: T004, T005, T006, T007.
+- Dependencies: T004, T005, T006.
 
 ## T009 - Add core unit test harness
 - Goal: Establish a clean test setup for the core package.
@@ -153,7 +203,7 @@ Working rules for all tasks:
   - The extension uses the shared core runtime.
   - No task logic is duplicated in the extension.
   - Tests cover the adapter boundary where practical.
-- Dependencies: T008, T009.
+- Dependencies: T008, T009, T022.
 
 ## T011 - Implement native VS Code `/qt` chat command
 - Goal: Support QuickTask through a native VS Code chat command flow.
@@ -196,7 +246,7 @@ Working rules for all tasks:
   - The OpenClaw package uses the shared core runtime.
   - No task logic is duplicated in the adapter.
   - Tests cover the adapter boundary where practical.
-- Dependencies: T008, T009.
+- Dependencies: T008, T009, T022.
 
 ## T014 - Implement native OpenClaw `/qt` command flow
 - Goal: Support QuickTask through a native OpenClaw slash-command flow.
@@ -291,4 +341,205 @@ Working rules for all tasks:
   - README explains what QuickTask is and how to install it per host.
   - Release flow is documented.
   - Marketplace publishing notes are documented.
-- Dependencies: T018, T019.
+- Dependencies: T018, T019, T027.
+
+## T021 - Add linting and formatting quality gates
+- Goal: Add repository-wide lint and formatting checks that run locally and in CI.
+- Files: root/package configs, package-level configs, workflow files, docs as needed.
+- Steps:
+  1. Choose linting and formatting tools that work well with the TypeScript monorepo.
+  2. Add root scripts for lint and format checks.
+  3. Wire lint/format checks into CI so violations fail builds.
+  4. Keep config shared where practical and scoped where necessary.
+- Acceptance criteria:
+  - `pnpm lint` and `pnpm format:check` run from repo root.
+  - CI fails on lint or formatting violations.
+  - Tooling setup is documented briefly for contributors.
+- Dependencies: T015.
+
+## T022 - Define stable core API surface for adapters
+- Goal: Ensure host adapters consume a documented, stable `@quicktask/core` API.
+- Files: `packages/core/src/index.ts`, core types/runtime files, tests/docs.
+- Steps:
+  1. Decide which parser/runtime/store/types exports are public.
+  2. Re-export public APIs from the package entrypoint.
+  3. Prevent adapter reliance on private internal paths.
+  4. Document intended adapter integration boundaries.
+- Acceptance criteria:
+  - Adapters can integrate using only documented core exports.
+  - Public exports are explicit and test-covered where practical.
+  - No required deep imports into core internals remain.
+- Dependencies: T008, T009.
+
+## T023 - Harden file-backed storage error handling
+- Goal: Make template persistence robust across common filesystem failure modes.
+- Files: `packages/core/src/store.ts`, `packages/core/src/runtime.ts`, tests/docs.
+- Steps:
+  1. Define behavior for permission errors, missing directories, and I/O failures.
+  2. Add safe read/write patterns to avoid corrupting templates on overwrite.
+  3. Return clear runtime error results that adapters can render.
+  4. Keep scope to operational filesystem failures; treat semantic file corruption in T030.
+  5. Add targeted tests for unhappy paths and recovery behavior.
+- Acceptance criteria:
+  - Permission and path errors are handled without crashes.
+  - Operational filesystem failures surface clear errors.
+  - Overwrite operations are safe and test-covered.
+  - Semantic corruption handling is explicitly deferred to T030.
+  - Error paths are documented for adapter authors.
+- Dependencies: T002, T008, T009.
+
+## T024 - Add host-level end-to-end smoke tests
+- Goal: Validate working `/qt` flows through host adapters using built artifacts.
+- Files: host test harness files, workflow files, docs as needed.
+- Steps:
+  1. Define minimal smoke scenarios for help/create/run/improve.
+  2. Add automated smoke tests for VS Code and OpenClaw adapters.
+  3. Validate Cursor integration behavior using practical scripted checks where feasible.
+  4. Run smoke tests in CI on pull requests and mainline changes.
+- Acceptance criteria:
+  - Smoke tests verify core user flows in each supported host path.
+  - Failures clearly indicate host integration regressions.
+  - Smoke checks are documented and repeatable.
+- Dependencies: T011, T012, T014, T015.
+
+## T025 - Add release versioning and changelog workflow
+- Goal: Standardize semantic versioning and changelog generation for releases.
+- Files: release docs/config/scripts/workflow files.
+- Steps:
+  1. Choose a release versioning approach compatible with the monorepo.
+  2. Add a changelog generation or maintenance workflow.
+  3. Require release notes content for shipped artifacts.
+  4. Align release automation with tag and artifact publishing steps.
+- Acceptance criteria:
+  - Version bumps follow a documented semver policy.
+  - Changelog entries are produced for each release.
+  - Release notes are attached or generated consistently.
+- Dependencies: T018.
+
+## T026 - Add post-release install verification checks
+- Goal: Confirm published artifacts are installable and usable after release.
+- Files: workflow/check scripts, release docs.
+- Steps:
+  1. Define post-release verification for VSIX and OpenClaw artifacts.
+  2. Automate install-and-basic-run checks against released assets.
+  3. Capture pass/fail evidence in release workflows.
+  4. Document manual fallback validation steps if automation is incomplete.
+- Acceptance criteria:
+  - Each release has a recorded install verification result.
+  - Basic `/qt` functionality is confirmed on published artifacts.
+  - Verification failures block or flag release completion.
+- Dependencies: T016, T017, T018.
+
+## T027 - Define support matrix and compatibility policy
+- Goal: Set clear compatibility expectations across hosts, OSes, and runtime versions.
+- Files: `README.md`, `ARCHITECTURE.md`, CI configs as needed.
+- Steps:
+  1. Define minimum supported VS Code, Cursor, OpenClaw, and Node versions.
+  2. Document supported operating systems and any known limitations.
+  3. Align CI coverage with the declared compatibility matrix.
+  4. Add policy guidance for introducing breaking compatibility changes.
+- Acceptance criteria:
+  - Compatibility matrix is documented in repo docs.
+  - CI validates at least the declared minimum supported environments.
+  - Breaking changes follow a documented policy.
+- Dependencies: T015.
+
+## T028 - Add dependency and supply-chain security scanning
+- Goal: Detect vulnerable dependencies and risky supply-chain changes early.
+- Files: workflow files, dependency policies/docs, package configs as needed.
+- Steps:
+  1. Add automated dependency vulnerability scanning in CI.
+  2. Add lockfile and dependency change checks for pull requests.
+  3. Define remediation expectations for high and critical findings.
+  4. Document local and CI security check commands.
+- Acceptance criteria:
+  - CI reports dependency vulnerabilities with actionable output.
+  - High and critical findings fail CI or are explicitly gated.
+  - Security scanning workflow is documented for contributors.
+- Dependencies: T015.
+
+## T029 - Define runtime diagnostics and error observability
+- Goal: Make runtime and adapter failures diagnosable in development and support scenarios.
+- Files: core runtime/types files, adapter integration files, docs/tests.
+- Steps:
+  1. Define structured error/result metadata for core and adapters.
+  2. Add consistent logging hooks or diagnostic events at key flow boundaries.
+  3. Ensure errors include context without leaking sensitive user content.
+  4. Add tests for key diagnostic and error reporting paths.
+- Acceptance criteria:
+  - Error results contain stable diagnostic fields.
+  - Host adapters can surface useful failure information.
+  - Observability behavior is documented and test-covered.
+- Dependencies: T008, T022, T023.
+
+## T030 - Add persisted template corruption recovery strategy
+- Goal: Prevent data loss and provide recovery behavior for corrupted task template files.
+- Files: `packages/core/src/store.ts`, runtime/docs/tests, scripts if needed.
+- Steps:
+  1. Define detection rules for malformed, truncated, or semantically invalid template files.
+  2. Add safe fallback behavior for unreadable templates.
+  3. Add optional backup or rollback behavior for overwrite operations.
+  4. Document operator and user recovery procedures.
+- Acceptance criteria:
+  - Corrupted files do not crash runtime flows.
+  - Recovery behavior is deterministic and documented.
+  - Tests cover corrupted-file detection and recovery outcomes.
+- Dependencies: T002, T023.
+
+## T031 - Add template format versioning and migration path
+- Goal: Ensure persisted templates can evolve without breaking existing user data.
+- Files: core store/runtime files, migration utilities, tests/docs.
+- Steps:
+  1. Define a version marker strategy for persisted template format.
+  2. Implement migration logic for older template versions.
+  3. Add backward-compatibility tests with representative legacy files.
+  4. Document migration behavior and rollback expectations.
+- Acceptance criteria:
+  - Older template files are readable or migratable without manual edits.
+  - Migration logic is automated and test-covered.
+  - Versioning policy is documented for future changes.
+- Dependencies: T002, T023, T030.
+
+## T032 - Add release-candidate validation workflow
+- Goal: Validate release artifacts in a staged RC process before final publication.
+- Files: release workflow files, docs, optional validation scripts.
+- Steps:
+  1. Add a release-candidate build and publish path.
+  2. Run smoke and install verification against RC artifacts.
+  3. Gate final release publication on RC validation results.
+  4. Document RC promotion and rollback procedures.
+- Acceptance criteria:
+  - RC artifacts are produced and validated before final release.
+  - Promotion to final release is explicit and auditable.
+  - Failed RC validation blocks final publication.
+- Dependencies: T018, T024, T026.
+
+## T033 - Add repository governance and release guardrails
+- Goal: Enforce review, ownership, and quality controls on high-impact changes.
+- Files: `CODEOWNERS`, workflow files, contributing docs.
+- Steps:
+  1. Add ownership rules for core runtime, adapters, and release workflows.
+  2. Require review and required checks for protected branches.
+  3. Add PR-level checks for changelog/release-note completeness.
+  4. Document governance expectations for contributors.
+- Acceptance criteria:
+  - Critical paths have explicit code ownership.
+  - PRs cannot merge without required checks and reviews.
+  - Release-note/changelog guardrails are enforced.
+  - A repository settings checklist artifact is included to verify platform-level enforcement.
+- Dependencies: T015, T025.
+
+## T034 - Define improvement proposal lifecycle contract
+- Goal: Standardize how improvement proposals are identified, accepted, rejected, or abandoned across hosts.
+- Files: `packages/core/src/types.ts`, `packages/core/src/runtime.ts`, adapter docs/tests.
+- Steps:
+  1. Define proposal identity and metadata requirements (for example ID/token and originating task).
+  2. Define runtime action shapes for accept/reject/abandon operations.
+  3. Define stale/conflicting proposal handling and idempotency behavior.
+  4. Document adapter UX requirements for proposal confirmation flows.
+- Acceptance criteria:
+  - Proposal lifecycle state transitions are explicit and testable.
+  - Accept/reject/abandon paths are deterministic across hosts.
+  - Stale proposal handling is documented and tested.
+  - Contract is documented for adapter implementations.
+- Dependencies: T006, T008.
