@@ -1,0 +1,39 @@
+name: PR Guardrails
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  changeset-required:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect release-relevant file changes
+        id: changed
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            packages/**
+            scripts/**
+            .github/workflows/release.yml
+            RELEASE_STRATEGY.md
+            README.md
+
+      - name: Enforce changeset for release-relevant PRs
+        if: steps.changed.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          if printf "%s\n" "${ALL_CHANGED_FILES}" | grep -Eq "^\\.changeset/.+\\.md$"; then
+            echo "Changeset found for release-relevant changes."
+            exit 0
+          fi
+
+          echo "Release-relevant PRs must include a .changeset/*.md entry."
+          echo "Run: pnpm changeset"
+          exit 1

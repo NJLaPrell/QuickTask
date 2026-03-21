@@ -6,7 +6,12 @@
   "scripts": {
     "build": "pnpm -r build",
     "check": "pnpm -r check",
-    "test": "pnpm -r --if-present test",
+    "test": "pnpm -r --if-present test && node --test scripts/test/**/*.test.mjs",
+    "test:smoke": "node scripts/smoke-host-adapters.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:package-manager": "node scripts/check-package-manager-consistency.mjs",
     "clean": "pnpm -r clean",
     "changeset": "changeset",
     "release:prepare": "node scripts/release-prepare-readiness.mjs",
@@ -15,7 +20,11 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.0",
-    "typescript": "^5.9.3"
+    "eslint": "^10.1.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1"
   }
 }

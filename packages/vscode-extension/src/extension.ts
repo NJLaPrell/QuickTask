@@ -1,44 +1,43 @@
-import * as vscode from 'vscode'
+import * as vscode from "vscode";
 
-import { handleQtChatPrompt, type QtRuntimeLike, createVsCodeQtRuntime } from './qtAdapter.js'
+import { handleQtChatPrompt, type QtRuntimeLike, createVsCodeQtRuntime } from "./qtAdapter.js";
 
 type ChatRequestLike = {
-  command?: string | { name?: string }
-  prompt?: string
-}
+  command?: string | { name?: string };
+  prompt?: string;
+};
 
 type ChatStreamLike = {
-  markdown?: (value: string) => void
-}
+  markdown?: (value: string) => void;
+};
 
 function getQtPromptFromRequest(request: ChatRequestLike): string {
-  const commandName =
-    typeof request.command === 'string' ? request.command : request.command?.name
-  const prompt = typeof request.prompt === 'string' ? request.prompt : ''
+  const commandName = typeof request.command === "string" ? request.command : request.command?.name;
+  const prompt = typeof request.prompt === "string" ? request.prompt : "";
 
-  if (commandName === 'qt') {
-    return prompt
+  if (commandName === "qt") {
+    return prompt;
   }
 
-  return prompt
+  return prompt;
 }
 
 function registerCommand(context: vscode.ExtensionContext, runtime: QtRuntimeLike): void {
-  const disposable = vscode.commands.registerCommand('quicktask.runQt', async () => {
+  const disposable = vscode.commands.registerCommand("quicktask.runQt", async () => {
     const prompt = await vscode.window.showInputBox({
-      prompt: 'Enter a /qt command or command arguments',
-      placeHolder: '/qt summarize summarize notes into bullets'
-    })
+      prompt: "Enter a /qt command or command arguments",
+      placeHolder: "/qt summarize summarize notes into bullets"
+    });
 
     if (prompt === undefined) {
-      return
+      return;
     }
 
-    const response = handleQtChatPrompt(prompt, runtime)
-    void vscode.window.showInformationMessage(response.markdown)
-  })
+    const response = handleQtChatPrompt(prompt, runtime);
+    void vscode.window.showInformationMessage(response.markdown);
+  });
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(disposable);
 }
 
 function registerChatParticipant(context: vscode.ExtensionContext, runtime: QtRuntimeLike): void {
@@ -46,35 +45,42 @@ function registerChatParticipant(context: vscode.ExtensionContext, runtime: QtRu
     | {
         createChatParticipant?: (
           id: string,
-          handler: (request: ChatRequestLike, chatContext: unknown, stream: ChatStreamLike) => unknown
-        ) => vscode.Disposable
+          handler: (
+            request: ChatRequestLike,
+            chatContext: unknown,
+            stream: ChatStreamLike
+          ) => unknown
+        ) => vscode.Disposable;
       }
-    | undefined
+    | undefined;
 
   if (!chatApi?.createChatParticipant) {
-    return
+    return;
   }
 
-  const participant = chatApi.createChatParticipant('quicktask.chat', async (request, _, stream) => {
-    const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime)
-    stream.markdown?.(response.markdown)
-  })
+  const participant = chatApi.createChatParticipant(
+    "quicktask.chat",
+    async (request, _, stream) => {
+      const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime);
+      stream.markdown?.(response.markdown);
+    }
+  );
 
-  context.subscriptions.push(participant)
+  context.subscriptions.push(participant);
 }
 
 function resolveTasksDir(context: vscode.ExtensionContext): string {
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
   if (workspaceRoot) {
-    return vscode.Uri.joinPath(workspaceRoot, 'tasks').fsPath
+    return vscode.Uri.joinPath(workspaceRoot, "tasks").fsPath;
   }
 
-  const storageRoot = context.storageUri ?? context.globalStorageUri
-  return vscode.Uri.joinPath(storageRoot, 'tasks').fsPath
+  const storageRoot = context.storageUri ?? context.globalStorageUri;
+  return vscode.Uri.joinPath(storageRoot, "tasks").fsPath;
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  const runtime = createVsCodeQtRuntime({ tasksDir: resolveTasksDir(context) })
-  registerCommand(context, runtime)
-  registerChatParticipant(context, runtime)
+  const runtime = createVsCodeQtRuntime({ tasksDir: resolveTasksDir(context) });
+  registerCommand(context, runtime);
+  registerChatParticipant(context, runtime);
 }

@@ -1,12 +1,14 @@
 Task: Rewrite or improve a GitHub project README using proven README best practices.
 
 Goals
+
 - Make the README immediately clear, useful, visually scannable, and credible.
 - Optimize for a first-time visitor deciding in under 30 seconds whether to use the project.
 - Keep it concise, exciting, and easy to understand.
 - Prefer clarity over hype. Prefer concrete value over vague claims.
 
 Required outcomes
+
 1. Open with a strong top section:
    - Project name
    - One-sentence value proposition
@@ -58,20 +60,26 @@ Required outcomes
    - Clearly separate shipped features from planned features
    - Do not invent benchmarks, users, integrations, or support channels
 10. Improve presentation:
-   - Use consistent Markdown formatting
-   - Use fenced code blocks for commands
-   - Use tables sparingly
-   - Add screenshots/GIF/demo links only if they materially help
+
+- Use consistent Markdown formatting
+- Use fenced code blocks for commands
+- Use tables sparingly
+- Add screenshots/GIF/demo links only if they materially help
+
 11. For open-source projects, ensure discoverability and contribution readiness:
-   - Mention license if available
-   - Point to contributing guidance if available
-   - Mention where to get help if known
+
+- Mention license if available
+- Point to contributing guidance if available
+- Mention where to get help if known
+
 12. Preserve truth and intent:
-   - Do not remove important technical constraints
-   - Do not change factual meaning
-   - If information is missing, leave a concise placeholder or note instead of fabricating
+
+- Do not remove important technical constraints
+- Do not change factual meaning
+- If information is missing, leave a concise placeholder or note instead of fabricating
 
 Style rules
+
 - Tone: confident, modern, professional, readable
 - Keep it tight
 - Lead with benefits, then mechanics
@@ -82,6 +90,7 @@ Style rules
 - Prefer “Run this” over explanation when action is enough
 
 Recommended section order
+
 1. Title + one-liner
 2. Why this exists / overview
 3. Key features
@@ -92,6 +101,7 @@ Recommended section order
 8. Contributing / support / license
 
 Output format
+
 - Return the revised README in clean Markdown
 - Then provide a short changelog summary:
   - What was improved
@@ -99,6 +109,7 @@ Output format
   - Any sections intentionally omitted
 
 Prerelease preparation checklist
+
 1. Before cutting a release, review `README.md` against this guide.
 2. Update `README.md` to add any missing documentation needed for current features, setup, usage, constraints, and support paths.
 3. Follow `README_EDITING.md` rules while editing so the README stays accurate, scannable, and release-ready.
