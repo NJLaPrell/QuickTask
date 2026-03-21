@@ -40,6 +40,8 @@ export type TaskTemplate = {
 }
 
 export type ImprovementProposal = {
+  proposalId: string
+  source: 'explicit' | 'inferred'
   oldTemplate: string
   proposedTemplate: string
 }
