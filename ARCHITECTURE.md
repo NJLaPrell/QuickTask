@@ -46,9 +46,17 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 ## Runtime flow
 
 1. Parse the `/qt` command.
-2. Decide whether the request is help, create, run, or improve.
+2. Decide whether the request is help, create, run, improve, or improve-action.
 3. Resolve the task template.
 4. Return a host-specific response.
+
+## Canonical command/result contract
+
+The single source of truth for supported command forms and runtime result codes is:
+
+- `docs/qt-command-result-contract.md`
+
+Host adapters and user-facing docs should reference this contract to avoid drift.
 
 ## Current state
 
