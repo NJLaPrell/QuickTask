@@ -1,0 +1,10 @@
+[
+  {
+    "proposalId": "e08249e562b6",
+    "taskName": "test",
+    "oldTemplate": "# test\n\n- Goal: build me a simple template to test out the qt plugin\n- Use the provided user input.\n- Return a concise result.",
+    "proposedTemplate": "# test\n\n- Goal: build me a simple template to test out the qt plugin\n- Use the provided user input.\n- Return a concise result.\n\nImprovement note for test: refine this template to better handle explicit user input.",
+    "status": "proposed",
+    "createdAtMs": 1774211753005
+  }
+]

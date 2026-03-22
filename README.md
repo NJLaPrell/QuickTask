@@ -15,6 +15,8 @@ QuickTask gives you a single `/qt` command family to create, run, and iterativel
 
 ## 2-Minute Quickstart
 
+**Trying the VS Code / Cursor extension?** Skip this repo build path and go to **[Install QuickTask](#install-quicktask)** (Marketplace or VSIX). The steps below are for **cloning this repo** and exercising core from source (contributors and advanced users).
+
 Use this path to get first value quickly:
 
 1. Install dependencies:
@@ -50,22 +52,35 @@ For full validation before contributing, run `pnpm check && pnpm test`.
 
 QuickTask ships installable artifacts through GitHub Releases.
 
+### Canonical extension identity
+
+Use these strings everywhere (search, support, docs) so people install the right thing:
+
+| What | Value |
+| --- | --- |
+| **Display name** | QuickTask Workflows |
+| **Extension id** | `nicklaprell.quicktask-vscode` |
+| **Marketplace** | [Open listing](https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode) |
+| **Run /qt from palette** | Command **QuickTask: Run /qt Command** |
+| **Chat participant** | **QuickTask** (invokable as `quicktask`); in chat, type **`/qt`** for QuickTask commands—the same surface as the palette command |
+
 ### VS Code (Marketplace)
 
-1. Open [Visual Studio Marketplace](https://marketplace.visualstudio.com/vscode).
-2. Search for `QuickTask Workflows` by publisher `nicklaprell`.
+1. Open [Visual Studio Marketplace](https://marketplace.visualstudio.com/vscode) or the [direct listing](https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode).
+2. Search for **`QuickTask Workflows`** (publisher **`nicklaprell`**).
 3. Install the extension.
 
 ### VS Code (manual VSIX)
 
 1. Download `quicktask-vscode-vX.Y.Z.vsix` from the matching GitHub release.
-2. In VS Code, open Command Palette.
-3. Run `Extensions: Install from VSIX...` and choose the downloaded file.
+2. Open the Command Palette (**View → Command Palette…** or the usual shortcut).
+3. Run exactly **`Extensions: Install from VSIX...`** and choose the downloaded file.  
+   - If it doesn’t appear, type `vsix` in the palette filter—some builds hide rarely used commands until you search.
 
 ### Cursor (VSIX)
 
 1. Download `quicktask-vscode-vX.Y.Z.vsix` from GitHub release assets.
-2. Use Cursor's extension install-from-VSIX flow.
+2. Open the Command Palette and run **`Extensions: Install from VSIX...`** (same wording as VS Code), then pick the file.
 3. Reload the window if prompted.
 
 ### OpenClaw

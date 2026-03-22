@@ -66,20 +66,25 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 ## Current execution state
 
-- Last updated: 2026-03-22
-- Current phase in execution: Post-Phase-11 wrap-up (next-phase planning pending)
-- Current milestone target: Hold stable on `v1.0.0` and prepare next backlog slice.
-- Phase objective now: maintain release stability and triage next phase proposals.
+- Last updated: 2026-03-23
+- Phase 12 proposals: **All accepted (2026-03-23).** Each of **`T133`–`T142`** retains **Proposal review (2026-03-23)** and **Maintainer decision: ACCEPTED**; tasks are **`[ ]` todo** and assigned to **Phase 12** sub-milestones **12a / 12b / 12c** (see each task’s **Phase / milestone** field).
+- Current phase in execution: **Phase 12** — user-feedback resolution / `v1.0.x` adoption (see **Phase 12** + **`v1.0.x` adoption execution plan**); direction in `docs/product-direction.md`.
+- Current milestone target: **12a** → **12b** → **12c** (see Phase 12 waves below).
+- Phase objective now: Implement accepted `T133`–`T142` and close linked GitHub feedback issues.
 - Phase kickoff assessment: complete (reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and active contracts).
 - Active implementation (`[~]`): none
-- Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 0 tasks
+- Scheduled this phase (`[ ]`): `T133`–`T142` (Phase 12; see **Scheduled** backlog below)
+- Ready queue (`[p]`): _Empty._
 - Blocked tasks (`[!]`): none
-- Next tasks in order:
-  1. Run next-phase task discovery and promote top proposals.
-  2. Start next implementation phase from refreshed backlog.
+- Next tasks in order (aligned with Phase 12 waves):
+  1. **12a — Wave A:** `T134`, `T135` (parallel where possible).
+  2. **12a — Wave B:** `T138`.
+  3. **12b — Wave C:** `T133`, then `T139`, then `T136`, then `T140`.
+  4. **12c:** `T137` (spec), then `T142`, then `T141` (P4).
+- User feedback triage: Each open UF issue is mapped in `USER_FEEDBACK.md` **Index** (GitHub + **TASKS.md** task column). UF-019 / [#59](https://github.com/NJLaPrell/QuickTask/issues/59) closed **not planned** (README + Releases only).
 - Definition of "phase complete" for current phase:
-  - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) are `[x]`.
+  - **Phase 12** completion gate: `T133`–`T142` are `[x]` and linked GitHub user-feedback issues are updated/closed (see Phase 12 section).
+  - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
   - CI/release workflow validation remains green after action-version modernization changes.
 
 ## `v1.0.0` release execution plan
@@ -120,6 +125,30 @@ The `v1.0.0` execution plan is complete when every task in this set is `[x]`:
 
 Validation expectations are enforced within those tasks' acceptance criteria and evidence blocks.
 
+## `v1.0.x` adoption execution plan (Phase 12)
+
+Use this board for **post-`v1.0.0` adoption** work driven by GitHub user-feedback issues and `docs/product-direction.md`.
+
+### Scope buckets
+
+- **12a — Discover + first-run clarity (P1):** `T134`, `T135`, `T138`
+- **12b — Command model + onboarding (P1–P2):** `T133`, `T139`, `T136`, `T140` (ship roughly in that order; see waves)
+- **12c — Trust + polish (P2–P4):** `T137` (spec, then future implementation task), `T142` (P2), `T141` (P4)
+
+### Ordered delivery waves
+
+1. **Wave A:** `T134` ⟷ `T135` (parallel where possible; Marketplace work may be out-of-band).
+2. **Wave B:** `T138` (contributor sandbox credibility).
+3. **Wave C:** `T133` (run-default + create escape hatch), then **`T139`** (UF-012: long paste = create body when template missing — docs/tests aligned with **T133**).
+4. **Wave D:** `T136` (tiered help, init steering, suggested next steps).
+5. **Wave E:** `T140` (improve empty input).
+6. **Wave F:** `T137` (verbose/debug **spec**; add implementation task(s) after spec lands).
+7. **Wave G:** `T142` (P2 — extension preflight + hint), then `T141` (P4).
+
+### Phase 12 completion gate
+
+Phase 12 is **ready to close** when: `T133`–`T142` are `[x]` and user-feedback issues linked in those tasks are updated/closed by maintainers.
+
 ## Milestone execution order
 
 ### Phase 1 - Core foundations
@@ -155,8 +184,8 @@ Validation expectations are enforced within those tasks' acceptance criteria and
 ### Phase 6 - Distribution and docs
 
 - Success measure: Users can discover, install, and upgrade QuickTask across hosts with clear docs.
-- Status: in maintenance.
-- Active/near-term IDs: none.
+- Status: in maintenance; **Phase 12** extends this track for user-feedback adoption.
+- Active/near-term IDs: `T133`–`T142` (see **Phase 12** above).
 - Archived task IDs: T019, T020, T050, T051, T052.
 
 ### Phase 7 - Release governance and risk gates
@@ -194,13 +223,55 @@ Validation expectations are enforced within those tasks' acceptance criteria and
 - Planned task IDs (in order): T132, T112, T113, T114, T116, T117, T118, T120, T123, T124, T126.
 - Archived task IDs: none.
 
+### Phase 12 - User feedback resolution (`v1.0.x` adoption)
+
+- **Success measure:** Open GitHub user-feedback issues have a tracked task, shipped work matches `docs/product-direction.md`, and README/Marketplace/extension tell a chat-first, install-credible story.
+- **Status:** **in execution** — proposals **ACCEPTED** (2026-03-23); tasks **`T133`–`T142`** are **`[ ]` todo** with **Phase / milestone** assignments (**12a** / **12b** / **12c**).
+- **Release milestone tag:** `v1.0.x` adoption (post-`v1.0.0`); ship order follows **Ordered delivery waves** in **`v1.0.x` adoption execution plan** above.
+- **Planned task IDs (by wave):**
+  - **12a Wave A — Discover + install trust:** `T134` (GitHub #48, #49, #60; #50 completed → #48), `T135` (GitHub #41, #43, #44, #47, #62; #46 completed → #47).
+  - **12a Wave B — Contributor path:** `T138` (GitHub #42).
+  - **12b — Command model + onboarding (waves C–E):** `T133` (#51, #53) → `T139` (#52) → `T136` (#54, #58) → `T140` (#55).
+  - **12c — Trust + polish (waves F–G):** `T137` (#45, #57) → `T142` (#61) → `T141` (#56).
+
+### Phase 12 dependency sketch
+
+```text
+T134 ──┬── (Marketplace external work can parallelize with repo)
+T135 ──┘
+T138 (independent; contributor)
+T133 → T140 (improve UX may assume stable create/run; can parallelize carefully)
+T136 (help/init; can parallel T133 with coordination)
+T137 → (future) verbose implementation task after spec
+T139 coordinates with T133 (create when missing vs run when exists)
+T142 (P2), T141 (P4) — extension preflight + templates polish
+```
+
 ## Active task backlog
 
-Pending work below is triaged and ready for implementation.
+Work below is triaged for implementation.
 
 ### Proposed
 
 - _Empty._
+
+### Scheduled (`[ ]`) — Phase 12 accepted 2026-03-23
+
+**Milestone: `v1.0.x` adoption — Phase 12**
+
+- **12a (discover + first-run + contributor path)**  
+  - [ ] `T134` — Marketplace + README install trust — [#48](https://github.com/NJLaPrell/QuickTask/issues/48), [#49](https://github.com/NJLaPrell/QuickTask/issues/49), [#60](https://github.com/NJLaPrell/QuickTask/issues/60)  
+  - [ ] `T135` — Chat-first docs + Contributing-only monorepo — [#41](https://github.com/NJLaPrell/QuickTask/issues/41), [#43](https://github.com/NJLaPrell/QuickTask/issues/43), [#44](https://github.com/NJLaPrell/QuickTask/issues/44), [#47](https://github.com/NJLaPrell/QuickTask/issues/47), [#62](https://github.com/NJLaPrell/QuickTask/issues/62)  
+  - [ ] `T138` — `qt:sandbox` fix or doc demotion — [#42](https://github.com/NJLaPrell/QuickTask/issues/42)
+- **12b (command model + onboarding)**  
+  - [ ] `T133` — Run when template exists + create escape hatch — [#51](https://github.com/NJLaPrell/QuickTask/issues/51), [#53](https://github.com/NJLaPrell/QuickTask/issues/53)  
+  - [ ] `T139` — UF-012 long paste = create body + docs — [#52](https://github.com/NJLaPrell/QuickTask/issues/52)  
+  - [ ] `T136` — Help tiering, init steer, next steps — [#54](https://github.com/NJLaPrell/QuickTask/issues/54), [#58](https://github.com/NJLaPrell/QuickTask/issues/58)  
+  - [ ] `T140` — Improve empty/incomplete input — [#55](https://github.com/NJLaPrell/QuickTask/issues/55)
+- **12c (trust + polish)**  
+  - [ ] `T137` — Verbose/debug **spec** — [#45](https://github.com/NJLaPrell/QuickTask/issues/45), [#57](https://github.com/NJLaPrell/QuickTask/issues/57)  
+  - [ ] `T142` — Extension hint + full preflight — [#61](https://github.com/NJLaPrell/QuickTask/issues/61)  
+  - [ ] `T141` — Seeded template run-line footer — [#56](https://github.com/NJLaPrell/QuickTask/issues/56)
 
 ### Intake queue
 
@@ -723,6 +794,267 @@ Pending work below is triaged and ready for implementation.
   - Merged release-significant updates to `main` via PR [#38](https://github.com/NJLaPrell/QuickTask/pull/38), reran RC [23410709034](https://github.com/NJLaPrell/QuickTask/actions/runs/23410709034), then re-dispatched release handoff.
   - Final release workflow succeeded: [run 23410723831](https://github.com/NJLaPrell/QuickTask/actions/runs/23410723831).
   - Published release/tag output: [v0.4.0](https://github.com/NJLaPrell/QuickTask/releases/tag/v0.4.0).
+
+### [ ] T133 - Prefer run when `/qt <existing-task> …` (explicit create escape hatch)
+
+- Status: [ ]
+- Priority: P1
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12b** (command model); delivery **wave C** (after **T138**; coordinate with **T139**).
+- Goal: When a template name already exists, default `/qt <name> …` to **run**, not create—per `docs/product-direction.md`. Preserve a clear **create-new** path for power users (subcommand, flag, or documented form).
+- **Proposal review (2026-03-23):**
+  - **What:** Changes default meaning of `/qt <existing-name> …` from create to **run**, with an explicit escape hatch to create/overwrite.
+  - **How:** Update `packages/core` parser + runtime, contract docs, tests, then adapter result copy where `already-exists` / did-you-mean still appears.
+  - **Impact:** **User-visible behavior change** on all hosts using core; power users trained on “space = create” need the new documented form.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#51](https://github.com/NJLaPrell/QuickTask/issues/51), [#53](https://github.com/NJLaPrell/QuickTask/issues/53) (UF-011, UF-013).
+- Files: `packages/core/src/parser.ts`, `packages/core/src/runtime.ts`, `docs/qt-command-result-contract.md`, `packages/core/test/*`, host adapters as needed
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Update parser semantics and contract docs for create vs run when task exists.
+  2. Implement runtime behavior + deterministic result payloads (incl. migration notes for users trained on “space = create”).
+  3. Add tests for run default, create escape hatch, and edge cases (quoted names, missing task).
+  4. Align adapter copy for `already-exists` / did-you-mean if still surfaced.
+- Acceptance criteria:
+  - Documented command forms match implemented behavior.
+  - Core tests cover run-default and explicit-create paths.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T134 - Marketplace + README install trust pass (identity, screenshots, copy)
+
+- Status: [ ]
+- Priority: P1
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12a** (discover + install trust); delivery **wave A** (parallel with **T135**).
+- Goal: Address UF-008, UF-009, UF-010: listing feels findable and credible; README reinforces canonical identity and install paths. Include **post-install verification** (UF-020): how to confirm the extension is enabled and what to try next.
+- **Proposal review (2026-03-23):**
+  - **What:** Make Marketplace + README **credible and findable**; add post-install “you’re good” checklist (UF-020).
+  - **How:** Update VS Code Marketplace listing (external console), edit `README.md`, optional small doc cross-links; coordinate copy with **T142** for doctor/hint wording.
+  - **Impact:** **No core/runtime code** required for listing/README; improves acquisition and first-run trust only.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#48](https://github.com/NJLaPrell/QuickTask/issues/48), [#49](https://github.com/NJLaPrell/QuickTask/issues/49), [#60](https://github.com/NJLaPrell/QuickTask/issues/60) (UF-008, UF-009, UF-020); **[#50](https://github.com/NJLaPrell/QuickTask/issues/50) completed** (consolidated tracking) — UF-010 scope merged here (canonical naming).
+- Files: Marketplace listing (external), `README.md`, `USER_FEEDBACK.md` cross-links as needed
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Refresh Marketplace overview, keywords, and screenshots; link repo/support.
+  2. Align README install section with listing and `docs/product-direction.md` priorities.
+  3. Spot-check Cursor/VS Code discoverability notes (no new landing page required).
+  4. Add short post-install checklist (Extensions view + version + optional `/qt doctor` / first command); align **doctor** / verification wording with **T142** when both ship.
+- Acceptance criteria:
+  - Canonical identity (display name, extension id, direct URL) is consistent in README and listing.
+  - Marketplace page does not read “empty upload.”
+  - README gives a clear “you installed the right thing” verification path.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T135 - Chat-first first-run docs and Contributing-only monorepo path
+
+- Status: [ ]
+- Priority: P1
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12a** (first-run clarity); delivery **wave A** (parallel with **T134**).
+- Goal: UF-001, UF-003, UF-004, UF-006, UF-007, UF-022: default story is **QuickTask chat participant + `/qt`**; clone/`pnpm` only under Contributing. Command Palette / VSIX steps stay **secondary** but exact strings remain documented for install.
+- **Proposal review (2026-03-23):**
+  - **What:** Reorder and rewrite onboarding so **extension + chat** is the default path; monorepo build is **Contributing-only**; link participant name ↔ `/qt`.
+  - **How:** `README.md`, `CONTRIBUTORS.md`, extension UI strings / walkthrough copy as needed.
+  - **Impact:** **Docs + extension copy only** (no core command semantics); reduces “I thought I had to clone the repo” confusion.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#41](https://github.com/NJLaPrell/QuickTask/issues/41), [#43](https://github.com/NJLaPrell/QuickTask/issues/43), [#44](https://github.com/NJLaPrell/QuickTask/issues/44), [#47](https://github.com/NJLaPrell/QuickTask/issues/47), [#62](https://github.com/NJLaPrell/QuickTask/issues/62); **[#46](https://github.com/NJLaPrell/QuickTask/issues/46) completed** (consolidated tracking) — UF-006 scope merged here (VSIX palette + first-run).
+- Files: `README.md`, `CONTRIBUTORS.md`, `packages/vscode-extension/*` (copy/walkthrough if any), `docs/*` as needed
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Reorder or signpost README so extension/chat path leads; monorepo quickstart clearly “contributors.”
+  2. Document “where to click/type” with chat as primary; Command Palette secondary.
+  3. One-liner linking participant **QuickTask** / `quicktask` to **`/qt`** in key surfaces.
+  4. During implementation, align README copy with **T142** (activation hint + preflight) so docs and in-editor UX match.
+- Acceptance criteria:
+  - New reader does not see repo build as the default “try it” path.
+  - Chat-first steps are explicit for Cursor/VS Code.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T136 - `/qt help` tiering, init steering, and suggested next steps
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12b** (onboarding); delivery **wave D** (after **T133** + **T139**).
+- Goal: Per `docs/product-direction.md`, init owns onboarding; **`/qt help`** should default to a **short quickstart** (UF-014), with a separate path to full reference (e.g. `help all` or equivalent). Help should detect uninitialized workspace and **steer into or run** init (suggest vs auto-run — specify in implementation). After successes like first **`list`**, surface **suggested next commands** (UF-018: show → run → improve).
+- **Proposal review (2026-03-23):**
+  - **What:** Tiered help (short vs full), init steering when not bootstrapped, and “what to do next” after `list`.
+  - **How:** Core help/init detection + rendering changes, contract updates, adapter output for help payloads; fix pipe/table rendering if needed.
+  - **Impact:** **All hosts** see different help text and possibly different init flows; core result shapes may change for help.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#54](https://github.com/NJLaPrell/QuickTask/issues/54), [#58](https://github.com/NJLaPrell/QuickTask/issues/58) (UF-014, UF-018).
+- Files: `packages/core/src/runtime.ts`, `packages/core/src/parser.ts` or help handler, `packages/core/src/rendering.ts`, `docs/qt-command-result-contract.md`, adapters
+- Dependencies: T101–T103 behavior remains coherent (may only need messaging)
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define contract for tiered help output and “not initialized” detection + help/init branching.
+  2. Implement core + adapter rendering for short vs full help; fix pipe/table rendering if needed.
+  3. Implement suggested next steps after key commands (at minimum post-`list` for first-time pattern).
+  4. Tests for help on fresh vs initialized workspace and tiered output.
+- Acceptance criteria:
+  - First-time user hitting help gets a path to initialized state without reading the full manual.
+  - Default help reads as onboarding, not only API reference.
+  - After at least one `list` success path, user sees suggested next commands (e.g. show → run → improve).
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T137 - Spec verbose/debug mode for paths and internal codes
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12c** (trust + polish); delivery **wave F** (spec only; implementation task may follow).
+- Goal: Plan optional **verbose/debug** surface for absolute paths, touched files, and internal-style codes (UF-005, UF-017)—not default happy path. Default UX should remain human-first summaries once implementation tasks spin out from this spec.
+- **Proposal review (2026-03-23):**
+  - **What:** Produce a **written spec** for verbose/debug (settings, which commands emit codes/paths, adapter duties)—**no product code required** in this task beyond docs.
+  - **How:** Edit `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, optional extension settings sketch in docs.
+  - **Impact:** **Zero runtime change** until a follow-on implementation task; defines future behavior for trust/diagnostics.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#45](https://github.com/NJLaPrell/QuickTask/issues/45), [#57](https://github.com/NJLaPrell/QuickTask/issues/57) (UF-005, UF-017).
+- Files: `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, `packages/vscode-extension/*` (settings sketch), `ARCHITECTURE.md` if needed
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Write spec: setting name(s), which commands emit extra detail, adapter responsibilities.
+  2. Open follow-on implementation task(s) if spec approves scope.
+- Acceptance criteria:
+  - Written spec agreed and linked from `docs/product-direction.md` open follow-ups if still relevant.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T138 - Fix or document `qt:sandbox` from monorepo root
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12a** (contributor path); delivery **wave B** (after Wave A or parallel if resourcing allows).
+- Goal: Contributor path: `pnpm qt:sandbox -- /qt …` works from a clean clone **or** docs stop recommending it until CI proves it (UF-002). Align with `docs/product-direction.md` open follow-up: fix vs de-emphasize—pick one and make docs/tooling consistent.
+- **Proposal review (2026-03-23):**
+  - **What:** Make contributor sandbox path **honest**: either fix workspace resolution from repo root **or** demote the script in docs with a working alternative.
+  - **How:** `package.json`/pnpm workspace fixes, optional CI job proving `qt:sandbox`, `CONTRIBUTORS.md` / `README` updates.
+  - **Impact:** **Contributor tooling + CI only**; end-user extension behavior unchanged.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#42](https://github.com/NJLaPrell/QuickTask/issues/42) (UF-002).
+- Files: `package.json` scripts, workspace resolution, `CONTRIBUTORS.md`, `README.md`, CI workflow proving sandbox if fix path
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Reproduce failure from repo root; fix workspace/`@quicktask/core` resolution **or** demote script in docs with alternative contributor flow.
+  2. Add CI check that `pnpm qt:sandbox -- /qt help` succeeds if we keep recommending it.
+- Acceptance criteria:
+  - Documented path matches working tooling.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T139 - UF-012: long paste as new template body; glossary and create/run clarity
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12b** (command model); delivery **wave C** (immediately after **T133**).
+- Goal: **Product decision (C)** — When the **template name does not exist**, text after `/qt <name>` (including a **long paste**) is **the body of the template to create** — intentional authoring, not “run web research now.” Deliver **docs + help copy** and verify **core/parser** treats remainder-of-line / multiline input correctly on **create** paths. Pair with **T133**: when the template **exists**, prefer **run** so `/qt research …` does not keep overwriting the template with pasted text unless user uses explicit **create** escape hatch.
+- **Proposal review (2026-03-23):**
+  - **What:** Encode decision **(C)** in docs/help and ensure **create** accepts long bodies when the template is missing; clarify create vs run with **T133**.
+  - **How:** README/docs, core tests + parser/runtime fixes if needed, adapter messaging.
+  - **Impact:** **Create path** behavior and messaging across hosts; depends on **T133** for the “template exists” branch.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#52](https://github.com/NJLaPrell/QuickTask/issues/52) (UF-012).
+- Files: `README.md`, `docs/*`, `docs/product-direction.md`, `packages/core/src/*`, host adapters, `packages/core/test/*`
+- Dependencies: **T133** — align messaging and tests after run-default lands.
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Confirm `docs/product-direction.md` decision (C) matches shipped docs.
+  2. Document in README/help: create stores template text; does not invoke web search; long paste on **new** template is valid.
+  3. Add or adjust core tests for “create with long body when task missing”; fix parser/runtime if paste is truncated or misclassified.
+  4. Adapter copy: clarify difference between **create** (template missing) and **run** (template exists, **T133**).
+- Acceptance criteria:
+  - Decision (C) is reflected in user-facing docs and matches behavior for new templates.
+  - Tests cover create-with-substantial-body when template absent.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T140 - Improve flow: empty or incomplete input
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12b** (command model); delivery **wave E** (after **T136**).
+- Goal: UF-015: `/qt improve <task>` with missing or vague input should not silently “infer” in a way that confuses first-time users; prompt or show example usage.
+- **Proposal review (2026-03-23):**
+  - **What:** Stop “mystery infer” on **empty or too-thin** improve input; return a clear prompt or example instead.
+  - **How:** Core runtime/parser rules + adapter presentation of the new result shape.
+  - **Impact:** **`/qt improve` UX change** for minimal input; may reduce surprise proposals for new users.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#55](https://github.com/NJLaPrell/QuickTask/issues/55) (UF-015).
+- Files: `packages/core/src/runtime.ts`, `packages/core/src/parser.ts`, adapters, `packages/core/test/*`
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define behavior for empty/minimal improve input (error + example vs interactive prompt pattern per host).
+  2. Implement + tests.
+- Acceptance criteria:
+  - First-time improve attempt gets clear guidance when input is insufficient.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T141 - Seeded templates: copy-pastable run line in body/footer
+
+- Status: [ ]
+- Priority: P4
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12c** (polish); delivery **wave G** (after **T142**; **T133** stable for example syntax).
+- Goal: UF-016: starter templates include a one-line “Run with: `/qt/<task> …`” (or equivalent) so `show` is self-teaching.
+- **Proposal review (2026-03-23):**
+  - **What:** Add a **run example line** (comment/footer) inside each **seeded** starter template.
+  - **How:** Edit seed template files consumed by `/qt init`; align wording after **T133** stabilizes run syntax.
+  - **Impact:** **New inits only** (existing `tasks/` unchanged); `show` becomes more self-explanatory.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#56](https://github.com/NJLaPrell/QuickTask/issues/56) (UF-016).
+- Files: Seed templates under `packages/core` / `tasks/` as seeded by init, template docs
+- Dependencies: T133 (run syntax) should be stable before finalizing example lines.
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add footer/comment block to each seeded template with run example.
+  2. Verify init path picks up changes.
+- Acceptance criteria:
+  - `show <task>` surfaces run syntax without leaving the template body.
+- Validation evidence:
+  - _Pending implementation._
+
+### [ ] T142 - Extension: activation hint + full preflight (doctor / workspace)
+
+- Status: [ ]
+- Priority: P2
+- **Phase / milestone:** **Phase 12** — `v1.0.x` adoption / sub-milestone **12c** (trust + extension UX); delivery **wave G** (after **T137** spec or parallel if resourcing allows; coordinate copy with **T134** / **T135**).
+- Goal: UF-021: **`doctor` must not feel like a dead-on-arrival rescue only.** Ship **(1) a visible hint in the extension** after install/activation (notification, welcome view, or sidebar cue) pointing to **QuickTask chat + `/qt`** and suggesting **`/qt doctor`** or **`/qt init`** as appropriate; **(2) full preflight** — extension-side checks (writable workspace, resolvable **`tasks/`** path, basic sanity) with clear outcomes, aligned with **`/qt doctor`** so behavior is consistent (reuse core/runtime where possible vs duplicating logic).
+- **Product decision:** `docs/product-direction.md` — **full preflight + extension hint** (not docs-only).
+- **Proposal review (2026-03-23):**
+  - **What:** In-editor **activation/install hint** plus **preflight** (workspace writable, tasks path) tied to **`/qt doctor`** semantics.
+  - **How:** Implement in `packages/vscode-extension` (activation, notifications or welcome UI); reuse core doctor where feasible; README alignment.
+  - **Impact:** **VS Code / Cursor extension only** (OpenClaw unchanged unless shared helpers added); more activation/UI surface area to maintain.
+  - **Maintainer decision:** **ACCEPTED** (2026-03-23).
+- **GitHub user feedback:** [#61](https://github.com/NJLaPrell/QuickTask/issues/61) (UF-021).
+- Files: `packages/vscode-extension/*`, `README.md`, `docs/qt-command-result-contract.md` or adapter notes if doctor wiring changes
+- Dependencies: none (coordinate copy with **T135** chat-first story)
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Design hint UX (when fired: first activation, first folder open, or once per workspace — document choice).
+  2. Implement preflight checks + user-visible summary (and link or delegate to **`/qt doctor`** for full detail).
+  3. Align strings with **T137** later if verbose/debug toggles affect surfaced detail.
+  4. README: one paragraph on “after install” matching extension behavior.
+- Acceptance criteria:
+  - New install sees an in-editor hint, not only documentation.
+  - User can understand workspace writable / tasks path status without having already failed silently.
+- Validation evidence:
+  - _Pending implementation._
 
 ## Archive cadence
 
