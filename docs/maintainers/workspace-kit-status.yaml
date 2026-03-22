@@ -1,0 +1,33 @@
+# Maintainer-only: execution handoff for workspace kit work (multi-session agents).
+# Do not link from product README.md (see ROADMAP.md documentation boundary).
+#
+# Agent session loop: read this file → align with ROADMAP.md → execute TASKS.md items
+# tagged [workspace-kit] → update this file on exit.
+
+schema_version: 1
+
+# Roadmap "Phases (full plan)" — integer 0-6
+current_kit_phase: 0
+
+# ISO date (YYYY-MM-DD) of last intentional update to this file
+last_updated: "2026-03-23"
+
+# One line: what the next session should prioritize (agent or human fills)
+active_focus: "Phase 0 — inventory + profile schema v0 draft"
+
+# Human-required stops; agent must not "resolve" these without user
+blockers: []
+
+# Ordered hints for the next agent run (clear when done)
+next_agent_actions:
+  - "Add or refine [workspace-kit] tasks in TASKS.md for Phase 0 exit criteria"
+  - "Keep product README free of kit narrative"
+
+# Optional: 2-5 bullets for the following session
+last_session_summary: null
+
+# Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
+pending_decisions:
+  - package_name_and_scope
+  - copilot_vs_cursor
+  - merge_strategy_on_upgrade

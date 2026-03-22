@@ -31,7 +31,8 @@ Until the kit lives in its **own repository**, treat **QuickTask as the system o
 | What | Where | Notes |
 |------|--------|--------|
 | **Direction and phases** | `ROADMAP.md` | Update phase status or dates here when milestones move; keep it strategy-level, not a task dump. |
-| **Actionable work** | `TASKS.md` | Same board as product tasks. Tag kit work with a stable label in the title or body, e.g. **`Kit Phase 0`**, **`[workspace-kit]`**, or **`K###`** task IDs if you want a dedicated sequence — pick one convention and stick to it. |
+| **Actionable work** | `TASKS.md` | Same board as product tasks. Use **`[workspace-kit]`** in the **title** (required convention — see [Recorded decisions](#recorded-decisions)). |
+| **Session handoff** | `docs/maintainers/workspace-kit-status.yaml` | Machine-readable **current kit phase**, next actions, blockers — **read at session start**, **update at session end**. |
 | **Proof / inventory / ADRs** | Maintainer-only paths (e.g. appendix here, `docs/` with an obvious **maintainer/internal** name) | Do not surface in product `README.md` (see boundary above). |
 | **Code and scripts** | This monorepo (`packages/`, `scripts/`, `templates/`, etc.) | Normal branches and PRs; Conventional Commits as you already do. |
 | **Friction / retros (Phase 5+)** | Repo-local file or section agreed at kickoff | Optional `KIT_FRICTION.md` or a subsection under maintainer docs — still **in** QuickTask until split, then **move or replicate** into the kit repo on extraction. |
@@ -41,7 +42,7 @@ Until the kit lives in its **own repository**, treat **QuickTask as the system o
 - **Second tracker** (random Notion/Jira only) without mirroring outcomes into `TASKS.md` or git — you’ll lose the audit trail next to the code.  
 - **Mixing** kit narrative into extension-facing docs; tracking stays internal, not marketing.
 
-On **Phase 6 cutover**, migrate **`ROADMAP.md` kit sections** (or the whole file if it’s kit-only), **open tasks** that are kit-only, and **kit package source** to the new repo; leave a **short pointer** in QuickTask maintainer notes if needed (“kit development moved to …”) without expanding product README.
+On **Phase 6 cutover**, migrate **`ROADMAP.md` kit sections** (or the whole file if it’s kit-only), **`docs/maintainers/workspace-kit-status.yaml`**, **open tasks** that are kit-only, and **kit package source** to the new repo; leave a **short pointer** in QuickTask maintainer notes if needed (“kit development moved to …”) without expanding product README.
 
 ---
 
@@ -63,7 +64,7 @@ On **Phase 6 cutover**, migrate **`ROADMAP.md` kit sections** (or the whole file
 | **Package is the system of record** | Templates become thin: they pin a kit version and call into the package for init, upgrade, and checks. |
 | **Strangler, not big bang** | Extract one concern per milestone; keep QuickTask dogfooding until cold-start repos pass the same gates. |
 | **Boring state** | Project specifics live in validated config (YAML/JSON + schema), not duplicated prose in many rule files. |
-| **Workflows are contracts** | Phases, gates, and task semantics stay consistent with existing docs (`RELEASE_STRATEGY.md`, task rules); machine-checkable where possible (build on `scripts/check-workflow-contracts.mjs`, `tasks:check`, etc.). |
+| **Workflows are contracts** | In **this lab monorepo**, phases/gates align with existing repo docs (`RELEASE_STRATEGY.md`, task rules) and scripts (`check-workflow-contracts.mjs`, `tasks:check`, etc.). The **shipped kit** will carry its own consumer-facing contract docs; it does not have to mirror QuickTask’s release doc titles word-for-word. |
 | **Human-first learning loop** | Structured friction logs and checklist failures drive kit changes before optional “monitor” automation on transcripts/diffs. |
 
 ---
@@ -78,6 +79,23 @@ On **Phase 6 cutover**, migrate **`ROADMAP.md` kit sections** (or the whole file
 | **Kit manifest** | Records pinned kit version, asset checksums or paths, last upgrade. | Enables `doctor` and CI drift checks. |
 
 Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decision** (see [Open decisions](#open-decisions)).
+
+**Package layout (recorded):** **One publishable package** (CLI + embedded assets) until **reuse or install-size pain** justifies splitting (for example `@scope/kit-core` + `@scope/kit-cli`). See [Recorded decisions](#recorded-decisions).
+
+---
+
+## Glossary (avoid mixing terms)
+
+| Term | Meaning here |
+|------|----------------|
+| **Kit phase** | A milestone in **this roadmap** (Phase 0–6). |
+| **Project phase** | Work tracked in **`TASKS.md`** / your product delivery phases (e.g. “Phase 1” on the task board). Not the same as a kit phase. |
+| **Template consumer README** | README in a **kit template repo** (or starter folder) for people adopting the workspace kit — **not** the QuickTask product `README.md`. |
+| **Lab monorepo** | This QuickTask repository while it hosts in-tree kit development. |
+| **Kit artifact** | Installable, versioned **registry package** (npm or GitHub Packages), or a **published GitHub Release** asset if you choose that channel for the CLI tarball — see [First publish of the kit](#first-publish-of-the-kit-registry-artifact). |
+| **Status YAML** | `docs/maintainers/workspace-kit-status.yaml` — **agent session handoff**; see [Multi-session agent operating model](#multi-session-agent-operating-model-minimal-human-interaction). |
+
+When this file says a consumer completes **“project Phase 1”** (or similar), it means **their** project’s phase from **TASKS** / your workflow — not **Kit Phase 1**.
 
 ---
 
@@ -117,7 +135,7 @@ Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decisi
 
 **Exit criteria**
 
-- Fresh directory: template + `pnpm dlx` / `node` CLI produces a workspace that passes **kit-owned** `doctor` checks (profile valid, required files present).
+- Fresh directory: template + **local CLI** (workspace command, `pnpm exec`, or `node` on a **built** artifact from `packages/workspace-kit/`) produces a workspace that passes **kit-owned** `doctor` checks (profile valid, required files present). **`pnpm dlx` / `npx` against the registry** is **Phase 3** (or an [early publish exception](#first-publish-of-the-kit-registry-artifact) documented in `TASKS.md`).
 - QuickTask repo still passes full monorepo checks.
 
 ---
@@ -153,11 +171,13 @@ Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decisi
 **Exit criteria**
 
 - Documented upgrade from kit `v0.x` → `v0.y` on a sample repo without losing custom overrides.  
-- Cold-start: new repo reaches “Phase 1 complete” workflow using **only** package + profile (template optional).
+- Cold-start: new repo reaches **project** “Phase 1 complete” (per **TASKS** / your workflow — see [Glossary](#glossary-avoid-mixing-terms)) using **only** package + profile (template optional).
 
 ---
 
 ### Phase 4 — Workflow contract in data (optional but high leverage)
+
+**Relationship to Phase 6:** Recommended **before** opening a separate kit repo **if** most of what you extract is generators and schema (so you move once). If the kit is already useful without Phase 4, Phase 6 can follow Phase 3; run Phase 4 in the new repo instead.
 
 **Objective:** Reduce prose duplication further: phases, gates, and allowed transitions described in **structured data**; IDE rules stay thin adapters.
 
@@ -236,11 +256,33 @@ Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decisi
 
 | Period | Approach |
 |--------|----------|
-| **Early** | Kit version may track monorepo lockstep (same Changesets bump) to reduce overhead. |
-| **Package-primary** | Kit uses **its own semver**; breaking profile schema changes = **major**; additive profile fields = **minor**; fixes = **patch**. |
-| **Template** | Tags or commit pins that reference **minimum kit version** in README. |
+| **Before first registry publish** | The kit package may live as `workspace:*` in this monorepo, `pnpm pack`, or private installs. Its version may **follow monorepo lockstep** (same Changesets bump as other packages) for convenience — there is **no separate public kit release story** yet. |
+| **From first registry publish onward** | The kit is its **own artifact**: **semver on the registry is authoritative** for the kit. Breaking profile schema changes = **major**; additive profile fields = **minor**; fixes = **patch**. Changelog entries for the kit package apply to adopters who install from the registry. |
+| **Template** | Tags or commit pins that reference **minimum kit version** in the **template consumer README**. |
+
+**Flip trigger (explicit):** The switch from “pre-publish / lockstep OK” to **independent kit semver + consumer changelog** happens at **`npm publish` / GitHub Packages publish** of the first **public** kit version (planned under Phase 3 — see below). Earlier tarballs or `pnpm pack` for pilots do not count as that flip unless you intentionally publish them to the registry.
 
 **Upgrade policy:** document in the **kit package README** (or kit docs site), not in QuickTask product documentation.
+
+---
+
+## First publish of the kit (registry artifact)
+
+**Definition:** A **public** (or team-visible, if private registry) installable package — typically **`npm publish`** or **GitHub Packages** — so consumers can run `pnpm dlx <package> init` / `npx <package>` without cloning the QuickTask monorepo.
+
+**Planned milestone:** **Phase 3** — the deliverable *“Published package on npm (or GitHub Packages), with semver and changelog”* is the committed slot for the **first registry publish**. Do not treat Phase 1–2 as requiring a registry; local workspace, `pnpm pack`, and template copy are enough until then.
+
+**Optional early publish:** If a **pilot** is blocked without a registry (CI, policy, or geography), you may publish a **`0.0.x`** or **`0.1.0`** **after Phase 1 exit** and basic smoke checks — then **apply the versioning flip** from that publish forward (semver + changelog for the kit package). Document the exception in `TASKS.md` when you do it.
+
+**Prerequisites before first publish (checklist):**
+
+- [ ] **Phase 1 exit criteria** met (`doctor`, cold-start with template + CLI).  
+- [ ] **Package name and registry** chosen; scope/org available (see [Open decisions](#open-decisions)).  
+- [ ] **Changesets** (or agreed alternative) includes the kit package; first published version is intentional (commonly `0.1.0`).  
+- [ ] **CI or release workflow** builds and tests the kit package; no secret QuickTask-only paths required for a minimal `init`/`doctor`.  
+- [ ] **Upgrade path** documented at least at “overwrite kit-owned + backup” level before calling Phase 3 complete (can match Phase 3 deliverables).
+
+**After first publish:** Template repos should **pin minimum kit version**; QuickTask CI should prefer **resolved published version** (or tarball) when validating consumer parity, per Phase 3 / Phase 6 gates.
 
 ---
 
@@ -252,23 +294,102 @@ Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decisi
 | Cold-start repo (template + package) | Proves init path for outsiders. |
 | Pilot consumer repo | Proves profile + upgrade path. |
 | Kit release checklist | Changelog, schema migration notes, template pin updated. |
+| First registry publish (Phase 3) | See [First publish of the kit](#first-publish-of-the-kit-registry-artifact). |
 
 ---
 
 ## Open decisions
 
-1. **Package name and scope** — Neutral (`@yourorg/dev-workspace-kit`) vs QuickTask-adjacent (`@quicktask/workspace-kit`); affects branding and npm availability.  
+1. **Package name and scope** — Neutral (`@yourorg/dev-workspace-kit`) vs QuickTask-adjacent (`@quicktask/workspace-kit`); affects branding and npm availability. **Resolve before first registry publish** (prerequisite checklist).  
 2. **Copilot vs Cursor** — Same profile; split or unified “directives” files (`.github/copilot-instructions.md` vs `.cursor/rules`) and how much the CLI generates.  
-3. **Merge strategy on upgrade** — Overwrite kit-owned only vs three-way merge; default should be **safe** (backup + diff).  
-4. **Single package vs split** — One CLI package vs `@scope/kit-core` + `@scope/kit-cli` if install size or embedding matters.
+3. **Merge strategy on upgrade** — Overwrite kit-owned only vs three-way merge; default should be **safe** (backup + diff).
+
+---
+
+## Recorded decisions
+
+| Decision | Choice |
+|----------|--------|
+| **Package layout** | **Single publishable package** until **reuse or install-size pain** warrants splitting into multiple packages. |
+| **TASKS.md tagging** | **`[workspace-kit]`** in the **task title** for all kit work. Do not use alternate tag sets for the same program. |
+
+---
+
+## Multi-session agent operating model (minimal human interaction)
+
+**Goal:** You can steer with **short prompts** across many sessions (“continue workspace kit”, “advance kit to Phase 1”, “unblock: npm scope is `@org/workspace-kit`”) while the agent **re-grounds** on repo state instead of chat memory.
+
+### Canonical files (read order)
+
+1. **`docs/maintainers/workspace-kit-status.yaml`** — current kit phase, next actions, blockers, pending decisions.  
+2. **`ROADMAP.md`** — this file: phases, exit criteria, glossary, human gates below.  
+3. **`TASKS.md`** — search **`[workspace-kit]`**; execution work lives here.  
+4. **Repo rules** — `.cursor/rules/*.mdc` (including **`workspace-kit-agent.mdc`** for kit work) and existing workflow docs when changing process or validation scripts.
+
+### Session entry (agent)
+
+- Read **`workspace-kit-status.yaml`** and note `current_kit_phase`, `blockers`, `next_agent_actions`.  
+- List open **`[workspace-kit]`** tasks in `TASKS.md` (respect status `[~]` / `[ ]` / `[!]`).  
+- If `current_kit_phase` and active tasks **disagree**, **stop once** and ask the human which source wins (then fix the other).
+
+### Session exit (agent — do not skip)
+
+- Update **`workspace-kit-status.yaml`**: `last_updated`, `last_session_summary` (2–5 bullets), `next_agent_actions` (clear completed items), `pending_decisions` (sync with [Open decisions](#open-decisions)).  
+- Update **`TASKS.md`** for any completed or newly discovered work.  
+- If a roadmap **open decision** was resolved, add a row under [Recorded decisions](#recorded-decisions) and remove it from **`pending_decisions`** in the YAML (and optionally from Open decisions list in this file).
+
+### Advancing kit phase (agent + human)
+
+- **Human:** “Set kit phase to *N*” or “Phase *N* exit criteria are done” — human is authoritative.  
+- **Agent:** Verify **exit criteria** for phase *N−1* (or *N* if validating) against repo reality before bumping `current_kit_phase`.  
+- Never advance **only** in chat: the **YAML** must reflect the new phase.
+
+### Human-only gates (agent must not fake these)
+
+- Creating/reserving **npm scope** or org packages, **2FA**, billing.  
+- **GitHub** org secrets, **OIDC** for publish, repository creation for template/kit (unless human already granted bot access — assume not).  
+- **Legal/branding** choice for neutral package name vs QuickTask-adjacent name.  
+- **First registry publish** execution (agent may prepare Changeset + PR + checklist; human runs org-approved publish path unless explicitly delegated).
+
+### Stop and ask (single concise message)
+
+- An **[Open decision](#open-decisions)** blocks the next file change and no **Recorded decision** default exists.  
+- **Destructive** or high-blast-radius edits (delete/rename workflow dirs, change release automation) without a linked **`[workspace-kit]`** task.  
+- **CI/check failures** after **two** focused fix attempts — summarize diff + failing command + hypothesis.  
+- **Security/sensitive** data requested (tokens, `.env`) — never commit; ask human to apply locally.
+
+### Short prompts the human can reuse
+
+| Prompt | Agent behavior |
+|--------|----------------|
+| **Continue `[workspace-kit]`** | Follow `next_agent_actions`, then highest-priority open `[workspace-kit]` task. |
+| **Kit status** | Summarize YAML + open tasks + phase exit criteria gap list. |
+| **Advance kit to Phase *N*** | Verify prior exit criteria, update YAML phase, align `TASKS.md`. |
+| **Resolve kit decision: *&lt;topic&gt;* = *&lt;choice&gt;*** | Record under Recorded decisions; clear YAML `pending_decisions`; implement if unblocked. |
+
+### Minimal CLI contract (implementations must follow)
+
+| Command | Purpose | Exit codes |
+|---------|---------|------------|
+| `init` | Idempotent scaffold from profile / defaults | `0` success, `1` validation failure, `2` usage/user error, `3` unexpected internal error |
+| `doctor` | Report profile + manifest + writable paths | same |
+| `check` | Validate profile (CI) | same |
+| `upgrade` | Phase 3+ apply kit-owned updates with backup | same |
+
+**Flags/IO** can evolve; **exit code semantics** stay stable once published.
+
+### Testing expectation (agent)
+
+- Any change under **`packages/workspace-kit/`** (when it exists) must run **that package’s** tests (or add them) plus **monorepo** `pnpm check` / `pnpm test` when shared scripts or workspace config change — proportional to blast radius.
 
 ---
 
 ## Suggested next actions (immediate)
 
-1. Optional: add a **Phase 0** row in `TASKS.md` that points at kit phase only (no pasted roadmap text).  
-2. Reserve npm scope / package name when publish is in scope; treat **kit release process** as separate from QuickTask extension release messaging unless you explicitly lockstep.  
-3. When Phase 1 starts, create template/starter assets; record their location **in this roadmap** or in maintainer notes — avoid folding that narrative into QuickTask’s product README.
+1. Add **`[workspace-kit]`** tasks in `TASKS.md` for **Phase 0** exit criteria (no pasted roadmap bodies).  
+2. Keep **`docs/maintainers/workspace-kit-status.yaml`** in sync after substantive kit sessions.  
+3. Reserve npm scope / package name **before** [first registry publish](#first-publish-of-the-kit-registry-artifact); treat **kit release process** as separate from QuickTask extension release messaging unless you explicitly lockstep until the [versioning flip](#versioning-and-release-strategy).  
+4. When Phase 1 starts, create template/starter assets; record their location in **maintainer notes** or this roadmap — avoid folding that narrative into QuickTask’s product README.
 
 ---
 
@@ -280,4 +401,4 @@ Exact npm scope (`@quicktask/workspace-kit` vs neutral name) is an **open decisi
 
 ---
 
-*Last updated: 2026-03-23*
+*Last updated: 2026-03-23 — agent operating model, status YAML, TASKS tag, Phase 1 CLI nuance, Cursor rule `workspace-kit-agent.mdc`*

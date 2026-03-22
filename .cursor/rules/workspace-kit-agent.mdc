@@ -1,0 +1,36 @@
+---
+description: Workspace kit multi-session protocol — status YAML, ROADMAP, [workspace-kit] tasks
+alwaysApply: true
+---
+
+# Workspace Kit Agent Protocol
+
+**Follow this rule when any of these are true; otherwise ignore it.**
+
+- The user mentions **workspace kit**, **`[workspace-kit]`**, **kit phase**, or **ROADMAP** in the context of kit delivery; or  
+- You are editing **`ROADMAP.md`**, **`docs/maintainers/workspace-kit-status.yaml`**, **`packages/workspace-kit/**`**, or **`templates/workspace-starter/**`** (when that tree exists).
+
+## Session start
+
+1. Read **`docs/maintainers/workspace-kit-status.yaml`** (`current_kit_phase`, `blockers`, `next_agent_actions`).  
+2. Read **`ROADMAP.md`** → section **“Multi-session agent operating model (minimal human interaction)”** (and the **Glossary** if kit vs project phase is ambiguous).  
+3. In **`TASKS.md`**, find rows whose **title** contains **`[workspace-kit]`**; align with `current_kit_phase` and exit criteria in the roadmap.  
+4. If **YAML phase** and **active tasks** disagree, **stop once** and ask the human which source is authoritative; then fix the other.
+
+## Session end
+
+- Update **`docs/maintainers/workspace-kit-status.yaml`**: `last_updated`, `last_session_summary`, `next_agent_actions`, `pending_decisions` (sync with roadmap open decisions).  
+- Update **`TASKS.md`** for any completed or new **`[workspace-kit]`** work.  
+- Resolved roadmap decisions → add **`ROADMAP.md`** **Recorded decisions** and remove from YAML `pending_decisions`.
+
+## Boundaries
+
+- **Do not** put kit strategy or roadmap narrative into **`README.md`** or other **product** docs (see **`ROADMAP.md`** documentation boundary).  
+- **Human-only gates** (npm org, publish secrets, org policy): prepare PRs/checklists; do not assume credentials.  
+- Stable **CLI exit codes** for kit commands: **`ROADMAP.md`** minimal CLI contract table.
+
+## Short user prompts (examples)
+
+- **Continue `[workspace-kit]`** — execute `next_agent_actions`, then highest-priority open **`[workspace-kit]`** task.  
+- **Kit status** — summarize YAML + open tasks + gap vs phase exit criteria.  
+- **Advance kit to Phase *N*** — verify prior exit criteria, then bump `current_kit_phase` in the YAML only when justified.
