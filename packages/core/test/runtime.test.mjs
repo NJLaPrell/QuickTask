@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -28,6 +28,9 @@ test("returns help for /qt", () => {
       "/qt [task] [instructions]",
       "/qt/[task] [input]",
       "/qt improve [task] [input]",
+      "/qt export [task|--all]",
+      "/qt import [--force] [payload-json]",
+      "/qt import-pack [--force] [manifest-path]",
       "/qt list",
       "/qt show [task]",
       "/qt doctor"
@@ -184,6 +187,87 @@ test("run supports minimal input with empty user input", () => {
   }
 });
 
+test("run interpolates template variables from key=value input", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    runtime.handle("/qt summarize generate summary for {{topic}} with tone {{tone|neutral}}");
+    const result = runtime.handle("/qt/summarize topic=incident");
+    assert.equal(result.kind, "run_executed");
+    assert.match(result.templateBody, /incident/);
+    assert.match(result.templateBody, /neutral/);
+  } finally {
+    cleanup();
+  }
+});
+
+test("run returns missing variable guidance when required variables are absent", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    runtime.handle("/qt summarize summarize {{topic}} for {{audience}}");
+    const result = runtime.handle("/qt/summarize topic=incident");
+    assert.equal(result.kind, "run_missing_variables");
+    assert.equal(result.code, "qt:run:missing-variables");
+    assert.deepEqual(result.missingVariables, ["audience"]);
+    assert.match(result.usage, /audience=<value>/);
+  } finally {
+    cleanup();
+  }
+});
+
+test("export and import commands support portable task payloads", () => {
+  const tasksDirA = mkdtempSync(path.join(os.tmpdir(), "quicktask-runtime-export-a-"));
+  const tasksDirB = mkdtempSync(path.join(os.tmpdir(), "quicktask-runtime-export-b-"));
+  try {
+    const runtimeA = createQtRuntime(createFileTaskStore({ tasksDir: tasksDirA }));
+    runtimeA.handle("/qt summarize write concise bullets");
+    const exported = runtimeA.handle("/qt export summarize");
+    assert.equal(exported.kind, "exported");
+    assert.equal(exported.code, "qt:export:task");
+    const compactPayload = JSON.stringify(JSON.parse(exported.payload));
+
+    const runtimeB = createQtRuntime(createFileTaskStore({ tasksDir: tasksDirB }));
+    const imported = runtimeB.handle(`/qt import ${compactPayload}`);
+    assert.equal(imported.kind, "imported");
+    assert.equal(imported.code, "qt:import:created");
+    const run = runtimeB.handle("/qt/summarize hello");
+    assert.equal(run.kind, "run_executed");
+  } finally {
+    rmSync(tasksDirA, { recursive: true, force: true });
+    rmSync(tasksDirB, { recursive: true, force: true });
+  }
+});
+
+test("import-pack resolves manifest and imports templates safely", () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-runtime-pack-"));
+  const packDir = path.join(tasksDir, "pack");
+  try {
+    mkdirSync(packDir, { recursive: true });
+    writeFileSync(path.join(packDir, "summary.md"), "# summary\n\n- Goal: summarize {{topic}}", "utf8");
+    writeFileSync(
+      path.join(packDir, "manifest.json"),
+      JSON.stringify(
+        {
+          version: 1,
+          name: "basic-pack",
+          templates: [{ taskName: "summary", file: "summary.md" }]
+        },
+        null,
+        2
+      ),
+      "utf8"
+    );
+
+    const runtime = createQtRuntime(createFileTaskStore({ tasksDir }));
+    const result = runtime.handle(`/qt import-pack ${path.join(packDir, "manifest.json")}`);
+    assert.equal(result.kind, "pack_resolved");
+    assert.equal(result.code, "qt:pack:resolved");
+    const run = runtime.handle("/qt/summary topic=incident");
+    assert.equal(run.kind, "run_executed");
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true });
+  }
+});
+
 test("list and show commands return template discovery results", () => {
   const { runtime, cleanup } = createRuntimeForTest();
   try {
@@ -231,6 +315,11 @@ test("doctor command reports safe diagnostics metadata", () => {
     assert.equal(typeof doctor.diagnostics.writable, "boolean");
     assert.equal(typeof doctor.diagnostics.runtimeVersion, "string");
     assert.ok(Array.isArray(doctor.diagnostics.recentRuntimeCodes));
+    assert.equal(typeof doctor.diagnostics.feedbackSignals.clarificationCount, "number");
+    assert.equal(typeof doctor.diagnostics.feedbackSignals.incompleteCount, "number");
+    assert.equal(typeof doctor.diagnostics.feedbackSignals.parseErrorCount, "number");
+    assert.equal(typeof doctor.diagnostics.feedbackSignals.storageErrorCount, "number");
+    assert.equal(typeof doctor.diagnostics.feedbackSignals.missingTaskCount, "number");
   } finally {
     cleanup();
   }

@@ -39,6 +39,18 @@ test("renders proposal output with proposal id", () => {
   assert.match(rendered, /Proposal ID: p_555/);
 });
 
+test("renders missing-variable guidance", () => {
+  const rendered = renderOpenClawQtResult({
+    kind: "run_missing_variables",
+    code: "qt:run:missing-variables",
+    taskName: "summarize",
+    missingVariables: ["topic"],
+    usage: "/qt/summarize topic=<value>",
+    message: "Missing required template variables: topic."
+  });
+  assert.match(rendered, /Missing required template variables/);
+});
+
 test("routes slash command through runtime boundary", () => {
   const runtime = {
     handle(input) {

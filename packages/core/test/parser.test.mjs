@@ -47,6 +47,36 @@ test("parses list command", () => {
   assert.deepEqual(parseQtCommand("/qt list"), { kind: "list" });
 });
 
+test("parses export command forms", () => {
+  assert.deepEqual(parseQtCommand("/qt export"), { kind: "export", all: true });
+  assert.deepEqual(parseQtCommand("/qt export summarize"), {
+    kind: "export",
+    all: false,
+    taskName: "summarize"
+  });
+});
+
+test("parses import command forms", () => {
+  assert.deepEqual(parseQtCommand('/qt import {"taskName":"sum","body":"# sum"}'), {
+    kind: "import",
+    force: false,
+    payload: '{"taskName":"sum","body":"# sum"}'
+  });
+  assert.deepEqual(parseQtCommand('/qt import --force {"taskName":"sum","body":"# sum"}'), {
+    kind: "import",
+    force: true,
+    payload: '{"taskName":"sum","body":"# sum"}'
+  });
+});
+
+test("parses import-pack command form", () => {
+  assert.deepEqual(parseQtCommand("/qt import-pack ./packs/basic/manifest.json"), {
+    kind: "import_pack",
+    force: false,
+    manifestPath: "./packs/basic/manifest.json"
+  });
+});
+
 test("parses show command", () => {
   assert.deepEqual(parseQtCommand("/qt show summarize"), {
     kind: "show",

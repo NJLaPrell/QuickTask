@@ -80,6 +80,66 @@ export function parseQtCommand(input: string): QtCommand {
     return { kind: "list" };
   }
 
+  if (value === "/qt export" || value === "/qt export --all") {
+    return { kind: "export", all: true };
+  }
+
+  if (value.startsWith("/qt export ")) {
+    const parsed = parseTaskAndInput(value.slice("/qt export ".length));
+    if (!parsed || parsed.taskName === "--all") {
+      return { kind: "export", all: true };
+    }
+    return {
+      kind: "export",
+      all: false,
+      taskName: parsed.taskName
+    };
+  }
+
+  if (value.startsWith("/qt import-pack ")) {
+    const parsed = parseTaskAndInput(value.slice("/qt import-pack ".length));
+    if (!parsed) {
+      return {
+        kind: "incomplete",
+        reason: "missing-import-payload",
+        usage: "/qt import [--force] [payload-json]"
+      };
+    }
+    const force = parsed.taskName === "--force";
+    const manifestPath = force ? parsed.rest : [parsed.taskName, parsed.rest].filter(Boolean).join(" ");
+    return {
+      kind: "import_pack",
+      force,
+      manifestPath: manifestPath.trim()
+    };
+  }
+
+  if (value === "/qt import" || value === "/qt import --force") {
+    return {
+      kind: "incomplete",
+      reason: "missing-import-payload",
+      usage: "/qt import [--force] [payload-json]"
+    };
+  }
+
+  if (value.startsWith("/qt import ")) {
+    const remainder = value.slice("/qt import ".length).trim();
+    const force = remainder.startsWith("--force ");
+    const payload = force ? remainder.slice("--force ".length).trim() : remainder;
+    if (!payload) {
+      return {
+        kind: "incomplete",
+        reason: "missing-import-payload",
+        usage: "/qt import [--force] [payload-json]"
+      };
+    }
+    return {
+      kind: "import",
+      force,
+      payload
+    };
+  }
+
   if (value === "/qt doctor") {
     return { kind: "doctor" };
   }

@@ -1,0 +1,21 @@
+{
+  "threshold": 70,
+  "cases": [
+    {
+      "taskName": "standup",
+      "templatePath": "./samples/standup.md",
+      "checks": [
+        { "type": "includes", "value": "# standup", "penalty": 20 },
+        { "type": "regex", "value": "- Goal:", "penalty": 20 }
+      ]
+    },
+    {
+      "taskName": "pr-review",
+      "templatePath": "./samples/pr-review.md",
+      "checks": [
+        { "type": "includes", "value": "# pr-review", "penalty": 20 },
+        { "type": "regex", "value": "- Goal:", "penalty": 20 }
+      ]
+    }
+  ]
+}

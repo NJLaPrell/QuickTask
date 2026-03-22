@@ -27,7 +27,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup workspace
         uses: ./.github/actions/setup-quicktask-workspace
@@ -81,7 +81,7 @@ jobs:
         run: pnpm release:validate-host-installs
 
       - name: Upload candidate assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: rc-assets-${{ inputs.candidate_label }}
           path: |

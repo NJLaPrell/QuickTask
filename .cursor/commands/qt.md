@@ -18,13 +18,16 @@ Approved command surface (current):
 - `/qt/[task] [input]`
 - `/qt improve [task] [input]`
 - `/qt improve <accept|reject|abandon> [task] [proposal-id]`
+- `/qt export [task|--all]`
+- `/qt import [--force] [payload-json]`
+- `/qt import-pack [--force] [manifest-path]`
 - `/qt list`
 - `/qt show [task]`
 - `/qt doctor`
 
 Quoted task names are supported for commands that take `[task]`.
 
-If a request asks for non-core command expansion, treat it as deferred unless explicitly approved.
+If a request asks for command expansion beyond this list, treat it as deferred unless explicitly approved.
 
 Execution requirements:
 

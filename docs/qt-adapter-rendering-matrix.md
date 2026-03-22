@@ -27,7 +27,17 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:create:created`             | `created`          | `taskName`, `filename`, `templateBody`                                |
 | `qt:incomplete`                 | `incomplete`       | `usage`, `message`                                                    |
 | `qt:run:not-found`              | `not_found`        | `taskName`, `message`                                                 |
+| `qt:run:missing-variables`      | `run_missing_variables` | `taskName`, `missingVariables[]`, `usage`, `message`             |
 | `qt:run:executed`               | `run_executed`     | `taskName`, `templateBody`, `userInput`                               |
+| `qt:export:task`                | `exported`         | `taskName`, `taskCount`, `payload`, `message`                         |
+| `qt:export:all`                 | `exported`         | `taskCount`, `payload`, `message`                                     |
+| `qt:import:created`             | `imported`         | `createdCount`, `updatedCount`, `skippedCount`, `message`             |
+| `qt:import:updated`             | `imported`         | `createdCount`, `updatedCount`, `skippedCount`, `message`             |
+| `qt:import:conflict`            | `imported`         | `createdCount`, `updatedCount`, `skippedCount`, `message`             |
+| `qt:import:invalid`             | `imported`         | `createdCount`, `updatedCount`, `skippedCount`, `message`             |
+| `qt:pack:resolved`              | `pack_resolved`    | `manifestPath`, `importedCount`, `skippedCount`, `message`            |
+| `qt:pack:invalid`               | `pack_resolved`    | `manifestPath`, `importedCount`, `skippedCount`, `message`            |
+| `qt:pack:not-found`             | `not_found`        | `taskName`, `message`                                                 |
 | `qt:list:listed`                | `list`             | `tasks[]`, `message`                                                  |
 | `qt:show:template`              | `show`             | `taskName`, `templateBody`                                            |
 | `qt:doctor:status`              | `doctor`           | `diagnostics`                                                         |
@@ -56,7 +66,17 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:create:created`             | Show success with created filename and preview snippet.                         | Show success with task and filename.                                    | Show success toast/panel message and include filename.       |
 | `qt:incomplete`                 | Show warning with `usage`.                                                      | Show warning and let user retry with full command.                      | Show warning with required command shape.                    |
 | `qt:run:not-found`              | Show warning and suggest create command.                                        | Show warning and suggest `/qt [task] [instructions]`.                   | Show warning and suggest create flow.                        |
+| `qt:run:missing-variables`      | Show warning listing missing variables and copyable re-run usage hint.           | Return missing-variable guidance with exact `/qt/[task] key=value` form. | Show warning and exact variable completion command.          |
 | `qt:run:executed`               | Render template plus user input in execution panel.                             | Return rendered output payload to command client.                       | Render template and input in plugin output surface.          |
+| `qt:export:task`                | Show success plus export payload JSON block for copy/export pipelines.           | Return deterministic JSON payload object/string for portable sharing.    | Render export payload text and task count summary.           |
+| `qt:export:all`                 | Show success plus full export payload JSON block and task count.                 | Return full export payload for all templates.                            | Render export summary and payload output.                    |
+| `qt:import:created`             | Show success summary with created/updated/skipped counts.                        | Return deterministic import counts and summary message.                  | Show import result summary.                                  |
+| `qt:import:updated`             | Show success summary including overwrite updates.                                | Return updated import status and counts.                                 | Show overwrite/import summary.                               |
+| `qt:import:conflict`            | Show non-fatal conflict summary with `--force` remediation hint.                 | Return conflict status and force-retry guidance.                         | Show conflict summary and next command hint.                 |
+| `qt:import:invalid`             | Show parse/validation error for import payload.                                  | Return invalid payload message without crashing host.                    | Show invalid import payload guidance.                        |
+| `qt:pack:resolved`              | Show pack resolution summary with imported/skipped counts.                       | Return deterministic pack import summary payload.                        | Show pack-import summary in response panel.                  |
+| `qt:pack:invalid`               | Show manifest validation errors and remediation hint.                             | Return manifest validation errors safely.                                | Show manifest validation failure details.                    |
+| `qt:pack:not-found`             | Show missing-manifest warning with path.                                         | Return missing-manifest warning.                                         | Show missing pack path warning.                              |
 | `qt:list:listed`                | Render ordered list of available task names.                                    | Return deterministic task name list with summary message.               | Render plain list of available task names.                   |
 | `qt:show:template`              | Render template markdown for one task body.                                     | Return task template preview payload for one task.                      | Render plain template preview for one task.                  |
 | `qt:doctor:status`              | Render diagnostics block with tasks dir, writability, and recent runtime codes. | Return safe diagnostics payload (no user-content fields).               | Render diagnostics text for support triage.                  |
@@ -89,4 +109,6 @@ When adapters receive a code not listed above:
 - Ensure parse/storage errors display `requestId`.
 - Ensure improve proposal renderers expose `proposalId` for action commands.
 - Ensure `list`/`show`/`doctor` renderers remain available as approved core command-surface behavior.
+- Ensure missing-variable guidance for `qt:run:missing-variables` includes copyable `key=value` usage.
+- Ensure export/import and pack-result codes are covered and non-crashing.
 - Keep host docs linking to this matrix and `docs/qt-command-result-contract.md`.

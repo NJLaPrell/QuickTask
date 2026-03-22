@@ -14,6 +14,24 @@ export type QtRunCommand = {
   userInput: string;
 };
 
+export type QtExportCommand = {
+  kind: "export";
+  all: boolean;
+  taskName?: string;
+};
+
+export type QtImportCommand = {
+  kind: "import";
+  payload: string;
+  force: boolean;
+};
+
+export type QtImportPackCommand = {
+  kind: "import_pack";
+  manifestPath: string;
+  force: boolean;
+};
+
 export type QtListCommand = {
   kind: "list";
 };
@@ -53,17 +71,25 @@ export type QtImproveActionCommand = {
 
 export type QtIncompleteCommand = {
   kind: "incomplete";
-  reason: "missing-improve-task" | "missing-improve-action-details" | "missing-show-task";
+  reason:
+    | "missing-improve-task"
+    | "missing-improve-action-details"
+    | "missing-show-task"
+    | "missing-import-payload";
   usage:
     | "/qt improve [task] [input]"
     | "/qt improve <accept|reject|abandon> [task] [proposal-id]"
-    | "/qt show [task]";
+    | "/qt show [task]"
+    | "/qt import [--force] [payload-json]";
 };
 
 export type QtCommand =
   | QtMenuCommand
   | QtCreateCommand
   | QtRunCommand
+  | QtExportCommand
+  | QtImportCommand
+  | QtImportPackCommand
   | QtListCommand
   | QtShowCommand
   | QtDoctorCommand
@@ -109,6 +135,13 @@ export type QtDoctorStatus = {
   taskCount: number;
   recentRuntimeCodes: string[];
   runtimeVersion: string;
+  feedbackSignals: {
+    clarificationCount: number;
+    incompleteCount: number;
+    parseErrorCount: number;
+    storageErrorCount: number;
+    missingTaskCount: number;
+  };
   storageError?: string;
 };
 
@@ -157,8 +190,20 @@ export type QtRuntimeResult =
     }
   | {
       kind: "not_found";
-      code: "qt:run:not-found" | "qt:improve:not-found" | "qt:improve:proposal-not-found";
+      code:
+        | "qt:run:not-found"
+        | "qt:improve:not-found"
+        | "qt:improve:proposal-not-found"
+        | "qt:pack:not-found";
       taskName: string;
+      message: string;
+    }
+  | {
+      kind: "run_missing_variables";
+      code: "qt:run:missing-variables";
+      taskName: string;
+      missingVariables: string[];
+      usage: string;
       message: string;
     }
   | {
@@ -167,6 +212,30 @@ export type QtRuntimeResult =
       taskName: string;
       templateBody: string;
       userInput: string;
+    }
+  | {
+      kind: "exported";
+      code: "qt:export:task" | "qt:export:all";
+      taskName?: string;
+      taskCount: number;
+      payload: string;
+      message: string;
+    }
+  | {
+      kind: "imported";
+      code: "qt:import:created" | "qt:import:updated" | "qt:import:conflict" | "qt:import:invalid";
+      createdCount: number;
+      updatedCount: number;
+      skippedCount: number;
+      message: string;
+    }
+  | {
+      kind: "pack_resolved";
+      code: "qt:pack:resolved" | "qt:pack:invalid";
+      manifestPath: string;
+      importedCount: number;
+      skippedCount: number;
+      message: string;
     }
   | {
       kind: "list";

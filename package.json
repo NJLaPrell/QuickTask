@@ -33,6 +33,7 @@
     "release:check-workflow-contracts": "node scripts/check-workflow-contracts.mjs",
     "tasks:check": "node scripts/tasks-check.mjs",
     "tasks:check-templates": "node scripts/check-task-templates.mjs",
+    "templates:eval": "node scripts/template-eval-harness.mjs --dataset docs/templates/eval-dataset.json",
     "docs:check-links": "node scripts/check-doc-links.mjs",
     "phase:check": "node scripts/phase-exit-check.mjs",
     "qt:sandbox": "node scripts/qt-sandbox.mjs",

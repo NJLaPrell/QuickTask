@@ -5,6 +5,18 @@ export { createQtRuntime } from "./runtime.js";
 export { formatQtRuntimeResult, type QtRenderStyle } from "./rendering.js";
 export { createTaskTemplate, proposeTemplateImprovement } from "./templates.js";
 export {
+  extractTemplateVariables,
+  interpolateTemplateVariables,
+  parseRuntimeVariableInput,
+  type TemplateVariableDeclaration
+} from "./templateVariables.js";
+export {
+  resolveLocalTemplatePack,
+  validateTemplatePackManifest,
+  type ResolvedTemplatePack,
+  type TemplatePackManifest
+} from "./templatePacks.js";
+export {
   checkTaskStoreHealth,
   createFileTaskStore,
   getTaskTemplate,
@@ -20,11 +32,17 @@ export type {
   ImprovementProposalStatus,
   QtCommand,
   QtDoctorStatus,
+  QtExportCommand,
   QtHelpCommand,
+  QtImportCommand,
+  QtImportPackCommand,
   QtImproveAction,
   QtImproveActionCommand,
   QtIncompleteCommand,
+  QtInitCommand,
+  QtRunCommand,
   QtRuntimeResult,
+  QtCreateCommand,
   TaskTemplate
 } from "./types.js";
 

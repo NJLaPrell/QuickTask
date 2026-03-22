@@ -89,6 +89,9 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 - `/qt improve accept [task] [proposal-id]` - accept and apply a proposal.
 - `/qt improve reject [task] [proposal-id]` - reject a proposal.
 - `/qt improve abandon [task] [proposal-id]` - abandon a proposal.
+- `/qt export [task|--all]` - export task templates as JSON.
+- `/qt import [--force] [payload-json]` - import exported task templates.
+- `/qt import-pack [--force] [manifest-path]` - import templates from a local pack manifest.
 - `/qt list` - list available task templates.
 - `/qt show [task]` - show one task template body.
 - `/qt doctor` - show storage/runtime diagnostics.
@@ -114,10 +117,12 @@ Expected behavior:
 - Creating a task that already exists returns an explicit already-exists result.
 - Running a missing task returns a clear not-found result.
 - Improvement proposals are previewed before they can be accepted.
+- Templates can include `{{variable}}` and `{{variable|default}}` tokens for key/value runtime interpolation.
 
 Approved command-surface policy:
 
 - QuickTask intentionally keeps a minimal command surface centered on create/run/improve lifecycle and `list/show/doctor`.
+- Portability commands (`export`, `import`, `import-pack`) are included for deterministic template sharing.
 - Additional command expansions are deferred by default unless explicitly approved.
 
 ## Current Status

@@ -9,6 +9,12 @@ import {
   saveTaskTemplate,
   type FileTaskStore
 } from "./store.js";
+import { resolveLocalTemplatePack } from "./templatePacks.js";
+import {
+  extractTemplateVariables,
+  interpolateTemplateVariables,
+  parseRuntimeVariableInput
+} from "./templateVariables.js";
 import { createTaskTemplate, proposeTemplateImprovement } from "./templates.js";
 import type {
   ImprovementProposalStatus,
@@ -62,7 +68,14 @@ const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
     message: "Apply, reject, or abandon a persisted active proposal."
   },
   discover: {
-    usage: ["/qt list", "/qt show [task]", "/qt doctor"],
+    usage: [
+      "/qt list",
+      "/qt show [task]",
+      "/qt doctor",
+      "/qt export [task|--all]",
+      "/qt import [--force] [payload-json]",
+      "/qt import-pack [--force] [manifest-path]"
+    ],
     message: "Discover templates and inspect local runtime health."
   }
 };
@@ -90,6 +103,13 @@ export function createQtRuntime(
   const proposalTtlMs = options.proposalTtlMs ?? 30 * 60 * 1000;
   const now = options.now ?? (() => Date.now());
   const statePaths = getRuntimeStatePaths(store.tasksDir);
+  const feedbackSignals = {
+    clarificationCount: 0,
+    incompleteCount: 0,
+    parseErrorCount: 0,
+    storageErrorCount: 0,
+    missingTaskCount: 0
+  };
 
   function nextRequestId(): string {
     requestCounter += 1;
@@ -199,6 +219,142 @@ export function createQtRuntime(
     return mutated;
   }
 
+  function buildExportPayload(taskNames: string[]): string {
+    const tasks = taskNames
+      .map((taskName) => getTaskTemplate(store, taskName))
+      .filter((template): template is NonNullable<typeof template> => Boolean(template))
+      .map((template) => ({
+        taskName: template.taskName,
+        body: template.body
+      }));
+    return JSON.stringify(
+      {
+        type: "quicktask-export",
+        version: 1,
+        generatedAt: new Date().toISOString(),
+        tasks
+      },
+      null,
+      2
+    );
+  }
+
+  function importTasksFromPayload(
+    payload: string,
+    force: boolean
+  ): {
+    code: "qt:import:created" | "qt:import:updated" | "qt:import:conflict" | "qt:import:invalid";
+    createdCount: number;
+    updatedCount: number;
+    skippedCount: number;
+    message: string;
+  } {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(payload);
+    } catch (error) {
+      return {
+        code: "qt:import:invalid",
+        createdCount: 0,
+        updatedCount: 0,
+        skippedCount: 0,
+        message: `Import payload is not valid JSON: ${
+          error instanceof Error ? error.message : "unknown parse error"
+        }`
+      };
+    }
+
+    const records: Array<{ taskName: string; body: string }> = [];
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "type" in parsed &&
+      (parsed as { type?: unknown }).type === "quicktask-export"
+    ) {
+      const tasks = (parsed as { tasks?: unknown }).tasks;
+      if (!Array.isArray(tasks)) {
+        return {
+          code: "qt:import:invalid",
+          createdCount: 0,
+          updatedCount: 0,
+          skippedCount: 0,
+          message: "Import payload must include a tasks array."
+        };
+      }
+      for (const task of tasks) {
+        if (!task || typeof task !== "object") {
+          continue;
+        }
+        const candidate = task as Record<string, unknown>;
+        if (typeof candidate.taskName === "string" && typeof candidate.body === "string") {
+          records.push({
+            taskName: candidate.taskName,
+            body: candidate.body
+          });
+        }
+      }
+    } else if (parsed && typeof parsed === "object") {
+      const single = parsed as Record<string, unknown>;
+      if (typeof single.taskName === "string" && typeof single.body === "string") {
+        records.push({
+          taskName: single.taskName,
+          body: single.body
+        });
+      }
+    }
+
+    if (records.length === 0) {
+      return {
+        code: "qt:import:invalid",
+        createdCount: 0,
+        updatedCount: 0,
+        skippedCount: 0,
+        message: "Import payload did not include any valid task records."
+      };
+    }
+
+    let createdCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+    for (const record of records) {
+      const existing = getTaskTemplate(store, record.taskName);
+      if (existing && !force) {
+        skippedCount += 1;
+        continue;
+      }
+      saveTaskTemplate(store, {
+        taskName: record.taskName,
+        filename: "",
+        body: record.body
+      });
+      if (existing) {
+        updatedCount += 1;
+      } else {
+        createdCount += 1;
+      }
+    }
+
+    if (createdCount === 0 && updatedCount === 0) {
+      return {
+        code: "qt:import:conflict",
+        createdCount,
+        updatedCount,
+        skippedCount,
+        message: "No tasks imported because all records conflict with existing templates. Re-run with --force."
+      };
+    }
+
+    return {
+      code: updatedCount > 0 ? "qt:import:updated" : "qt:import:created",
+      createdCount,
+      updatedCount,
+      skippedCount,
+      message: `Imported ${createdCount + updatedCount} task template${
+        createdCount + updatedCount === 1 ? "" : "s"
+      } (${createdCount} created, ${updatedCount} updated, ${skippedCount} skipped).`
+    };
+  }
+
   loadPersistedProposals();
   if (collectProposalGarbage()) {
     persistProposals();
@@ -233,6 +389,9 @@ export function createQtRuntime(
               "/qt [task] [instructions]",
               "/qt/[task] [input]",
               "/qt improve [task] [input]",
+              "/qt export [task|--all]",
+              "/qt import [--force] [payload-json]",
+              "/qt import-pack [--force] [manifest-path]",
               "/qt list",
               "/qt show [task]",
               "/qt doctor"
@@ -252,6 +411,9 @@ export function createQtRuntime(
                 "/qt [task] [instructions]",
                 "/qt/[task] [input]",
                 "/qt improve [task] [input]",
+                "/qt export [task|--all]",
+                "/qt import [--force] [payload-json]",
+                "/qt import-pack [--force] [manifest-path]",
                 "/qt list",
                 "/qt show [task]",
                 "/qt doctor",
@@ -380,10 +542,113 @@ export function createQtRuntime(
           });
         }
 
+        if (command.kind === "export") {
+          collectProposalGarbage();
+          if (command.all) {
+            const taskNames = listTaskNames(store);
+            const payload = buildExportPayload(taskNames);
+            return finalizeResult(requestId, command.kind, {
+              kind: "exported",
+              code: "qt:export:all",
+              taskCount: taskNames.length,
+              payload,
+              message: `Exported ${taskNames.length} task template${
+                taskNames.length === 1 ? "" : "s"
+              }.`
+            });
+          }
+
+          const taskName = command.taskName ?? "";
+          const template = getTaskTemplate(store, taskName);
+          if (!template) {
+            feedbackSignals.missingTaskCount += 1;
+            return finalizeResult(requestId, command.kind, {
+              kind: "not_found",
+              code: "qt:run:not-found",
+              taskName,
+              message: `No template exists yet for ${taskName}.`
+            });
+          }
+
+          const payload = buildExportPayload([taskName]);
+          return finalizeResult(requestId, command.kind, {
+            kind: "exported",
+            code: "qt:export:task",
+            taskName,
+            taskCount: 1,
+            payload,
+            message: `Exported task template ${taskName}.`
+          });
+        }
+
+        if (command.kind === "import") {
+          collectProposalGarbage();
+          const imported = importTasksFromPayload(command.payload, command.force);
+          return finalizeResult(requestId, command.kind, {
+            kind: "imported",
+            code: imported.code,
+            createdCount: imported.createdCount,
+            updatedCount: imported.updatedCount,
+            skippedCount: imported.skippedCount,
+            message: imported.message
+          });
+        }
+
+        if (command.kind === "import_pack") {
+          collectProposalGarbage();
+          const resolved = resolveLocalTemplatePack(command.manifestPath);
+          if (!resolved.ok || !resolved.resolved) {
+            const notFoundError = resolved.errors.find((error) => error.includes("not found"));
+            if (notFoundError) {
+              return finalizeResult(requestId, command.kind, {
+                kind: "not_found",
+                code: "qt:pack:not-found",
+                taskName: command.manifestPath,
+                message: `Template pack manifest not found: ${command.manifestPath}.`
+              });
+            }
+
+            return finalizeResult(requestId, command.kind, {
+              kind: "pack_resolved",
+              code: "qt:pack:invalid",
+              manifestPath: command.manifestPath,
+              importedCount: 0,
+              skippedCount: 0,
+              message: `Template pack manifest is invalid: ${resolved.errors.join("; ")}`
+            });
+          }
+
+          let importedCount = 0;
+          let skippedCount = 0;
+          for (const template of resolved.resolved.templates) {
+            const existing = getTaskTemplate(store, template.taskName);
+            if (existing && !command.force) {
+              skippedCount += 1;
+              continue;
+            }
+            saveTaskTemplate(store, {
+              taskName: template.taskName,
+              filename: "",
+              body: template.body
+            });
+            importedCount += 1;
+          }
+
+          return finalizeResult(requestId, command.kind, {
+            kind: "pack_resolved",
+            code: "qt:pack:resolved",
+            manifestPath: resolved.resolved.manifestPath,
+            importedCount,
+            skippedCount,
+            message: `Resolved template pack "${resolved.resolved.name}" (${importedCount} imported, ${skippedCount} skipped).`
+          });
+        }
+
         if (command.kind === "show") {
           collectProposalGarbage();
           const template = getTaskTemplate(store, command.taskName);
           if (!template) {
+            feedbackSignals.missingTaskCount += 1;
             return finalizeResult(requestId, command.kind, {
               kind: "not_found",
               code: "qt:run:not-found",
@@ -417,7 +682,8 @@ export function createQtRuntime(
               taskCount: storeHealth.taskCount,
               storageError: storeHealth.storageError,
               recentRuntimeCodes,
-              runtimeVersion: QT_RUNTIME_VERSION
+              runtimeVersion: QT_RUNTIME_VERSION,
+              feedbackSignals: { ...feedbackSignals }
             }
           });
         }
@@ -425,6 +691,7 @@ export function createQtRuntime(
         if (command.kind === "create") {
           collectProposalGarbage();
           if (!command.instructions.trim()) {
+            feedbackSignals.clarificationCount += 1;
             return finalizeResult(requestId, command.kind, {
               kind: "clarification",
               code: "qt:create:clarify",
@@ -457,6 +724,7 @@ export function createQtRuntime(
 
         if (command.kind === "incomplete") {
           collectProposalGarbage();
+          feedbackSignals.incompleteCount += 1;
           return finalizeResult(requestId, command.kind, {
             kind: "incomplete",
             code: "qt:incomplete",
@@ -550,6 +818,7 @@ export function createQtRuntime(
           collectProposalGarbage();
           const template = getTaskTemplate(store, command.taskName);
           if (!template) {
+            feedbackSignals.missingTaskCount += 1;
             return finalizeResult(requestId, command.kind, {
               kind: "not_found",
               code: "qt:run:not-found",
@@ -558,11 +827,32 @@ export function createQtRuntime(
             });
           }
 
+          const declarations = extractTemplateVariables(template.body);
+          let renderedTemplate = template.body;
+          if (declarations.length > 0) {
+            const values = parseRuntimeVariableInput(command.userInput);
+            const interpolation = interpolateTemplateVariables(template.body, values);
+            if (interpolation.missingVariables.length > 0) {
+              feedbackSignals.incompleteCount += 1;
+              return finalizeResult(requestId, command.kind, {
+                kind: "run_missing_variables",
+                code: "qt:run:missing-variables",
+                taskName: template.taskName,
+                missingVariables: interpolation.missingVariables,
+                usage: `/qt/${template.taskName} ${interpolation.missingVariables
+                  .map((name) => `${name}=<value>`)
+                  .join(" ")}`,
+                message: `Missing required template variables: ${interpolation.missingVariables.join(", ")}.`
+              });
+            }
+            renderedTemplate = interpolation.output;
+          }
+
           return finalizeResult(requestId, command.kind, {
             kind: "run_executed",
             code: "qt:run:executed",
             taskName: template.taskName,
-            templateBody: template.body,
+            templateBody: renderedTemplate,
             userInput: command.userInput
           });
         }
@@ -572,6 +862,7 @@ export function createQtRuntime(
         }
         const template = getTaskTemplate(store, command.taskName);
         if (!template) {
+          feedbackSignals.missingTaskCount += 1;
           return finalizeResult(requestId, command.kind, {
             kind: "not_found",
             code: "qt:improve:not-found",
@@ -616,6 +907,11 @@ export function createQtRuntime(
         const diagnosticCode: "parse-invalid-input" | "storage-io-failure" = isParseError
           ? "parse-invalid-input"
           : "storage-io-failure";
+        if (isParseError) {
+          feedbackSignals.parseErrorCount += 1;
+        } else {
+          feedbackSignals.storageErrorCount += 1;
+        }
 
         recordDiagnostic({
           requestId,

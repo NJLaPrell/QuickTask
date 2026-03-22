@@ -53,8 +53,10 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
     case "qt:create:already-exists":
     case "qt:incomplete":
     case "qt:run:not-found":
+    case "qt:run:missing-variables":
     case "qt:improve:not-found":
     case "qt:improve:proposal-not-found":
+    case "qt:pack:not-found":
       return result.message;
     case "qt:create:created":
       if (style === "markdown") {
@@ -92,6 +94,25 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
           style === "markdown" ? `- ${inlineCode(style, task)}` : `- ${task}`
         )
       ]);
+    case "qt:export:task":
+    case "qt:export:all":
+      return joinLines([
+        result.message,
+        `Task count: ${result.taskCount}`,
+        "",
+        "Payload:",
+        "```json",
+        result.payload,
+        "```"
+      ]);
+    case "qt:import:created":
+    case "qt:import:updated":
+    case "qt:import:conflict":
+    case "qt:import:invalid":
+      return result.message;
+    case "qt:pack:resolved":
+    case "qt:pack:invalid":
+      return result.message;
     case "qt:show:template":
       if (style === "markdown") {
         return joinLines([
@@ -112,6 +133,7 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
         `- Writable: ${result.diagnostics.writable ? "yes" : "no"}`,
         `- Task count: ${result.diagnostics.taskCount}`,
         `- Runtime version: ${result.diagnostics.runtimeVersion}`,
+        `- Feedback signals: clarifications=${result.diagnostics.feedbackSignals.clarificationCount}, incomplete=${result.diagnostics.feedbackSignals.incompleteCount}, parse-errors=${result.diagnostics.feedbackSignals.parseErrorCount}, storage-errors=${result.diagnostics.feedbackSignals.storageErrorCount}, missing-tasks=${result.diagnostics.feedbackSignals.missingTaskCount}`,
         result.diagnostics.recentRuntimeCodes.length
           ? `- Recent runtime codes: ${result.diagnostics.recentRuntimeCodes.join(", ")}`
           : "- Recent runtime codes: (none)",

@@ -18,6 +18,9 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task.
 - `/qt improve [task] [input]` - propose an improvement.
+- `/qt export [task|--all]` - export one or all templates as a deterministic JSON payload.
+- `/qt import [--force] [payload-json]` - import template records from exported payloads.
+- `/qt import-pack [--force] [manifest-path]` - resolve and import a local template-pack manifest.
 - `/qt list` - list available task templates.
 - `/qt show [task]` - show one task template body.
 - `/qt doctor` - show runtime/storage diagnostics.
@@ -45,6 +48,7 @@ The approved `/qt` command surface is intentionally minimal:
 - create (`/qt [task] [instructions]`)
 - run (`/qt/[task] [input]`)
 - improve lifecycle (`/qt improve ...`, accept/reject/abandon)
+- portability (`/qt export`, `/qt import`, `/qt import-pack`)
 - discovery and diagnostics (`/qt list`, `/qt show [task]`, `/qt doctor`)
 
 Additional command expansions are deferred by default and require explicit re-approval.
@@ -62,7 +66,17 @@ Additional command expansions are deferred by default and require explicit re-ap
 - `qt:create:created`
 - `qt:incomplete`
 - `qt:run:not-found`
+- `qt:run:missing-variables`
 - `qt:run:executed`
+- `qt:export:task`
+- `qt:export:all`
+- `qt:import:created`
+- `qt:import:updated`
+- `qt:import:conflict`
+- `qt:import:invalid`
+- `qt:pack:resolved`
+- `qt:pack:invalid`
+- `qt:pack:not-found`
 - `qt:list:listed`
 - `qt:show:template`
 - `qt:doctor:status`
@@ -103,11 +117,45 @@ Additional command expansions are deferred by default and require explicit re-ap
 - When no active proposal exists (expired/finalized/missing), runtime returns `qt:improve:proposal-not-found`.
 - Expired proposals and surplus finalized proposals are garbage-collected to keep persisted proposal state bounded.
 
+## Template variable syntax and runtime behavior
+
+- Variable token syntax: `{{variableName}}`.
+- Variable default syntax: `{{variableName|default value}}`.
+- Variable names must match: `[a-zA-Z][a-zA-Z0-9_-]*`.
+- Escape rule for literal open braces: `\{{`.
+- Runtime variable input uses `key=value` tokens in `/qt/[task] [input]`.
+  - Example: `/qt/summarize topic=incident tone=concise`
+- Missing required variables (without defaults) return `qt:run:missing-variables` with deterministic usage guidance.
+- Backward compatibility: templates with no variable tokens run unchanged.
+
+## Export/import contract
+
+- Export payload format:
+  - object with `type: "quicktask-export"`, `version: 1`, `generatedAt`, and `tasks[]`.
+  - each task record includes `taskName` and `body`.
+- Import accepts either:
+  - full export payload (`quicktask-export` envelope), or
+  - single `{ "taskName": "...", "body": "..." }` record.
+- Conflict policy:
+  - default import skips collisions and returns `qt:import:conflict` when nothing is imported,
+  - `--force` allows deterministic overwrite and returns `qt:import:updated` when updates occur.
+
+## Template-pack manifest contract
+
+- Local manifest is JSON with:
+  - `version: 1`
+  - `name` (non-empty string)
+  - `templates[]` entries with `taskName` + `file`
+- Pack resolution is local-only and resolves template file paths relative to the manifest directory.
+- Invalid manifests return `qt:pack:invalid`; missing manifest files return `qt:pack:not-found`.
+- Successful pack resolution/import returns `qt:pack:resolved` with imported/skipped counts.
+
 ## Diagnostics and privacy policy
 
 - Runtime diagnostic events are local-only and in-memory.
 - Diagnostic events include operational metadata only (`requestId`, timestamp, lifecycle phase, command kind, result code).
 - Do not include raw user input, template bodies, or other user-content fields in diagnostics.
+- Aggregate UX feedback signals are allowed in doctor output only as counters (clarifications, incomplete commands, parse/storage errors, missing-task attempts) with no raw payload content.
 - Adapter unknown-result fallbacks must avoid dumping full payloads to output surfaces.
 
 ## Lightweight drift-check checklist
