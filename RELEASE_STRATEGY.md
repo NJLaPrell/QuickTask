@@ -87,22 +87,26 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
    - run `pnpm build`
    - run `pnpm release:validate-changesets`
    - run `pnpm release:check-workflow-contracts`
+   - run `pnpm docs:check-links`
+   - run `pnpm check:command-entrypoints`
    - run `pnpm check:support-matrix`
    - run `pnpm check:package-compliance`
+   - run `pnpm check:generated-artifacts`
    - run `pnpm release:docs-check`
-5. Workflow builds curated release notes and versions packages/changelogs with `pnpm release:notes` + `pnpm release:version`.
-6. Workflow builds and verifies release assets using:
+5. Workflow builds and validates curated release notes with `pnpm release:notes` + `pnpm release:check-notes-quality`.
+6. Workflow versions packages/changelogs with `pnpm release:version`.
+7. Workflow builds and verifies release assets using:
    - `pnpm package:release`
    - `pnpm release:verify-local-artifacts`
    - `pnpm release:test-artifact-journeys`
    - `pnpm release:validate-host-installs`
-7. Workflow creates:
+8. Workflow creates:
    - release commit on `main`
    - semantic tag `vX.Y.Z`
    - published GitHub Release for `vX.Y.Z`
-8. Release notes combine curated user-focused notes with GitHub generated notes.
+9. Release notes combine curated user-focused notes with GitHub generated notes.
    - GitHub note categories are configured in `.github/release.yml`.
-9. Post-release workflow verifies downloaded published assets across Ubuntu/macOS/Windows and reruns artifact user-journey + host-install checks on Linux.
+10. Post-release workflow verifies downloaded published assets across Ubuntu/macOS/Windows and reruns artifact user-journey + host-install checks on Linux.
 
 ## Docs sync gate policy
 
@@ -146,3 +150,9 @@ Accepted risk is temporary. If the sunset date passes, release handoff is blocke
   - behavior: checks out the release tag, validates the tag matches `packages/vscode-extension/package.json` version, packages VSIX, and publishes with `vsce`.
 
 Marketplace publishing remains decoupled from the GitHub release workflow so release tagging/publication and marketplace rollout can be controlled independently.
+
+## Generated artifact policy
+
+- Generated declarations (`*.d.ts`) are build outputs and must not be tracked under source directories.
+- Local release artifacts (`artifacts/*`) are ephemeral by default and regenerated per workflow run.
+- The policy is enforced by `pnpm check:generated-artifacts`.

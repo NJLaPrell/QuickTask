@@ -23,6 +23,32 @@ type PendingProposal = {
 };
 
 const QT_RUNTIME_VERSION = "1.1.0";
+const MAX_PROPOSAL_CACHE_SIZE = 200;
+const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
+  create: {
+    usage: ["/qt [task] [instructions]"],
+    message: "Create a new task template with instructions."
+  },
+  run: {
+    usage: ["/qt/[task] [input]"],
+    message: "Run an existing task template with optional input."
+  },
+  improve: {
+    usage: [
+      "/qt improve [task] [input]",
+      "/qt improve <accept|reject|abandon> [task] [proposal-id]"
+    ],
+    message: "Propose and manage template improvements for the current session."
+  },
+  actions: {
+    usage: ["/qt improve <accept|reject|abandon> [task] [proposal-id]"],
+    message: "Apply, reject, or abandon an in-session proposal."
+  },
+  discover: {
+    usage: ["/qt list", "/qt show [task]", "/qt doctor"],
+    message: "Discover templates and inspect local runtime health."
+  }
+};
 
 export type CreateQtRuntimeOptions = {
   proposalTtlMs?: number;
@@ -70,6 +96,29 @@ export function createQtRuntime(
     return now() - proposal.createdAtMs > proposalTtlMs;
   }
 
+  function collectProposalGarbage(): void {
+    for (const [proposalId, proposal] of proposals) {
+      if (isProposalExpired(proposal)) {
+        proposals.delete(proposalId);
+      }
+    }
+
+    if (proposals.size <= MAX_PROPOSAL_CACHE_SIZE) {
+      return;
+    }
+
+    const finalizedByAge = [...proposals.entries()]
+      .filter(([, proposal]) => proposal.status !== "proposed")
+      .sort((a, b) => a[1].createdAtMs - b[1].createdAtMs);
+
+    for (const [proposalId] of finalizedByAge) {
+      if (proposals.size <= MAX_PROPOSAL_CACHE_SIZE) {
+        break;
+      }
+      proposals.delete(proposalId);
+    }
+  }
+
   return {
     store,
     getDiagnostics(): RuntimeDiagnosticEvent[] {
@@ -89,6 +138,7 @@ export function createQtRuntime(
         });
 
         if (command.kind === "menu") {
+          collectProposalGarbage();
           return finalizeResult(requestId, command.kind, {
             kind: "help",
             code: "qt:help",
@@ -104,7 +154,51 @@ export function createQtRuntime(
           });
         }
 
+        if (command.kind === "help") {
+          collectProposalGarbage();
+          if (!command.topic) {
+            return finalizeResult(requestId, command.kind, {
+              kind: "help",
+              code: "qt:help",
+              usage: [
+                "/qt",
+                "/qt [task] [instructions]",
+                "/qt/[task] [input]",
+                "/qt improve [task] [input]",
+                "/qt list",
+                "/qt show [task]",
+                "/qt doctor",
+                "/qt help [create|run|improve|actions|discover]"
+              ],
+              message: "Use /qt help [topic] for contextual command guidance."
+            });
+          }
+
+          const topic = HELP_TOPICS[command.topic];
+          if (!topic) {
+            return finalizeResult(requestId, command.kind, {
+              kind: "help",
+              code: "qt:help",
+              usage: [
+                "/qt help [create|run|improve|actions|discover]",
+                "/qt",
+                "/qt list",
+                "/qt doctor"
+              ],
+              message: `Unknown help topic "${command.topic}". Valid topics: create, run, improve, actions, discover.`
+            });
+          }
+
+          return finalizeResult(requestId, command.kind, {
+            kind: "help",
+            code: "qt:help",
+            usage: topic.usage,
+            message: topic.message
+          });
+        }
+
         if (command.kind === "list") {
+          collectProposalGarbage();
           const tasks = listTaskNames(store);
           const message =
             tasks.length === 0
@@ -119,6 +213,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "show") {
+          collectProposalGarbage();
           const template = getTaskTemplate(store, command.taskName);
           if (!template) {
             return finalizeResult(requestId, command.kind, {
@@ -138,6 +233,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "doctor") {
+          collectProposalGarbage();
           const storeHealth = checkTaskStoreHealth(store);
           const recentRuntimeCodes = diagnostics
             .map((event) => event.code)
@@ -159,6 +255,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "create") {
+          collectProposalGarbage();
           if (!command.instructions.trim()) {
             return finalizeResult(requestId, command.kind, {
               kind: "clarification",
@@ -191,6 +288,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "incomplete") {
+          collectProposalGarbage();
           return finalizeResult(requestId, command.kind, {
             kind: "incomplete",
             code: "qt:incomplete",
@@ -243,6 +341,7 @@ export function createQtRuntime(
               body: proposal.proposedTemplate
             });
             proposal.status = "accepted";
+            collectProposalGarbage();
             return finalizeResult(requestId, command.kind, {
               kind: "improve_action",
               code: "qt:improve:accept:applied",
@@ -255,6 +354,7 @@ export function createQtRuntime(
           }
 
           proposal.status = command.action === "reject" ? "rejected" : "abandoned";
+          collectProposalGarbage();
           return finalizeResult(requestId, command.kind, {
             kind: "improve_action",
             code:
@@ -270,6 +370,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "run") {
+          collectProposalGarbage();
           const template = getTaskTemplate(store, command.taskName);
           if (!template) {
             return finalizeResult(requestId, command.kind, {
@@ -289,6 +390,7 @@ export function createQtRuntime(
           });
         }
 
+        collectProposalGarbage();
         const template = getTaskTemplate(store, command.taskName);
         if (!template) {
           return finalizeResult(requestId, command.kind, {
@@ -311,6 +413,7 @@ export function createQtRuntime(
           status: "proposed",
           createdAtMs: now()
         });
+        collectProposalGarbage();
 
         return finalizeResult(requestId, command.kind, {
           kind: "improve_proposed",

@@ -57,6 +57,11 @@ const VALID_TASKS_DOC = `
 - Dependencies: T100.
 - Blocked by: external dependency.
 - Unblock plan: wait for dependency response.
+
+## Milestone execution order
+
+### Phase 1 - Example
+- Planned task IDs (in order): T100, T101, T102, T103
 `;
 
 test("passes for valid tracker structure", () => {
@@ -83,4 +88,13 @@ test("fails when backlog entries use wrong status for section", () => {
   const result = validateTasksDocument(malformed);
   assert.equal(result.ok, false);
   assert.match(result.errors.join("\n"), /must use status \[p\]/);
+});
+
+test("fails when a task appears in multiple phase plan lists", () => {
+  const malformed = `${VALID_TASKS_DOC}
+### Phase 2 - Another
+- Planned task IDs (in order): T100`;
+  const result = validateTasksDocument(malformed);
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join("\n"), /appears in multiple phase plan lists/);
 });

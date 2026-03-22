@@ -80,8 +80,15 @@ After intake, report:
 - category coverage,
 - top 3 recommended next tasks to promote from `[p]` to `[ ]` or `[~]`.
 
-## Promotion guidance
+## Promotion and aging policy
 
-- `[p]` -> `[ ]` when user approves promotion from ready queue into scheduled backlog.
-- `[ ]` -> `[~]` when active implementation starts.
-- `[~]` -> `[x]` when done and validated.
+- Promotion from `[p]` (ready-proposed) to `[ ]` requires:
+  - dependency readiness,
+  - clear user or maintainer sponsor,
+  - visible phase alignment in `Current execution state`.
+- Promotion from `[ ]` to `[~]` requires active implementation start.
+- Promotion from `[~]` to `[x]` requires implementation + validation evidence.
+- Aging rule: review `[p]` tasks each release cycle; if no sponsor for 2 cycles, either:
+  - keep as `[p]` with an explicit "still relevant" note, or
+  - cancel/archive as low-ROI backlog.
+- Pruning rule: when discovery produces overlapping low-value items, keep the strongest task and cancel duplicates immediately.

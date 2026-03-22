@@ -4,6 +4,59 @@ function normalize(input: string): string {
   return input.trim().replace(/\s+/g, " ");
 }
 
+function parseQuotedToken(value: string): { token: string; remainder: string } | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (!trimmed.startsWith('"')) {
+    const firstSpace = trimmed.indexOf(" ");
+    if (firstSpace === -1) {
+      return { token: trimmed, remainder: "" };
+    }
+    return {
+      token: trimmed.slice(0, firstSpace),
+      remainder: trimmed.slice(firstSpace + 1).trim()
+    };
+  }
+
+  let token = "";
+  let escaped = false;
+  for (let index = 1; index < trimmed.length; index += 1) {
+    const char = trimmed[index];
+    if (escaped) {
+      token += char;
+      escaped = false;
+      continue;
+    }
+    if (char === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (char === '"') {
+      return {
+        token,
+        remainder: trimmed.slice(index + 1).trim()
+      };
+    }
+    token += char;
+  }
+
+  return undefined;
+}
+
+function parseTaskAndInput(value: string): { taskName: string; rest: string } | undefined {
+  const parsed = parseQuotedToken(value);
+  if (!parsed || !parsed.token.trim()) {
+    return undefined;
+  }
+  return {
+    taskName: parsed.token.trim(),
+    rest: parsed.remainder
+  };
+}
+
 export function parseQtCommand(input: string): QtCommand {
   const value = normalize(input);
 
@@ -31,6 +84,18 @@ export function parseQtCommand(input: string): QtCommand {
     return { kind: "doctor" };
   }
 
+  if (value === "/qt help") {
+    return { kind: "help" };
+  }
+
+  if (value.startsWith("/qt help ")) {
+    const topic = value.slice("/qt help ".length).trim().toLowerCase();
+    return {
+      kind: "help",
+      topic: topic || undefined
+    };
+  }
+
   if (value === "/qt show") {
     return {
       kind: "incomplete",
@@ -40,8 +105,8 @@ export function parseQtCommand(input: string): QtCommand {
   }
 
   if (value.startsWith("/qt show ")) {
-    const taskName = value.slice("/qt show ".length).trim();
-    if (!taskName) {
+    const parsed = parseTaskAndInput(value.slice("/qt show ".length));
+    if (!parsed) {
       return {
         kind: "incomplete",
         reason: "missing-show-task",
@@ -50,7 +115,7 @@ export function parseQtCommand(input: string): QtCommand {
     }
     return {
       kind: "show",
-      taskName
+      taskName: parsed.taskName
     };
   }
 
@@ -61,9 +126,16 @@ export function parseQtCommand(input: string): QtCommand {
       const [, actionMatch] = improveActionMatch;
       const action = actionMatch as "accept" | "reject" | "abandon";
       const actionRemainder = remainder.slice(action.length).trim();
-      const tokens = actionRemainder.split(" ").filter(Boolean);
-
-      if (tokens.length < 2) {
+      const parsed = parseTaskAndInput(actionRemainder);
+      if (!parsed) {
+        return {
+          kind: "incomplete",
+          reason: "missing-improve-action-details",
+          usage: "/qt improve <accept|reject|abandon> [task] [proposal-id]"
+        };
+      }
+      const proposalId = parsed.rest.split(" ").filter(Boolean)[0];
+      if (!proposalId) {
         return {
           kind: "incomplete",
           reason: "missing-improve-action-details",
@@ -74,14 +146,13 @@ export function parseQtCommand(input: string): QtCommand {
       return {
         kind: "improve_action",
         action,
-        taskName: tokens[0],
-        proposalId: tokens[1]
+        taskName: parsed.taskName,
+        proposalId
       };
     }
 
-    const firstSpace = remainder.indexOf(" ");
-
-    if (firstSpace === -1) {
+    const parsed = parseTaskAndInput(remainder);
+    if (!parsed) {
       return {
         kind: "improve",
         taskName: remainder
@@ -90,8 +161,8 @@ export function parseQtCommand(input: string): QtCommand {
 
     return {
       kind: "improve",
-      taskName: remainder.slice(0, firstSpace).trim(),
-      userInput: remainder.slice(firstSpace + 1).trim()
+      taskName: parsed.taskName,
+      userInput: parsed.rest
     };
   }
 
@@ -101,9 +172,8 @@ export function parseQtCommand(input: string): QtCommand {
       return { kind: "menu" };
     }
 
-    const firstSpace = remainder.indexOf(" ");
-
-    if (firstSpace === -1) {
+    const parsed = parseTaskAndInput(remainder);
+    if (!parsed) {
       return {
         kind: "run",
         taskName: remainder,
@@ -113,16 +183,15 @@ export function parseQtCommand(input: string): QtCommand {
 
     return {
       kind: "run",
-      taskName: remainder.slice(0, firstSpace).trim(),
-      userInput: remainder.slice(firstSpace + 1).trim()
+      taskName: parsed.taskName,
+      userInput: parsed.rest
     };
   }
 
   if (value.startsWith("/qt ")) {
     const remainder = value.slice("/qt ".length).trim();
-    const firstSpace = remainder.indexOf(" ");
-
-    if (firstSpace === -1) {
+    const parsed = parseTaskAndInput(remainder);
+    if (!parsed) {
       return {
         kind: "create",
         taskName: remainder,
@@ -132,8 +201,8 @@ export function parseQtCommand(input: string): QtCommand {
 
     return {
       kind: "create",
-      taskName: remainder.slice(0, firstSpace).trim(),
-      instructions: remainder.slice(firstSpace + 1).trim()
+      taskName: parsed.taskName,
+      instructions: parsed.rest
     };
   }
 

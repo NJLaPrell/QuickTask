@@ -18,6 +18,7 @@ import type { TaskTemplate } from "./types.js";
 const TASKS_DIR_ENV_VAR = "QUICKTASK_TASKS_DIR";
 const CURRENT_TEMPLATE_FORMAT_VERSION = 1;
 const STALE_TEMPLATE_LOCK_AGE_MS = 5 * 60 * 1000;
+const CORRUPT_BACKUP_RETENTION_LIMIT = 25;
 
 export type FileTaskStore = {
   tasksDir: string;
@@ -182,6 +183,39 @@ function acquireTemplateWriteLock(templatePath: string): () => void {
   };
 }
 
+function listCorruptBackupFiles(tasksDir: string): string[] {
+  if (!existsSync(tasksDir)) {
+    return [];
+  }
+  return readdirSync(tasksDir)
+    .filter((entry) => entry.includes(".corrupt.") && entry.endsWith(".bak"))
+    .map((entry) => path.join(tasksDir, entry));
+}
+
+function cleanupCorruptBackups(tasksDir: string): void {
+  const backups = listCorruptBackupFiles(tasksDir)
+    .map((backupPath) => {
+      try {
+        return {
+          backupPath,
+          mtimeMs: statSync(backupPath).mtimeMs
+        };
+      } catch {
+        return undefined;
+      }
+    })
+    .filter((entry): entry is { backupPath: string; mtimeMs: number } => Boolean(entry))
+    .sort((a, b) => b.mtimeMs - a.mtimeMs);
+
+  if (backups.length <= CORRUPT_BACKUP_RETENTION_LIMIT) {
+    return;
+  }
+
+  for (const stale of backups.slice(CORRUPT_BACKUP_RETENTION_LIMIT)) {
+    rmSync(stale.backupPath, { force: true });
+  }
+}
+
 export function createFileTaskStore(options: CreateFileTaskStoreOptions = {}): FileTaskStore {
   return {
     tasksDir: resolveTasksDir(options)
@@ -189,6 +223,7 @@ export function createFileTaskStore(options: CreateFileTaskStoreOptions = {}): F
 }
 
 export function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTemplate | undefined {
+  cleanupCorruptBackups(store.tasksDir);
   const cleanTaskName = taskName.trim();
   if (!cleanTaskName) {
     return undefined;
@@ -227,6 +262,7 @@ export function getTaskTemplate(store: FileTaskStore, taskName: string): TaskTem
 }
 
 export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): TaskTemplate {
+  cleanupCorruptBackups(store.tasksDir);
   const cleanTaskName = template.taskName.trim();
   const filename = taskNameToFilename(cleanTaskName);
   const templatePath = path.join(store.tasksDir, filename);
@@ -255,6 +291,7 @@ export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): 
 }
 
 export function listTaskNames(store: FileTaskStore): string[] {
+  cleanupCorruptBackups(store.tasksDir);
   if (!existsSync(store.tasksDir)) {
     return [];
   }
@@ -267,6 +304,7 @@ export function listTaskNames(store: FileTaskStore): string[] {
 }
 
 export function checkTaskStoreHealth(store: FileTaskStore): TaskStoreHealth {
+  cleanupCorruptBackups(store.tasksDir);
   const health: TaskStoreHealth = {
     tasksDir: store.tasksDir,
     writable: false,

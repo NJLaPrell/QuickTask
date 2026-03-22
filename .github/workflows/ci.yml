@@ -173,7 +173,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate task tracker schema
-        run: pnpm tasks:check
+        run: |
+          pnpm tasks:check
+          pnpm tasks:check-templates
 
   workflow-contracts:
     runs-on: ubuntu-latest
@@ -196,7 +198,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate release workflow contracts
-        run: pnpm release:check-workflow-contracts
+        run: |
+          pnpm release:check-workflow-contracts
+          pnpm docs:check-links
+          pnpm check:command-entrypoints
 
   qt-contract-drift:
     runs-on: ubuntu-latest
@@ -318,7 +323,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Package compliance
-        run: pnpm check:package-compliance
+        run: |
+          pnpm check:package-compliance
+          pnpm check:generated-artifacts
 
   smoke:
     runs-on: ubuntu-latest

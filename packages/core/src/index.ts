@@ -20,6 +20,7 @@ export type {
   ImprovementProposalStatus,
   QtCommand,
   QtDoctorStatus,
+  QtHelpCommand,
   QtImproveAction,
   QtImproveActionCommand,
   QtIncompleteCommand,

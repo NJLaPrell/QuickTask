@@ -97,13 +97,18 @@ jobs:
         run: pnpm release:validate-changesets
 
       - name: Validate release workflow contracts
-        run: pnpm release:check-workflow-contracts
+        run: |
+          pnpm release:check-workflow-contracts
+          pnpm docs:check-links
+          pnpm check:command-entrypoints
 
       - name: Validate support-matrix consistency
         run: pnpm check:support-matrix
 
       - name: Validate package compliance metadata
-        run: pnpm check:package-compliance
+        run: |
+          pnpm check:package-compliance
+          pnpm check:generated-artifacts
 
       - name: Docs synchronization gate
         env:
@@ -114,6 +119,9 @@ jobs:
 
       - name: Generate curated release notes
         run: pnpm release:notes
+
+      - name: Validate release note quality
+        run: pnpm release:check-notes-quality
 
       - name: Apply release versions and changelogs
         run: pnpm release:version

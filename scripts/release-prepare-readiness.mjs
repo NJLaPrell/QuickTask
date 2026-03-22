@@ -53,6 +53,27 @@ const commandChecks = [
     command: "pnpm",
     args: ["release:check-workflow-contracts"],
     failureSeverity: "medium"
+  },
+  {
+    id: "docs-links",
+    label: "Docs link integrity check",
+    command: "pnpm",
+    args: ["docs:check-links"],
+    failureSeverity: "medium"
+  },
+  {
+    id: "command-entrypoints",
+    label: "Command entrypoint reference check",
+    command: "pnpm",
+    args: ["check:command-entrypoints"],
+    failureSeverity: "medium"
+  },
+  {
+    id: "generated-artifacts-policy",
+    label: "Generated artifact policy check",
+    command: "pnpm",
+    args: ["check:generated-artifacts"],
+    failureSeverity: "medium"
   }
 ];
 

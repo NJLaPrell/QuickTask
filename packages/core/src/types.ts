@@ -27,6 +27,11 @@ export type QtDoctorCommand = {
   kind: "doctor";
 };
 
+export type QtHelpCommand = {
+  kind: "help";
+  topic?: string;
+};
+
 export type QtImproveCommand = {
   kind: "improve";
   taskName: string;
@@ -58,6 +63,7 @@ export type QtCommand =
   | QtListCommand
   | QtShowCommand
   | QtDoctorCommand
+  | QtHelpCommand
   | QtImproveCommand
   | QtImproveActionCommand
   | QtIncompleteCommand;
@@ -104,6 +110,7 @@ export type QtRuntimeResult =
       kind: "help";
       code: "qt:help";
       usage: string[];
+      message?: string;
     }
   | {
       kind: "clarification";
