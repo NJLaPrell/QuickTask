@@ -19,6 +19,23 @@ test("parses create command", () => {
   });
 });
 
+test("parses explicit /qt create command", () => {
+  assert.deepEqual(parseQtCommand("/qt create standup first-run goals"), {
+    kind: "create",
+    taskName: "standup",
+    instructions: "first-run goals",
+    createMode: "explicit"
+  });
+});
+
+test("returns incomplete for bare /qt create", () => {
+  assert.deepEqual(parseQtCommand("/qt create"), {
+    kind: "incomplete",
+    reason: "missing-create-task",
+    usage: "/qt create [task] [instructions]"
+  });
+});
+
 test("parses quoted create task names", () => {
   assert.deepEqual(parseQtCommand('/qt "incident triage" create runbook from issue details'), {
     kind: "create",

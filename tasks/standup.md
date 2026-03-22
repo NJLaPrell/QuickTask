@@ -2,6 +2,7 @@
 quicktaskVersion: 1
 taskName: standup
 ---
+
 # standup
 
 - Goal: Summarize yesterday/today/blockers in concise bullets.

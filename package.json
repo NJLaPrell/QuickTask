@@ -42,6 +42,7 @@
     "qt:check-contract-drift": "node scripts/check-qt-contract-drift.mjs"
   },
   "devDependencies": {
+    "@quicktask/core": "workspace:*",
     "@changesets/cli": "^2.30.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.0",

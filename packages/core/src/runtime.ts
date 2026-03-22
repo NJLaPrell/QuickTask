@@ -41,6 +41,7 @@ type PersistedProposalRecord = {
 
 const QT_RUNTIME_VERSION = "1.1.0";
 const MAX_PROPOSAL_CACHE_SIZE = 200;
+const IMPROVE_INPUT_MIN_LEN = 12;
 const STARTER_TEMPLATES: Array<{ taskName: string; instructions: string }> = [
   { taskName: "standup", instructions: "Summarize yesterday/today/blockers in concise bullets." },
   {
@@ -58,11 +59,12 @@ const STARTER_TEMPLATES: Array<{ taskName: string; instructions: string }> = [
 ];
 const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
   create: {
-    usage: ["/qt [task] [instructions]"],
-    message: "Create a new task template with instructions."
+    usage: ["/qt [task] [instructions or run input]", "/qt create [task] [instructions]"],
+    message:
+      "When the name is new, `/qt name …` stores the rest as the template body (long pastes are OK). If the template already exists, the same form runs it. Use `/qt create …` only when you want explicit create wording."
   },
   run: {
-    usage: ["/qt/[task] [input]"],
+    usage: ["/qt/[task] [input]", "/qt [task] [input] (after the template exists)"],
     message: "Run an existing task template with optional input."
   },
   improve: {
@@ -201,6 +203,58 @@ export function createQtRuntime(
     const tempPath = `${statePaths.proposalsPath}.${process.pid}.${Date.now()}.tmp`;
     writeFileSync(tempPath, JSON.stringify(payload, null, 2), "utf8");
     renameSync(tempPath, statePaths.proposalsPath);
+  }
+
+  function formatTaskRef(taskName: string): string {
+    return taskName.includes(" ") ? `"${taskName}"` : taskName;
+  }
+
+  function executeRunCommand(
+    taskName: string,
+    userInput: string,
+    requestId: string,
+    commandKind: RuntimeDiagnosticEvent["commandKind"]
+  ): QtRuntimeResult {
+    collectProposalGarbage();
+    const template = getTaskTemplate(store, taskName);
+    if (!template) {
+      feedbackSignals.missingTaskCount += 1;
+      return finalizeResult(requestId, commandKind, {
+        kind: "not_found",
+        code: "qt:run:not-found",
+        taskName,
+        message: `No template exists yet for ${taskName}. Use /qt create ${formatTaskRef(taskName)} … to author a new template, or /qt init for starters.`
+      });
+    }
+
+    const declarations = extractTemplateVariables(template.body);
+    let renderedTemplate = template.body;
+    if (declarations.length > 0) {
+      const values = parseRuntimeVariableInput(userInput);
+      const interpolation = interpolateTemplateVariables(template.body, values);
+      if (interpolation.missingVariables.length > 0) {
+        feedbackSignals.incompleteCount += 1;
+        return finalizeResult(requestId, commandKind, {
+          kind: "run_missing_variables",
+          code: "qt:run:missing-variables",
+          taskName: template.taskName,
+          missingVariables: interpolation.missingVariables,
+          usage: `/qt/${formatTaskRef(template.taskName)} ${interpolation.missingVariables
+            .map((name) => `${name}=<value>`)
+            .join(" ")}`,
+          message: `Missing required template variables: ${interpolation.missingVariables.join(", ")}.`
+        });
+      }
+      renderedTemplate = interpolation.output;
+    }
+
+    return finalizeResult(requestId, commandKind, {
+      kind: "run_executed",
+      code: "qt:run:executed",
+      taskName: template.taskName,
+      templateBody: renderedTemplate,
+      userInput
+    });
   }
 
   function collectProposalGarbage(): boolean {
@@ -396,42 +450,61 @@ export function createQtRuntime(
             kind: "help",
             code: "qt:help",
             usage: [
-              "/qt",
               "/qt init",
-              "/qt [task] [instructions]",
-              "/qt/[task] [input]",
-              "/qt improve [task] [input]",
-              "/qt export [task|--all]",
-              "/qt import [--force] [payload-json]",
-              "/qt import-pack [--force] [manifest-path]",
               "/qt list",
-              "/qt show [task]",
-              "/qt doctor"
-            ]
+              "/qt help — short quickstart (default)",
+              "/qt help all — full command list",
+              "/qt help [create|run|improve|actions|discover]",
+              "/qt [task] … / /qt create [task] … / /qt/[task] …",
+              "/qt improve [task] [input]",
+              "/qt export | import | import-pack | show | doctor"
+            ],
+            message: "Tip: in VS Code / Cursor, open chat → QuickTask participant → type /qt."
           });
         }
 
         if (command.kind === "help") {
           collectProposalGarbage();
+          const tasksDirReady = existsSync(store.tasksDir);
+
           if (!command.topic) {
+            const usage = [
+              "QuickTask quickstart",
+              "- Chat: choose the QuickTask participant, then type `/qt` or `/qt init`.",
+              tasksDirReady
+                ? "- `tasks/` is present — run `/qt list`, then `/qt show <task>`, then `/qt/<task>` or `/qt <task> …` (runs when the template already exists)."
+                : "- Run `/qt init` once to create `tasks/` and starter templates.",
+              "- Every form: `/qt help all`. Topic help: `/qt help create`, `run`, `improve`, `actions`, `discover`."
+            ];
+            return finalizeResult(requestId, command.kind, {
+              kind: "help",
+              code: "qt:help",
+              usage,
+              message: "Compact onboarding help; use `/qt help all` for the full command surface."
+            });
+          }
+
+          if (command.topic === "all") {
             return finalizeResult(requestId, command.kind, {
               kind: "help",
               code: "qt:help",
               usage: [
                 "/qt",
                 "/qt init",
-                "/qt [task] [instructions]",
+                "/qt help [topic|all]",
+                "/qt [task] [instructions or run input when template exists]",
+                "/qt create [task] [instructions]",
                 "/qt/[task] [input]",
                 "/qt improve [task] [input]",
+                "/qt improve <accept|reject|abandon> [task] [proposal-id]",
                 "/qt export [task|--all]",
                 "/qt import [--force] [payload-json]",
                 "/qt import-pack [--force] [manifest-path]",
                 "/qt list",
                 "/qt show [task]",
-                "/qt doctor",
-                "/qt help [create|run|improve|actions|discover]"
+                "/qt doctor"
               ],
-              message: "Use /qt help [topic] for contextual command guidance."
+              message: "Full /qt command surface."
             });
           }
 
@@ -441,13 +514,13 @@ export function createQtRuntime(
               kind: "help",
               code: "qt:help",
               usage: [
-                "/qt help [create|run|improve|actions|discover]",
+                "/qt help [create|run|improve|actions|discover|all]",
                 "/qt",
                 "/qt init",
                 "/qt list",
                 "/qt doctor"
               ],
-              message: `Unknown help topic "${command.topic}". Valid topics: create, run, improve, actions, discover.`
+              message: `Unknown help topic "${command.topic}". Valid topics: create, run, improve, actions, discover, all.`
             });
           }
 
@@ -480,10 +553,10 @@ export function createQtRuntime(
                 continue;
               }
               try {
-                const created = saveTaskTemplate(
-                  store,
-                  createTaskTemplate(starter.taskName, starter.instructions)
-                );
+                const seeded = createTaskTemplate(starter.taskName, starter.instructions);
+                const runRef = formatTaskRef(starter.taskName);
+                seeded.body += `\n\n---\nRun (example): \`/qt/${runRef} your input here\``;
+                const created = saveTaskTemplate(store, seeded);
                 createdAssets.push(`tasks/${created.filename}`);
               } catch (error) {
                 warnings.push(
@@ -497,7 +570,7 @@ export function createQtRuntime(
             const nextCommands = [
               "/qt list",
               "/qt show standup",
-              "/qt/standup today's updates",
+              "/qt standup today: ship the thing, blockers: none",
               "/qt improve standup include risks and blockers"
             ];
             const onlySkipped = createdAssets.length === 0 && warnings.length === 0;
@@ -546,11 +619,22 @@ export function createQtRuntime(
             tasks.length === 0
               ? "No task templates found yet."
               : `Found ${tasks.length} task template${tasks.length === 1 ? "" : "s"}.`;
+          const sorted = [...tasks].sort((a, b) => a.localeCompare(b));
+          const first = sorted[0];
+          const suggestedNext =
+            tasks.length > 0
+              ? [
+                  `/qt show ${formatTaskRef(first)}`,
+                  `/qt/${formatTaskRef(first)} try a short sample input`,
+                  `/qt improve ${formatTaskRef(first)} what to change`
+                ]
+              : undefined;
           return finalizeResult(requestId, command.kind, {
             kind: "list",
             code: "qt:list:listed",
             tasks,
-            message
+            message,
+            suggestedNext
           });
         }
 
@@ -701,28 +785,60 @@ export function createQtRuntime(
         }
 
         if (command.kind === "create") {
-          collectProposalGarbage();
+          const mode = command.createMode ?? "implicit";
+          const existingTemplate = getTaskTemplate(store, command.taskName);
+
+          if (!command.taskName.trim()) {
+            collectProposalGarbage();
+            feedbackSignals.incompleteCount += 1;
+            return finalizeResult(requestId, command.kind, {
+              kind: "incomplete",
+              code: "qt:incomplete",
+              usage: "/qt create [task] [instructions]",
+              message: "Missing task name after /qt create."
+            });
+          }
+
           if (!command.instructions.trim()) {
+            if (mode === "implicit" && existingTemplate) {
+              return executeRunCommand(command.taskName, "", requestId, command.kind);
+            }
+            collectProposalGarbage();
             feedbackSignals.clarificationCount += 1;
             return finalizeResult(requestId, command.kind, {
               kind: "clarification",
               code: "qt:create:clarify",
               taskName: command.taskName,
-              usage: `/qt ${command.taskName} [instructions]`,
-              message: `Please provide instructions for ${command.taskName}.`
+              usage:
+                mode === "explicit"
+                  ? `/qt create ${formatTaskRef(command.taskName)} [instructions]`
+                  : `/qt ${formatTaskRef(command.taskName)} [instructions — template body when new, or run input when it already exists]`,
+              message:
+                mode === "explicit"
+                  ? `Please provide instructions (template body) for new template ${command.taskName}.`
+                  : `Please provide instructions (template body) for new template ${command.taskName}.`
             });
           }
 
-          const existingTemplate = getTaskTemplate(store, command.taskName);
           if (existingTemplate) {
-            return finalizeResult(requestId, command.kind, {
-              kind: "already_exists",
-              code: "qt:create:already-exists",
-              taskName: command.taskName,
-              message: `A template already exists for ${command.taskName}. Use /qt/${command.taskName} [input] to run it or /qt improve ${command.taskName} [input] to propose changes.`
-            });
+            if (mode === "explicit") {
+              collectProposalGarbage();
+              return finalizeResult(requestId, command.kind, {
+                kind: "already_exists",
+                code: "qt:create:already-exists",
+                taskName: command.taskName,
+                message: `A template already exists for ${command.taskName}. Run with /qt ${formatTaskRef(command.taskName)} … or /qt/${formatTaskRef(command.taskName)} …, or change it with /qt improve ${formatTaskRef(command.taskName)} …. /qt create is only for new names.`
+              });
+            }
+            return executeRunCommand(
+              command.taskName,
+              command.instructions,
+              requestId,
+              command.kind
+            );
           }
 
+          collectProposalGarbage();
           const template = createTaskTemplate(command.taskName, command.instructions);
           saveTaskTemplate(store, template);
           return finalizeResult(requestId, command.kind, {
@@ -827,46 +943,7 @@ export function createQtRuntime(
         }
 
         if (command.kind === "run") {
-          collectProposalGarbage();
-          const template = getTaskTemplate(store, command.taskName);
-          if (!template) {
-            feedbackSignals.missingTaskCount += 1;
-            return finalizeResult(requestId, command.kind, {
-              kind: "not_found",
-              code: "qt:run:not-found",
-              taskName: command.taskName,
-              message: `No template exists yet for ${command.taskName}.`
-            });
-          }
-
-          const declarations = extractTemplateVariables(template.body);
-          let renderedTemplate = template.body;
-          if (declarations.length > 0) {
-            const values = parseRuntimeVariableInput(command.userInput);
-            const interpolation = interpolateTemplateVariables(template.body, values);
-            if (interpolation.missingVariables.length > 0) {
-              feedbackSignals.incompleteCount += 1;
-              return finalizeResult(requestId, command.kind, {
-                kind: "run_missing_variables",
-                code: "qt:run:missing-variables",
-                taskName: template.taskName,
-                missingVariables: interpolation.missingVariables,
-                usage: `/qt/${template.taskName} ${interpolation.missingVariables
-                  .map((name) => `${name}=<value>`)
-                  .join(" ")}`,
-                message: `Missing required template variables: ${interpolation.missingVariables.join(", ")}.`
-              });
-            }
-            renderedTemplate = interpolation.output;
-          }
-
-          return finalizeResult(requestId, command.kind, {
-            kind: "run_executed",
-            code: "qt:run:executed",
-            taskName: template.taskName,
-            templateBody: renderedTemplate,
-            userInput: command.userInput
-          });
+          return executeRunCommand(command.taskName, command.userInput, requestId, command.kind);
         }
 
         if (collectProposalGarbage()) {
@@ -880,6 +957,18 @@ export function createQtRuntime(
             code: "qt:improve:not-found",
             taskName: command.taskName,
             message: `No template exists yet for ${command.taskName}.`
+          });
+        }
+
+        const hint = command.userInput?.trim() ?? "";
+        if (hint.length < IMPROVE_INPUT_MIN_LEN) {
+          feedbackSignals.incompleteCount += 1;
+          return finalizeResult(requestId, command.kind, {
+            kind: "incomplete",
+            code: "qt:incomplete",
+            usage: `/qt improve ${formatTaskRef(command.taskName)} [what to change — at least a short sentence]`,
+            message:
+              "Improve needs a concrete note (about one line). Example: `/qt improve standup include risk and escalation callouts`."
           });
         }
 

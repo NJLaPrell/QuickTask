@@ -12,12 +12,15 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 
 ### Core commands
 
-- `/qt` - show command help.
-- `/qt help [topic]` - show contextual help (`create`, `run`, `improve`, `actions`, `discover`).
+- `/qt` - compact command index (points at `/qt help` and `/qt help all`).
+- `/qt help` - short quickstart (chat + init + pointer to full reference).
+- `/qt help all` - full command list (same surface as historical `/qt` menu).
+- `/qt help [topic]` - contextual help (`create`, `run`, `improve`, `actions`, `discover`, `all`).
 - `/qt init` - initialize QuickTask first-run assets and guidance.
-- `/qt [task] [instructions]` - create a new task template.
+- `/qt [task] [body or run input]` - **if the template name is new**, the remainder is the template body (long pastes are valid authoring). **If the template already exists**, the remainder is treated as **run input** (same semantics as `/qt/[task]`).
+- `/qt create [task] [instructions]` - **explicit create** only; if the name already exists, returns `qt:create:already-exists` (does not run).
 - `/qt/[task] [input]` - run an existing task.
-- `/qt improve [task] [input]` - propose an improvement.
+- `/qt improve [task] [input]` - propose an improvement. **Input must be substantive** (runtime enforces a minimum length); otherwise returns `qt:incomplete` with an example.
 - `/qt export [task|--all]` - export one or all templates as a deterministic JSON payload.
 - `/qt import [--force] [payload-json]` - import template records from exported payloads.
 - `/qt import-pack [--force] [manifest-path]` - resolve and import a local template-pack manifest.
@@ -42,11 +45,10 @@ Quoted task names are supported anywhere a `[task]` argument is accepted. Use do
 
 The approved `/qt` command surface is intentionally minimal:
 
-- help (`/qt`)
-- contextual help (`/qt help [topic]`)
+- help (`/qt`, `/qt help`, `/qt help [topic|all]`)
 - init/bootstrap (`/qt init`)
-- create (`/qt [task] [instructions]`)
-- run (`/qt/[task] [input]`)
+- create / run disambiguation (`/qt [task] …`, `/qt create [task] …`, `/qt/[task] …`)
+- run (`/qt/[task] [input]`, and `/qt [task] …` when the template exists)
 - improve lifecycle (`/qt improve ...`, accept/reject/abandon)
 - portability (`/qt export`, `/qt import`, `/qt import-pack`)
 - discovery and diagnostics (`/qt list`, `/qt show [task]`, `/qt doctor`)
@@ -77,7 +79,7 @@ Additional command expansions are deferred by default and require explicit re-ap
 - `qt:pack:resolved`
 - `qt:pack:invalid`
 - `qt:pack:not-found`
-- `qt:list:listed`
+- `qt:list:listed` (optional `suggestedNext[]` onboarding hints after a non-empty list)
 - `qt:show:template`
 - `qt:doctor:status`
 - `qt:improve:not-found`
@@ -149,6 +151,16 @@ Additional command expansions are deferred by default and require explicit re-ap
 - Pack resolution is local-only and resolves template file paths relative to the manifest directory.
 - Invalid manifests return `qt:pack:invalid`; missing manifest files return `qt:pack:not-found`.
 - Successful pack resolution/import returns `qt:pack:resolved` with imported/skipped counts.
+
+## Verbose and debug mode (spec, Phase 12 / T137)
+
+**Status:** specified only; default UX remains human-first summaries until an implementation task ships.
+
+- **Goals:** optional surfacing of absolute paths, touched files, internal diagnostic codes, and structured “reason” tokens for support — **off by default** for `/qt` happy paths (`docs/product-direction.md`).
+- **Suggested control surface (VS Code / Cursor):** workspace setting `quicktask.verbose` (boolean) and optional `quicktask.debug` (boolean) with `debug` implying `verbose`. OpenClaw hosts may expose equivalent host config that maps into the same runtime flags when implemented.
+- **Runtime (future):** accept optional verbosity flags on `createQtRuntime` options or per-request context from adapters; when verbose, append a fenced “Diagnostics” section to markdown output for `doctor`, `init_status`, storage errors, and `not_found` (paths only, no raw user template text). When debug, include last N diagnostic event codes and `requestId` on non-error results where privacy policy still allows.
+- **Commands (future):** at minimum `doctor`, `init`, `export`/`import` outcomes; consider `list`/`show` path hints only under debug.
+- **Adapters:** hosts must not log full template bodies to shared telemetry; verbose/debug is for local buffers and user-visible output only. See `docs/qt-adapter-rendering-matrix.md` § Verbose/debug.
 
 ## Diagnostics and privacy policy
 

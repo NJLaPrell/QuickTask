@@ -10,6 +10,9 @@ function parseArgs(argv) {
       args.help = true;
       continue;
     }
+    if (arg === "--") {
+      continue;
+    }
     if (arg === "--tasks-dir") {
       args.tasksDir = argv[index + 1];
       index += 1;

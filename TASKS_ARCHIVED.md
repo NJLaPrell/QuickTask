@@ -143,6 +143,19 @@ Active planning stays in `TASKS.md`.
 - [h] T093 - Reorganize root documentation into a maintainable docs structure
 - [h] T096 - Remove or replace low-value placeholder package docs
 
+### Phase 12 - User feedback resolution (`v1.0.x` adoption)
+
+- [h] T133 - Prefer run when `/qt <existing-task> …` (explicit `/qt create` escape hatch) — shipped `v1.1.0`; core + contract + tests.
+- [h] T134 - Marketplace + README install trust — README identity, checklist, listing cross-links (Marketplace assets external).
+- [h] T135 - Chat-first docs + Contributing-only monorepo path — README reorder, `CONTRIBUTORS.md` sandbox quotes.
+- [h] T136 - `/qt help` tiering, init steer, suggested next after `list` — core runtime + rendering.
+- [h] T137 - Verbose/debug **spec** — `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`.
+- [h] T138 - `qt:sandbox` from repo root — root `devDependency` `@quicktask/core`, `scripts/qt-sandbox.mjs` `--` fix, CI job.
+- [h] T139 - UF-012 long paste create body + docs — tests + README/contract.
+- [h] T140 - Improve empty/thin input — `qt:incomplete` + minimum length in runtime.
+- [h] T141 - Seeded template run-line footer — `/qt init` seeds in `packages/core/src/runtime.ts`.
+- [h] T142 - Extension activation + doctor-aligned preflight — `packages/vscode-extension/src/extension.ts` (once per workspace).
+
 ## Notes
 
 - Detailed implementation history, diffs, and acceptance evidence for archived tasks remain in git history and PR records.

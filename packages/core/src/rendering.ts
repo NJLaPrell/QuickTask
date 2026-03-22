@@ -92,7 +92,16 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
         result.tasks.length > 0 ? "" : "",
         ...result.tasks.map((task) =>
           style === "markdown" ? `- ${inlineCode(style, task)}` : `- ${task}`
-        )
+        ),
+        result.suggestedNext?.length
+          ? joinLines([
+              "",
+              "Suggested next:",
+              ...result.suggestedNext.map((line) =>
+                style === "markdown" ? `- ${inlineCode(style, line)}` : `- ${line}`
+              )
+            ])
+          : ""
       ]);
     case "qt:export:task":
     case "qt:export:all":

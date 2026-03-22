@@ -129,7 +129,10 @@ test("covers improve action lifecycle through OpenClaw adapter boundary", () => 
     const runtime = createOpenClawQtRuntime(tasksDir);
     handleOpenClawQtInput("summarize baseline template", runtime);
 
-    const proposal = handleOpenClawQtInput("/qt improve summarize add owners", runtime).result;
+    const proposal = handleOpenClawQtInput(
+      "/qt improve summarize add owners and accountability",
+      runtime
+    ).result;
     assert.equal(proposal.code, "qt:improve:proposed");
 
     const accepted = handleOpenClawQtInput(

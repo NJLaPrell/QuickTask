@@ -49,7 +49,7 @@ export type {
 export function describeQt(): string {
   return [
     "QuickTask (qt) is a task templating system accessed through /qt.",
-    "Use /qt to view help, /qt init to bootstrap starter templates, /qt [task] [instructions] to define a task, /qt/[task] to run a task, and /qt improve [task] [input] to improve a task template.",
+    "Use /qt help for a short quickstart, /qt init to bootstrap starter templates, /qt [task] … to create (new name) or run (existing), /qt create [task] … for explicit create, /qt/[task] to run, and /qt improve [task] [input] to improve a template.",
     `Core API surface version: ${QUICKTASK_CORE_API_VERSION}.`
   ].join(" ");
 }
