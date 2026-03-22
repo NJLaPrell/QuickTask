@@ -70,6 +70,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Current phase in execution: Phase 11 - Post-release expansion and workflow modernization
 - Current milestone target: Deliver accepted post-release scope moved from Phase 10 and keep release/CI workflows modernized.
 - Phase objective now: ship deferred product/governance improvements and remove action-runtime deprecation risk in GitHub workflows.
+- Phase kickoff assessment: complete (reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and active contracts).
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
 - Ready queue (`[p]`): 11 tasks
@@ -192,7 +193,7 @@ Validation expectations are enforced within those tasks' acceptance criteria and
 ### Phase 11 - Post-release expansion and workflow modernization
 
 - Delivery outcome: Deferred feature/governance enhancements land after the `v0.4.0` release, and CI/release workflows are modernized for current GitHub Actions runtime policy.
-- Status: in progress.
+- Status: kickoff complete; implementation in progress.
 - Planned task IDs (in order): T132, T112, T113, T114, T116, T117, T118, T120, T123, T124, T126.
 - Archived task IDs: none.
 
@@ -617,10 +618,11 @@ Pending work below is triaged and ready for implementation.
 - Steps:
   1. Audit all workflow actions currently running on Node 20 (checkout/setup-node/upload-artifact/action-gh-release, etc.).
   2. Upgrade to Node 24-compatible action versions and pin to supported releases.
-  3. Re-run CI + RC + Release candidate validation and confirm deprecation annotations are cleared.
+  3. Align contributor/release docs that hardcode prior phase checks (for example `phase:check -- --phase 10`) with active Phase 11 execution.
+  4. Re-run CI + RC + Release candidate validation and confirm deprecation annotations are cleared.
 - Acceptance criteria:
   - RC/release workflow runs no longer emit Node 20 deprecation warnings.
-  - Updated action versions are documented and verified in workflow validation.
+  - Updated action versions and any phase-check doc references are documented and verified in workflow validation.
 - Validation evidence:
   - <add after implementation>
 
