@@ -67,14 +67,14 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-22
-- **Phase 12** (`v1.0.x` adoption): **implementation complete**; task records **`[h]`** in `TASKS_ARCHIVED.md`. **Version `v1.1.0`** is cut by the **`Release`** workflow after merge (pending `.changeset/phase-twelve-adoption.md` on `main`).
+- **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _None — pick next phase goal from product backlog or open a Phase 13 kickoff._
 - Phase kickoff assessment: Phase 12 kickoff was complete; close-out validation: `pnpm test`, `pnpm test:smoke`, `pnpm check`, `pnpm qt:check-contract-drift`, `pnpm tasks:check`.
 - Active implementation (`[~]`): none
 - Scheduled (`[ ]`): _Empty._
 - Ready queue (`[p]`): _Empty._
 - Blocked tasks (`[!]`): none
-- Next tasks: After **`Release`** publishes **`v1.1.0`**, close/update linked GitHub user-feedback issues **#41–#44, #47, #48, #49, #51–#53, #54, #55, #56, #57, #58, #60–#62** (see `USER_FEEDBACK.md`).
+- Next tasks: Pick next phase goal (Phase 13 kickoff or backlog); optional: refresh `USER_FEEDBACK.md` maintainer notes now that **#41–#44, #47–#49, #51–#58, #60–#62** are closed with **`v1.1.0`**.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
