@@ -61,7 +61,10 @@ function main() {
   const results = [];
   for (const testCase of cases) {
     const taskName = String(testCase.taskName ?? "").trim();
-    const templatePath = path.resolve(path.dirname(datasetPath), String(testCase.templatePath ?? ""));
+    const templatePath = path.resolve(
+      path.dirname(datasetPath),
+      String(testCase.templatePath ?? "")
+    );
     const checks = Array.isArray(testCase.checks) ? testCase.checks : [];
     if (!taskName || !existsSync(templatePath)) {
       results.push({

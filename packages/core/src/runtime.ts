@@ -43,9 +43,18 @@ const QT_RUNTIME_VERSION = "1.1.0";
 const MAX_PROPOSAL_CACHE_SIZE = 200;
 const STARTER_TEMPLATES: Array<{ taskName: string; instructions: string }> = [
   { taskName: "standup", instructions: "Summarize yesterday/today/blockers in concise bullets." },
-  { taskName: "incident-triage", instructions: "Collect incident facts, impact, owner, and next action." },
-  { taskName: "release-notes", instructions: "Draft user-facing release notes from merged changes." },
-  { taskName: "pr-review", instructions: "Review pull requests for risks, regressions, and missing tests." }
+  {
+    taskName: "incident-triage",
+    instructions: "Collect incident facts, impact, owner, and next action."
+  },
+  {
+    taskName: "release-notes",
+    instructions: "Draft user-facing release notes from merged changes."
+  },
+  {
+    taskName: "pr-review",
+    instructions: "Review pull requests for risks, regressions, and missing tests."
+  }
 ];
 const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
   create: {
@@ -179,14 +188,16 @@ export function createQtRuntime(
 
   function persistProposals(): void {
     mkdirSync(statePaths.stateDir, { recursive: true });
-    const payload: PersistedProposalRecord[] = [...proposals.entries()].map(([proposalId, proposal]) => ({
-      proposalId,
-      taskName: proposal.taskName,
-      oldTemplate: proposal.oldTemplate,
-      proposedTemplate: proposal.proposedTemplate,
-      status: proposal.status,
-      createdAtMs: proposal.createdAtMs
-    }));
+    const payload: PersistedProposalRecord[] = [...proposals.entries()].map(
+      ([proposalId, proposal]) => ({
+        proposalId,
+        taskName: proposal.taskName,
+        oldTemplate: proposal.oldTemplate,
+        proposedTemplate: proposal.proposedTemplate,
+        status: proposal.status,
+        createdAtMs: proposal.createdAtMs
+      })
+    );
     const tempPath = `${statePaths.proposalsPath}.${process.pid}.${Date.now()}.tmp`;
     writeFileSync(tempPath, JSON.stringify(payload, null, 2), "utf8");
     renameSync(tempPath, statePaths.proposalsPath);
@@ -340,7 +351,8 @@ export function createQtRuntime(
         createdCount,
         updatedCount,
         skippedCount,
-        message: "No tasks imported because all records conflict with existing templates. Re-run with --force."
+        message:
+          "No tasks imported because all records conflict with existing templates. Re-run with --force."
       };
     }
 

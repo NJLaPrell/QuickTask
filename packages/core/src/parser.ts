@@ -106,7 +106,9 @@ export function parseQtCommand(input: string): QtCommand {
       };
     }
     const force = parsed.taskName === "--force";
-    const manifestPath = force ? parsed.rest : [parsed.taskName, parsed.rest].filter(Boolean).join(" ");
+    const manifestPath = force
+      ? parsed.rest
+      : [parsed.taskName, parsed.rest].filter(Boolean).join(" ");
     return {
       kind: "import_pack",
       force,

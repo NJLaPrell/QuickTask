@@ -4,16 +4,20 @@
 "quicktask-openclaw": major
 ---
 
-## Breaking Changes
-
-- Graduate QuickTask to the `1.0.0` line with finalized command/runtime contracts, including template variable interpolation and portability command surfaces (`export`, `import`, `import-pack`).
-
-## Features
+## New Features
 
 - Add deterministic template-variable support with missing-variable guidance.
 - Add template export/import flows and local template-pack manifest resolution.
 - Add privacy-safe aggregate UX friction diagnostics and baseline template eval harness scaffolding.
 
-## Internal
+## Bug Fixes
 
-- Modernize release-critical workflow actions for current GitHub runtime policy and replace deprecated release publish action path with CLI publish.
+- Modernize release-critical workflow publish path to use CLI-based release publication and remove deprecated JS-action runtime dependency during release.
+
+## Internal Improvements
+
+- Upgrade release-critical workflow setup actions to Node-24-ready versions and align governance/contributor docs with canonical policy links and Phase 11 execution checks.
+
+## Breaking Changes
+
+- Graduate QuickTask to the `1.0.0` line with finalized command/runtime contracts, including template variable interpolation and portability command surfaces (`export`, `import`, `import-pack`).

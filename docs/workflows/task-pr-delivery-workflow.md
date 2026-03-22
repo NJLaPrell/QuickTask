@@ -17,12 +17,12 @@ Canonical source for task delivery execution loop.
 
 Use fast-lane only when all criteria are true:
 
-| Criterion | Required value |
-| --- | --- |
-| Task priority | `P2` or lower |
-| Scope | docs/rules/workflow text only (no runtime/adapter/workflow behavior changes) |
-| Release impact | no changeset required, no release-contract drift |
-| Risk class | no medium/high findings introduced |
+| Criterion      | Required value                                                               |
+| -------------- | ---------------------------------------------------------------------------- |
+| Task priority  | `P2` or lower                                                                |
+| Scope          | docs/rules/workflow text only (no runtime/adapter/workflow behavior changes) |
+| Release impact | no changeset required, no release-contract drift                             |
+| Risk class     | no medium/high findings introduced                                           |
 
 Fast-lane minimum validation:
 

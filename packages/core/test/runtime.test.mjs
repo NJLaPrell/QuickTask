@@ -242,7 +242,11 @@ test("import-pack resolves manifest and imports templates safely", () => {
   const packDir = path.join(tasksDir, "pack");
   try {
     mkdirSync(packDir, { recursive: true });
-    writeFileSync(path.join(packDir, "summary.md"), "# summary\n\n- Goal: summarize {{topic}}", "utf8");
+    writeFileSync(
+      path.join(packDir, "summary.md"),
+      "# summary\n\n- Goal: summarize {{topic}}",
+      "utf8"
+    );
     writeFileSync(
       path.join(packDir, "manifest.json"),
       JSON.stringify(
