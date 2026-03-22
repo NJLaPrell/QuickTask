@@ -20,7 +20,10 @@ test("resolveChatParticipantFactory returns callable factory when chat API exist
 
 test("getQtPromptFromRequest normalizes missing and plain prompts", () => {
   assert.equal(getQtPromptFromRequest({ prompt: "" }), "/qt");
-  assert.equal(getQtPromptFromRequest({ prompt: "summarize write bullets" }), "/qt summarize write bullets");
+  assert.equal(
+    getQtPromptFromRequest({ prompt: "summarize write bullets" }),
+    "/qt summarize write bullets"
+  );
   assert.equal(getQtPromptFromRequest({ prompt: "/qt list" }), "/qt list");
 });
 

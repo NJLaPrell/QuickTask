@@ -121,7 +121,10 @@ function runNormalizationParitySmoke() {
     { input: "summarize write concise bullets", expected: "/qt summarize write concise bullets" },
     { input: "/qt list", expected: "/qt list" },
     { input: "/qt show summarize", expected: "/qt show summarize" },
-    { input: "/qt improve accept summarize abc123", expected: "/qt improve accept summarize abc123" }
+    {
+      input: "/qt improve accept summarize abc123",
+      expected: "/qt improve accept summarize abc123"
+    }
   ];
 
   for (const testCase of parityCases) {

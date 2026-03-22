@@ -25,7 +25,9 @@ export function resolveChatParticipantFactory(
   }
 
   const maybeFactory = Reflect.get(maybeChat, "createChatParticipant");
-  return typeof maybeFactory === "function" ? (maybeFactory as ChatParticipantFactoryLike) : undefined;
+  return typeof maybeFactory === "function"
+    ? (maybeFactory as ChatParticipantFactoryLike)
+    : undefined;
 }
 
 export function getQtPromptFromRequest(request: ChatRequestLike): string {

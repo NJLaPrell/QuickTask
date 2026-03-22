@@ -125,7 +125,10 @@ test("covers improve action lifecycle through OpenClaw adapter boundary", () => 
     ).result;
     assert.equal(accepted.code, "qt:improve:accept:applied");
 
-    const missing = handleOpenClawQtInput("/qt improve abandon summarize does-not-exist", runtime).result;
+    const missing = handleOpenClawQtInput(
+      "/qt improve abandon summarize does-not-exist",
+      runtime
+    ).result;
     assert.equal(missing.code, "qt:improve:proposal-not-found");
   } finally {
     rmSync(tasksDir, { recursive: true, force: true });

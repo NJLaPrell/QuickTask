@@ -113,7 +113,10 @@ test("covers improve action lifecycle through VS Code adapter boundary", () => {
     ).result;
     assert.equal(alreadyFinalized.code, "qt:improve:already-finalized");
 
-    const rejectProposal = handleQtChatPrompt("/qt improve summarize reject branch", runtime).result;
+    const rejectProposal = handleQtChatPrompt(
+      "/qt improve summarize reject branch",
+      runtime
+    ).result;
     assert.equal(rejectProposal.code, "qt:improve:proposed");
     const rejected = handleQtChatPrompt(
       `/qt improve reject summarize ${rejectProposal.proposalId}`,
@@ -121,7 +124,10 @@ test("covers improve action lifecycle through VS Code adapter boundary", () => {
     ).result;
     assert.equal(rejected.code, "qt:improve:reject:recorded");
 
-    const abandonProposal = handleQtChatPrompt("/qt improve summarize abandon branch", runtime).result;
+    const abandonProposal = handleQtChatPrompt(
+      "/qt improve summarize abandon branch",
+      runtime
+    ).result;
     assert.equal(abandonProposal.code, "qt:improve:proposed");
     const abandoned = handleQtChatPrompt(
       `/qt improve abandon summarize ${abandonProposal.proposalId}`,

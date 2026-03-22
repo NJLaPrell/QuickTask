@@ -277,7 +277,10 @@ export function checkTaskStoreHealth(store: FileTaskStore): TaskStoreHealth {
     mkdirSync(store.tasksDir, { recursive: true });
     health.taskCount = listTaskNames(store).length;
 
-    const probePath = path.join(store.tasksDir, `.qt-doctor-write-check-${process.pid}-${Date.now()}`);
+    const probePath = path.join(
+      store.tasksDir,
+      `.qt-doctor-write-check-${process.pid}-${Date.now()}`
+    );
     writeFileSync(probePath, "ok", "utf8");
     unlinkSync(probePath);
     health.writable = true;

@@ -58,7 +58,9 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
       return joinLines([
         result.message,
         result.tasks.length > 0 ? "" : "",
-        ...result.tasks.map((task) => (style === "markdown" ? `- ${inlineCode(style, task)}` : `- ${task}`))
+        ...result.tasks.map((task) =>
+          style === "markdown" ? `- ${inlineCode(style, task)}` : `- ${task}`
+        )
       ]);
     case "qt:show:template":
       if (style === "markdown") {

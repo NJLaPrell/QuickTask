@@ -1,10 +1,7 @@
 import * as vscode from "vscode";
 
 import { handleQtChatPrompt, type QtRuntimeLike, createVsCodeQtRuntime } from "./qtAdapter.js";
-import {
-  getQtPromptFromRequest,
-  resolveChatParticipantFactory
-} from "./chatCompat.js";
+import { getQtPromptFromRequest, resolveChatParticipantFactory } from "./chatCompat.js";
 
 function renderCommandResult(
   response: ReturnType<typeof handleQtChatPrompt>,
@@ -23,7 +20,9 @@ function renderCommandResult(
     return;
   }
 
-  void vscode.window.showInformationMessage("QuickTask result written to the QuickTask output channel.");
+  void vscode.window.showInformationMessage(
+    "QuickTask result written to the QuickTask output channel."
+  );
 }
 
 function registerCommand(context: vscode.ExtensionContext, runtime: QtRuntimeLike): void {
@@ -53,13 +52,10 @@ function registerChatParticipant(context: vscode.ExtensionContext, runtime: QtRu
     return;
   }
 
-  const participant = createChatParticipant(
-    "quicktask.chat",
-    async (request, _, stream) => {
-      const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime);
-      stream.markdown?.(response.markdown);
-    }
-  );
+  const participant = createChatParticipant("quicktask.chat", async (request, _, stream) => {
+    const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime);
+    stream.markdown?.(response.markdown);
+  });
 
   context.subscriptions.push(participant);
 }
