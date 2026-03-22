@@ -2,7 +2,7 @@
   "name": "quicktask-vscode",
   "displayName": "QuickTask Workflows",
   "description": "Reusable /qt task workflows for AI chat in VS Code.",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "private": true,
   "publisher": "nicklaprell",
   "repository": {
