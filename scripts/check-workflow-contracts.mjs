@@ -25,10 +25,31 @@ const REQUIRED_DOCS_CHECK_ENVS = [
   "RELEASE_DOCS_STATUS",
   "RELEASE_DOCS_SYNC_NOTES"
 ];
+const REQUIRED_RELEASE_GATES = [
+  "run: pnpm release:verify-local-artifacts",
+  "run: pnpm release:test-artifact-journeys",
+  "run: pnpm release:validate-host-installs"
+];
+const REQUIRED_RC_GATES = [
+  "run: pnpm release:verify-local-artifacts",
+  "run: pnpm release:test-artifact-journeys",
+  "run: pnpm release:validate-host-installs"
+];
+const REQUIRED_POST_RELEASE_GATES = [
+  "os: [ubuntu-latest, macos-latest, windows-latest]",
+  "node scripts/run-artifact-user-journeys.mjs",
+  "node scripts/host-install-validate.mjs"
+];
 
 export function checkWorkflowContracts(sources) {
   const findings = [];
-  const { releaseWorkflow, releaseHandoffScript, releaseDocsCheckScript } = sources;
+  const {
+    releaseWorkflow,
+    rcWorkflow,
+    postReleaseWorkflow,
+    releaseHandoffScript,
+    releaseDocsCheckScript
+  } = sources;
 
   for (const inputName of REQUIRED_RELEASE_INPUTS) {
     if (!releaseWorkflow.includes(`      ${inputName}:`)) {
@@ -66,6 +87,24 @@ export function checkWorkflowContracts(sources) {
     }
   }
 
+  for (const gate of REQUIRED_RELEASE_GATES) {
+    if (!releaseWorkflow.includes(gate)) {
+      findings.push(`release.yml is missing required release gate step: ${gate}`);
+    }
+  }
+
+  for (const gate of REQUIRED_RC_GATES) {
+    if (!rcWorkflow.includes(gate)) {
+      findings.push(`release-candidate.yml is missing required gate step: ${gate}`);
+    }
+  }
+
+  for (const gate of REQUIRED_POST_RELEASE_GATES) {
+    if (!postReleaseWorkflow.includes(gate)) {
+      findings.push(`post-release-verify.yml is missing required verification contract: ${gate}`);
+    }
+  }
+
   return {
     ok: findings.length === 0,
     findings
@@ -74,10 +113,14 @@ export function checkWorkflowContracts(sources) {
 
 export function main() {
   const releaseWorkflow = readFileSync(".github/workflows/release.yml", "utf8");
+  const rcWorkflow = readFileSync(".github/workflows/release-candidate.yml", "utf8");
+  const postReleaseWorkflow = readFileSync(".github/workflows/post-release-verify.yml", "utf8");
   const releaseHandoffScript = readFileSync("scripts/release-handoff.mjs", "utf8");
   const releaseDocsCheckScript = readFileSync("scripts/release-docs-check.mjs", "utf8");
   const result = checkWorkflowContracts({
     releaseWorkflow,
+    rcWorkflow,
+    postReleaseWorkflow,
     releaseHandoffScript,
     releaseDocsCheckScript
   });

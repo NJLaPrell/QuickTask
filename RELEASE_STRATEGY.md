@@ -87,18 +87,22 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
    - run `pnpm build`
    - run `pnpm release:validate-changesets`
    - run `pnpm release:check-workflow-contracts`
+   - run `pnpm check:support-matrix`
+   - run `pnpm check:package-compliance`
    - run `pnpm release:docs-check`
 5. Workflow builds curated release notes and versions packages/changelogs with `pnpm release:notes` + `pnpm release:version`.
 6. Workflow builds and verifies release assets using:
    - `pnpm package:release`
    - `pnpm release:verify-local-artifacts`
+   - `pnpm release:test-artifact-journeys`
+   - `pnpm release:validate-host-installs`
 7. Workflow creates:
    - release commit on `main`
    - semantic tag `vX.Y.Z`
    - published GitHub Release for `vX.Y.Z`
 8. Release notes combine curated user-focused notes with GitHub generated notes.
    - GitHub note categories are configured in `.github/release.yml`.
-9. Post-release workflow verifies downloaded published assets.
+9. Post-release workflow verifies downloaded published assets across Ubuntu/macOS/Windows and reruns artifact user-journey + host-install checks on Linux.
 
 ## Docs sync gate policy
 

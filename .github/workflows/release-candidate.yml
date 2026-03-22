@@ -51,6 +51,12 @@ jobs:
       - name: Validate release workflow contracts
         run: pnpm release:check-workflow-contracts
 
+      - name: Validate support-matrix consistency
+        run: pnpm check:support-matrix
+
+      - name: Validate package compliance metadata
+        run: pnpm check:package-compliance
+
       - name: Generate release notes snapshot
         run: pnpm release:notes
 
@@ -59,6 +65,12 @@ jobs:
 
       - name: Verify candidate artifacts
         run: pnpm release:verify-local-artifacts
+
+      - name: Run clean-room artifact user journeys
+        run: pnpm release:test-artifact-journeys
+
+      - name: Validate host install harness
+        run: pnpm release:validate-host-installs
 
       - name: Upload candidate assets
         uses: actions/upload-artifact@v4

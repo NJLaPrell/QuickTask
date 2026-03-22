@@ -274,6 +274,52 @@ jobs:
       - name: Package manager consistency
         run: pnpm check:package-manager
 
+  support-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Support-matrix consistency
+        run: pnpm check:support-matrix
+
+  package-compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Package compliance
+        run: pnpm check:package-compliance
+
   smoke:
     runs-on: ubuntu-latest
     steps:
@@ -314,6 +360,8 @@ jobs:
       - qt-contract-drift
       - package-vscode
       - package-manager
+      - support-matrix
+      - package-compliance
       - smoke
     steps:
       - name: CI aggregate gate

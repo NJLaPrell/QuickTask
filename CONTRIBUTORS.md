@@ -200,7 +200,8 @@ Run this after a release tag exists and the extension version matches that tag:
 
 QuickTask enforces dependency and supply-chain checks in CI:
 
-- `Security / dependency-review` validates dependency and lockfile changes on PRs.
+- `Security / dependency-review` fails PRs on high-severity findings when dependency graph is available.
+- Dependency-review fallback is allowed only when GitHub dependency-graph is platform-unavailable; this is summarized in workflow output.
 - `Security / audit` fails on known high/critical vulnerabilities.
 
 Run locally before opening a dependency-heavy PR:
@@ -222,6 +223,8 @@ Package manager policy:
 - Source of truth is `package.json#packageManager`.
 - CI and release workflows must pin the same `pnpm` version.
 - Validate with `pnpm check:package-manager`.
+- Keep `README.md` support floors aligned with workflow/package policy via `pnpm check:support-matrix`.
+- Enforce distributable package metadata policy with `pnpm check:package-compliance`.
 
 Diagnostics and logging policy:
 

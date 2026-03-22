@@ -9,7 +9,14 @@ permissions:
 
 jobs:
   verify-release-assets:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,11 +50,30 @@ jobs:
           VERSION="${RELEASE_TAG#v}"
           node scripts/verify-release-assets.mjs --assets-dir artifacts --version "${VERSION}"
 
+      - name: Run clean-room artifact user journeys
+        if: runner.os == 'Linux'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          node scripts/run-artifact-user-journeys.mjs --assets-dir artifacts --version "${VERSION}"
+
+      - name: Validate host install harness
+        if: runner.os == 'Linux'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          node scripts/host-install-validate.mjs --assets-dir artifacts --version "${VERSION}"
+
       - name: Publish verification summary
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
-          echo "Verified installable assets for ${RELEASE_TAG}." >> "${GITHUB_STEP_SUMMARY}"
+          echo "Verified installable assets for ${RELEASE_TAG} on ${{ matrix.os }}." >> "${GITHUB_STEP_SUMMARY}"
           echo "- VSIX and OpenClaw package naming matched release tag" >> "${GITHUB_STEP_SUMMARY}"
           echo "- Checksum validation passed" >> "${GITHUB_STEP_SUMMARY}"
           echo "- OpenClaw install smoke check passed" >> "${GITHUB_STEP_SUMMARY}"
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            echo "- Clean-room user journeys and host-install validation passed" >> "${GITHUB_STEP_SUMMARY}"
+          fi
