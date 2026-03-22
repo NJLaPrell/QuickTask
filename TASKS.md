@@ -67,17 +67,17 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-22
-- Current phase in execution: Phase 9 - CI/release platform hardening (in progress)
-- Current milestone target: Phase 9 CI/release hardening baseline (`T060` + `T064` + `T068` complete; advance to security/artifact contract slices)
-- Phase objective now: improve CI/release reliability and observability while preserving strict release/security gates.
+- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (planned start)
+- Current milestone target: Phase 9 release completed and shipped; transition to Phase 10 backlog promotion.
+- Phase objective now: preserve new CI/release hardening gates while executing deferred operational polish work.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 29 tasks (phase 9-10 backlog)
+- Ready queue (`[p]`): 20 tasks (phase 10 backlog)
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T073 - Harden dependency-review enforcement and fallback behavior
-  2. T080 - Validate release asset metadata contract in CI before publish
-  3. T082 - Add distributable package metadata and license compliance checks
+  1. T057 - Support quoted task names and richer parser input forms
+  2. T058 - Add proposal lifecycle GC to bound in-memory growth
+  3. T059 - Enforce session-only proposal lifecycle policy
 - Definition of "phase complete" for current phase:
   - Phase 9 planned tasks (`T060`, `T064`, `T068`, `T073`, `T074`, `T080`, `T082`, `T098`, `T099`, `T100`, `T075`, `T081`) are complete.
   - No unresolved medium/high CI/release platform blockers remain.
@@ -136,7 +136,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ### Phase 9 - CI/release platform hardening
 
 - Delivery outcome: Faster and more reliable release operations with reusable workflows, stronger security enforcement, cross-platform packaging/verification, and artifact contract checks.
-- Status: in progress.
+- Status: complete (awaiting archive cadence).
 - Planned task IDs (in order): T060, T064, T068, T073, T074, T080, T082, T098, T099, T100, T075, T081.
 
 ### Phase 10 - Operational polish and deferred enhancements
@@ -158,14 +158,8 @@ Pending work below is triaged and ready for implementation.
 - [p] T067 - Add `/qt help [topic]` contextual help command (P3)
 - [p] T069 - Add template quality lint for `tasks/*.md` content conventions (P3)
 - [p] T072 - Add release-note quality validation beyond section format (P3)
-- [p] T073 - Harden dependency-review enforcement and fallback behavior (P1)
-- [p] T074 - Expand post-release verification across OS matrix (P2)
-- [p] T075 - Add test coverage for package-manager consistency checker script (P3)
 - [p] T078 - Add local CLI sandbox for QuickTask runtime command simulation (P4)
 - [p] T079 - Add automated cleanup policy for quarantined corrupt templates (P4)
-- [p] T080 - Validate release asset metadata contract in CI before publish (P1)
-- [p] T081 - Add support-matrix consistency check against package/workflow floors (P3)
-- [p] T082 - Add distributable package metadata and license compliance checks (P2)
 - [p] T087 - Add proposed-task promotion and aging policy in TASKS workflow (P2)
 - [p] T088 - Add phase exit checklist automation and report command (P2)
 - [p] T089 - Add backlog integrity check for duplicates and phase assignment drift (P2)
@@ -177,9 +171,6 @@ Pending work below is triaged and ready for implementation.
 - [p] T095 - Refactor duplicated test setup helpers for maintainability (P3)
 - [p] T096 - Remove or replace low-value placeholder package docs (P4)
 - [p] T097 - Audit and remove dead or unreferenced command/docs entrypoints (P3)
-- [p] T098 - Add clean-room install-and-first-run journey tests for release artifacts (P0)
-- [p] T099 - Make user-journey artifact tests release-blocking in RC and release workflows (P0)
-- [p] T100 - Build host-specific artifact install validation harness (VSIX/OpenClaw/Cursor) (P1)
 
 ### Intake queue
 
@@ -694,15 +685,15 @@ Pending work below is triaged and ready for implementation.
   - Run quality validator locally.
   - Verify release workflow integration in dry-run/test branch.
 
-### [p] T073 - Harden dependency-review enforcement and fallback behavior
+### [x] T073 - Harden dependency-review enforcement and fallback behavior
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve security signal reliability by removing silent pass behavior in dependency review while preserving clear fallback semantics.
 - Files: `.github/workflows/security.yml`, security docs.
 - Dependencies: T028.
-- Blocked by: T085.
-- Unblock plan: finalize formal risk-acceptance policy so security gating exceptions are explicit and auditable.
+- Blocked by: none.
+- Unblock plan: n/a
 - Pros:
   - Stronger supply-chain security signal on PRs.
   - Prevents silent acceptance of high-severity dependency risk.
@@ -722,18 +713,19 @@ Pending work below is triaged and ready for implementation.
   - Fallback messaging is only used for genuine platform limitations.
   - Security workflow behavior is documented.
 - Validation evidence:
-  - Run/inspect security workflow on a PR with dependency changes.
-  - Verify failure and fallback paths with test scenarios.
+  - Updated `.github/workflows/security.yml` to remove silent pass behavior (`continue-on-error`) for actionable dependency-review failures.
+  - Added explicit dependency-graph availability detection and fallback summary messaging only when platform capability is unavailable.
+  - Kept `audit` job as independent required security signal with deterministic high/critical failure behavior.
 
-### [p] T074 - Expand post-release verification across OS matrix
+### [x] T074 - Expand post-release verification across OS matrix
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Increase release confidence by validating published assets on multiple operating systems, not Ubuntu only.
 - Files: `.github/workflows/post-release-verify.yml`, verification scripts/docs.
 - Dependencies: T026, T046.
-- Blocked by: T080.
-- Unblock plan: lock artifact metadata/schema checks first, then scale verification matrix.
+- Blocked by: none.
+- Unblock plan: n/a
 - Pros:
   - Improves real-world release confidence across supported platforms.
   - Catches OS-specific install/runtime issues earlier.
@@ -753,12 +745,13 @@ Pending work below is triaged and ready for implementation.
   - OS-specific failures are visible and actionable.
   - Verification runtime remains practical.
 - Validation evidence:
-  - Trigger post-release verification on a tag/release test.
-  - Compare matrix job summaries.
+  - Updated `.github/workflows/post-release-verify.yml` to run verification matrix on Ubuntu, macOS, and Windows.
+  - Added explicit matrix summary output and Linux reruns for artifact journey and host-install harness checks.
+  - Verified local artifact verification scripts remain cross-platform compatible by removing hard unzip dependency from base verifier.
 
-### [p] T075 - Add test coverage for package-manager consistency checker script
+### [x] T075 - Add test coverage for package-manager consistency checker script
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Improve tooling reliability by adding unit tests for `scripts/check-package-manager-consistency.mjs`.
 - Files: `scripts/check-package-manager-consistency.mjs`, `scripts/test/*.test.mjs` (new).
@@ -775,8 +768,9 @@ Pending work below is triaged and ready for implementation.
   - Regressions in version matching are caught before CI failures.
   - Script output remains actionable.
 - Validation evidence:
-  - Run `pnpm test`.
-  - Run `pnpm check:package-manager`.
+  - Refactored `scripts/check-package-manager-consistency.mjs` into testable helpers (`parseExpectedPnpmVersion`, `checkWorkflowPnpmConsistency`).
+  - Added `scripts/test/check-package-manager-consistency.test.mjs` coverage for matching, mismatch, and missing-policy scenarios.
+  - Ran `pnpm test` and `pnpm check:package-manager`.
 
 ### [x] T076 - Add adapter normalization parity test suite in shared smoke harness
 
@@ -870,9 +864,9 @@ Pending work below is triaged and ready for implementation.
   - Add/store tests for retention behavior.
   - Verify cleanup with fixture backup sets.
 
-### [p] T080 - Validate release asset metadata contract in CI before publish
+### [x] T080 - Validate release asset metadata contract in CI before publish
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Increase release reliability by asserting required fields and schema consistency in generated integrity metadata before release publication.
 - Files: `scripts/generate-release-integrity.mjs`, `scripts/verify-release-assets.mjs`, schema/validation helper (new), workflows/tests.
@@ -889,12 +883,14 @@ Pending work below is triaged and ready for implementation.
   - Verification output clearly identifies missing/invalid fields.
   - Schema is versioned or explicitly managed for future changes.
 - Validation evidence:
-  - Run release packaging and verification commands.
-  - Add test/fixture with malformed metadata.
+  - Added schema validator in `scripts/release-integrity-schema.mjs` with contract versioning (`1.0.0`) and strict field checks.
+  - Updated `scripts/generate-release-integrity.mjs` to emit schemaVersion/generatedBy metadata.
+  - Updated `scripts/verify-release-assets.mjs` to hard-fail on schema violations and artifact metadata digest/size mismatch.
+  - Added malformed/valid metadata tests in `scripts/test/release-integrity-schema.test.mjs`.
 
-### [p] T081 - Add support-matrix consistency check against package/workflow floors
+### [x] T081 - Add support-matrix consistency check against package/workflow floors
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Prevent documentation drift by checking `README.md` support matrix values against package engine declarations and workflow Node/pnpm floors.
 - Files: `scripts/check-support-matrix-consistency.mjs` (new), `README.md`, package manifests, workflow files, docs/tests.
@@ -911,18 +907,19 @@ Pending work below is triaged and ready for implementation.
   - Contributors get clear guidance on which source should be updated.
   - Check can run locally and in CI.
 - Validation evidence:
-  - Run consistency check command.
-  - Validate mismatch detection with fixture or controlled edit.
+  - Added `scripts/check-support-matrix-consistency.mjs` and command `pnpm check:support-matrix`.
+  - Added unit tests in `scripts/test/check-support-matrix-consistency.test.mjs` for pass/fail drift cases.
+  - Wired support-matrix check into CI and RC/release workflow gates.
 
-### [p] T082 - Add distributable package metadata and license compliance checks
+### [x] T082 - Add distributable package metadata and license compliance checks
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve distribution quality by validating that publishable artifacts include required metadata (license/repository/version fields) and expected files.
 - Files: package manifests under `packages/`, packaging scripts, compliance checker script (new), CI/docs.
 - Dependencies: T016, T017, T046.
-- Blocked by: T080, T083.
-- Unblock plan: complete release asset contract validation and change-based cadence policy before adding compliance gates.
+- Blocked by: none.
+- Unblock plan: n/a
 - Pros:
   - Improves distribution quality and legal/compliance hygiene.
   - Reduces risk of metadata omissions in publishable artifacts.
@@ -942,8 +939,10 @@ Pending work below is triaged and ready for implementation.
   - Distribution artifacts meet declared package policy.
   - Checker output is actionable for maintainers.
 - Validation evidence:
-  - Run compliance check command.
-  - Verify packaging pipeline behavior with compliance gate enabled.
+  - Added `scripts/check-package-compliance.mjs` and command `pnpm check:package-compliance`.
+  - Added compliance unit coverage in `scripts/test/check-package-compliance.test.mjs`.
+  - Added missing distributable metadata (`license`, `repository`, dist-based entrypoints) in `packages/core/package.json` and `packages/openclaw-plugin/package.json`.
+  - Wired package compliance as CI and RC/release gate.
 
 ### [x] T083 - Codify change-based release cadence and trigger timing policy
 
@@ -1279,9 +1278,9 @@ Pending work below is triaged and ready for implementation.
   - Run docs/command reference checks.
   - Verify active command workflows still resolve correctly.
 
-### [p] T098 - Add clean-room install-and-first-run journey tests for release artifacts
+### [x] T098 - Add clean-room install-and-first-run journey tests for release artifacts
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Validate releases like a real first-time user by running install-and-use flows from packaged artifacts in clean environments.
 - Files: `scripts/` test harness files (new), `.github/workflows/release-candidate.yml`, `.github/workflows/post-release-verify.yml`, docs.
@@ -1298,12 +1297,13 @@ Pending work below is triaged and ready for implementation.
   - Tests fail deterministically on broken install/activation/command execution.
   - Harness runs in CI and is reusable for RC and post-release verification.
 - Validation evidence:
-  - Run harness locally against artifacts directory.
-  - Run in RC workflow and post-release verify workflow.
+  - Added clean-room artifact harness `scripts/run-artifact-user-journeys.mjs` to exercise create/run/improve/accept/list/show/doctor from packaged VSIX and OpenClaw artifacts.
+  - Added release command `pnpm release:test-artifact-journeys`.
+  - Ran harness locally against `artifacts/` and wired into RC/release workflows plus Linux post-release verification.
 
-### [p] T099 - Make user-journey artifact tests release-blocking in RC and release workflows
+### [x] T099 - Make user-journey artifact tests release-blocking in RC and release workflows
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Prevent shipping broken releases by making artifact-based user journeys hard gates for RC and release.
 - Files: `.github/workflows/release-candidate.yml`, `.github/workflows/release.yml`, `.github/workflows/post-release-verify.yml`, release docs.
@@ -1320,12 +1320,13 @@ Pending work below is triaged and ready for implementation.
   - Release workflow does not publish when journey checks fail.
   - Post-release verification confirms published assets still pass journey checks.
 - Validation evidence:
-  - Trigger RC run with harness enabled and inspect required-check behavior.
-  - Verify release workflow blocks on injected harness failures.
+  - Added required `pnpm release:test-artifact-journeys` gates in `.github/workflows/release-candidate.yml` and `.github/workflows/release.yml`.
+  - Added workflow contract enforcement in `scripts/check-workflow-contracts.mjs` + tests to prevent gate drift.
+  - Added post-release Linux rerun for journey checks in `.github/workflows/post-release-verify.yml`.
 
-### [p] T100 - Build host-specific artifact install validation harness (VSIX/OpenClaw/Cursor)
+### [x] T100 - Build host-specific artifact install validation harness (VSIX/OpenClaw/Cursor)
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Ensure each host integration is validated through host-appropriate install and execution paths before release.
 - Files: `scripts/host-install-validate/*.mjs` (new), adapter docs, CI workflow wiring.
@@ -1342,8 +1343,10 @@ Pending work below is triaged and ready for implementation.
   - Failures identify host stage (install, activation, command run) clearly.
   - Validation is documented and maintainable for future host changes.
 - Validation evidence:
-  - Run host harness locally in artifact test mode.
-  - Run in CI across RC and post-release verification paths.
+  - Added host-specific harness `scripts/host-install-validate.mjs` with stage-level reporting (`install`, `activation`, `command`) for VSIX and OpenClaw artifacts.
+  - Added release command `pnpm release:validate-host-installs`.
+  - Wired harness as release-blocking gate in RC/release workflows and Linux post-release verification.
+  - Ran host harness locally in artifact mode with passing stage reports for both hosts.
 
 ## Completed tasks (not yet archived)
 

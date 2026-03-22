@@ -4,6 +4,8 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { RELEASE_INTEGRITY_SCHEMA_VERSION } from "./release-integrity-schema.mjs";
+
 function sha256(path) {
   const hash = createHash("sha256");
   hash.update(readFileSync(path));
@@ -42,7 +44,16 @@ writeFileSync("artifacts/checksums.txt", `${checksums}\n`, "utf8");
 const generatedAt = new Date().toISOString();
 writeFileSync(
   "artifacts/release-integrity-metadata.json",
-  `${JSON.stringify({ generatedAt, artifacts: entries }, null, 2)}\n`,
+  `${JSON.stringify(
+    {
+      schemaVersion: RELEASE_INTEGRITY_SCHEMA_VERSION,
+      generatedAt,
+      generatedBy: "scripts/generate-release-integrity.mjs",
+      artifacts: entries
+    },
+    null,
+    2
+  )}\n`,
   "utf8"
 );
 

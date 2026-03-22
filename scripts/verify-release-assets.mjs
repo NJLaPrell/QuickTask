@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 
+import { validateReleaseIntegrityMetadata } from "./release-integrity-schema.mjs";
+
 function getArg(flag) {
   const index = process.argv.indexOf(flag);
   if (index === -1 || index + 1 >= process.argv.length) {
@@ -38,15 +40,16 @@ function sha256(path) {
 }
 
 const assetsDir = getArg("--assets-dir") ?? "artifacts";
-const version = getArg("--version");
+const version =
+  getArg("--version") ?? JSON.parse(readFileSync("packages/core/package.json", "utf8")).version;
 const files = readdirSync(assetsDir).filter((entry) => statSync(join(assetsDir, entry)).isFile());
 
-const vsixPattern = version
-  ? new RegExp(`^quicktask-vscode-v${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.vsix$`)
-  : /^quicktask-vscode-v.+\.vsix$/;
-const openclawPattern = version
-  ? new RegExp(`^quicktask-openclaw-v${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.tgz$`)
-  : /^quicktask-openclaw-v.+\.tgz$/;
+const vsixPattern = new RegExp(
+  `^quicktask-vscode-v${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.vsix$`
+);
+const openclawPattern = new RegExp(
+  `^quicktask-openclaw-v${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.tgz$`
+);
 
 const vsix = files.find((entry) => vsixPattern.test(entry));
 const openclaw = files.find((entry) => openclawPattern.test(entry));
@@ -64,8 +67,6 @@ const openclawPath = join(assetsDir, openclaw);
 if (statSync(vsixPath).size <= 0 || statSync(openclawPath).size <= 0) {
   fail("release artifacts must be non-empty files");
 }
-
-run("unzip", ["-t", vsixPath], process.cwd());
 
 const checksumsPath = join(assetsDir, "checksums.txt");
 const checksumLines = readFileSync(checksumsPath, "utf8")
@@ -88,6 +89,34 @@ for (const file of [vsix, openclaw]) {
   if (actual !== expected) {
     fail(`checksum mismatch for ${file}`);
   }
+}
+
+const metadataPath = join(assetsDir, "release-integrity-metadata.json");
+const metadata = JSON.parse(readFileSync(metadataPath, "utf8"));
+const metadataFindings = validateReleaseIntegrityMetadata(metadata);
+if (metadataFindings.length > 0) {
+  fail(`release-integrity-metadata.json contract violation:\n- ${metadataFindings.join("\n- ")}`);
+}
+
+const metadataByFile = new Map(metadata.artifacts.map((entry) => [entry.file, entry]));
+for (const file of [vsix, openclaw]) {
+  const entry = metadataByFile.get(file);
+  if (!entry) {
+    fail(`release-integrity-metadata.json missing entry for ${file}`);
+  }
+  const expectedSize = statSync(join(assetsDir, file)).size;
+  if (entry.sizeBytes !== expectedSize) {
+    fail(`release-integrity-metadata.json size mismatch for ${file}`);
+  }
+  const expectedDigest = sha256(join(assetsDir, file));
+  if (entry.sha256 !== expectedDigest) {
+    fail(`release-integrity-metadata.json sha256 mismatch for ${file}`);
+  }
+}
+
+const vsixHeader = readFileSync(vsixPath).subarray(0, 2).toString("utf8");
+if (vsixHeader !== "PK") {
+  fail(`${vsix} is not a valid ZIP/VSIX container`);
 }
 
 const tempProject = mkdtempSync(join(tmpdir(), "quicktask-release-verify-"));

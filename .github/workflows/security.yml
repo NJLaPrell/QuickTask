@@ -17,17 +17,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect dependency graph availability
+        id: dependency_graph
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATUS="$(gh api "repos/${{ github.repository }}" --jq '.security_and_analysis.dependency_graph.status // "unavailable"' || echo "unavailable")"
+          if [ "${STATUS}" = "enabled" ]; then
+            echo "available=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "available=false" >> "${GITHUB_OUTPUT}"
+          fi
+          echo "status=${STATUS}" >> "${GITHUB_OUTPUT}"
+
       - name: Dependency review (PR dependency and lockfile changes)
+        if: steps.dependency_graph.outputs.available == 'true'
         uses: actions/dependency-review-action@v4
-        continue-on-error: true
         with:
           fail-on-severity: high
 
       - name: Dependency review fallback note
-        if: always()
+        if: steps.dependency_graph.outputs.available != 'true'
         run: |
-          echo "Dependency review action may be unavailable if GitHub dependency graph is disabled."
-          echo "Security coverage is still enforced via the audit job."
+          echo "Dependency review fallback: dependency graph unavailable (status=${{ steps.dependency_graph.outputs.status }})." >> "${GITHUB_STEP_SUMMARY}"
+          echo "Security audit job remains required; dependency-review gate is skipped only for platform unavailability." >> "${GITHUB_STEP_SUMMARY}"
 
   audit:
     runs-on: ubuntu-latest

@@ -18,12 +18,39 @@ on:
 jobs:
   release:
     steps:
+      - name: Verify built release assets
+        run: pnpm release:verify-local-artifacts
+      - name: Run clean-room artifact user journeys
+        run: pnpm release:test-artifact-journeys
+      - name: Validate host install harness
+        run: pnpm release:validate-host-installs
       - name: Docs synchronization gate
         env:
           RELEASE_README_STATUS: \${{ inputs.readme_status }}
           RELEASE_DOCS_STATUS: \${{ inputs.docs_status }}
           RELEASE_DOCS_SYNC_NOTES: \${{ inputs.docs_sync_notes }}
         run: pnpm release:docs-check
+`;
+const VALID_RC_WORKFLOW = `
+jobs:
+  validate-rc:
+    steps:
+      - name: Verify candidate artifacts
+        run: pnpm release:verify-local-artifacts
+      - name: Run clean-room artifact user journeys
+        run: pnpm release:test-artifact-journeys
+      - name: Validate host install harness
+        run: pnpm release:validate-host-installs
+`;
+const VALID_POST_RELEASE_WORKFLOW = `
+jobs:
+  verify-release-assets:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - run: node scripts/run-artifact-user-journeys.mjs --assets-dir artifacts
+      - run: node scripts/host-install-validate.mjs --assets-dir artifacts
 `;
 
 const VALID_HANDOFF = `
@@ -55,6 +82,8 @@ const docsSyncNotes = process.env.RELEASE_DOCS_SYNC_NOTES;
 test("passes when workflow and scripts are aligned", () => {
   const result = checkWorkflowContracts({
     releaseWorkflow: VALID_RELEASE_WORKFLOW,
+    rcWorkflow: VALID_RC_WORKFLOW,
+    postReleaseWorkflow: VALID_POST_RELEASE_WORKFLOW,
     releaseHandoffScript: VALID_HANDOFF,
     releaseDocsCheckScript: VALID_DOCS_CHECK
   });
@@ -66,6 +95,8 @@ test("passes when workflow and scripts are aligned", () => {
 test("fails when expected release input contract drifts", () => {
   const result = checkWorkflowContracts({
     releaseWorkflow: VALID_RELEASE_WORKFLOW.replace("docs_sync_notes", "docs_notes"),
+    rcWorkflow: VALID_RC_WORKFLOW,
+    postReleaseWorkflow: VALID_POST_RELEASE_WORKFLOW,
     releaseHandoffScript: VALID_HANDOFF,
     releaseDocsCheckScript: VALID_DOCS_CHECK
   });

@@ -26,19 +26,38 @@ For each release tag `vX.Y.Z`, the release includes:
 
 - RC validation (`Release Candidate Validation` workflow):
   - builds artifacts and integrity metadata,
+  - validates support-floor and package-compliance policy checks,
   - runs local artifact verification (`pnpm release:verify-local-artifacts`),
+  - runs clean-room user journeys (`pnpm release:test-artifact-journeys`),
+  - runs host install/activation/command harness (`pnpm release:validate-host-installs`),
   - uploads candidate assets for review.
 - Final release (`Release` workflow):
   - requires successful RC run ID (`rc_run_id`),
   - rebuilds and verifies release assets,
+  - enforces artifact journey and host-install gates before publish,
   - publishes assets to GitHub release.
 - Post-release verification (`Post-Release Install Verification` workflow):
   - downloads published assets from the release page,
-  - verifies naming, checksums, archive integrity, and OpenClaw install smoke.
+  - verifies naming, checksums, archive integrity, and metadata schema on Ubuntu/macOS/Windows,
+  - re-runs clean-room and host install checks on Linux for release-blocking parity.
+
+## Release integrity metadata contract
+
+`release-integrity-metadata.json` is validated against schema `1.0.0` before publish. Required fields:
+
+- `schemaVersion` (currently `1.0.0`)
+- `generatedAt` (ISO-8601 UTC timestamp)
+- `generatedBy` (script provenance string)
+- `artifacts[]` entries with:
+  - `file` (artifact filename),
+  - `sizeBytes` (positive integer),
+  - `sha256` (64-char lowercase hex digest).
 
 ## Local verification commands
 
 ```bash
 pnpm package:release
 pnpm release:verify-local-artifacts
+pnpm release:test-artifact-journeys
+pnpm release:validate-host-installs
 ```
