@@ -137,7 +137,7 @@ Use this board for **post-`v1.0.0` adoption** work driven by GitHub user-feedbac
 
 ### Phase 12 completion gate
 
-**Closed:** implementation merged to `main`; **`v1.1.0`** tag via **`Release`** workflow. Task records **`T133`–`T142`** archived as **`[h]`**. Remaining hygiene: update/close linked GitHub feedback issues after publish.
+**Closed:** implementation merged to `main`; **`v1.1.0`** tag via **`Release`** workflow. Task records **`T133`–`T142`** archived as **`[h]`**. Linked GitHub feedback issues **#41–#44, #47–#49, #51–#58, #60–#62** closed with the **`v1.1.0`** release (see `USER_FEEDBACK.md` index).
 
 ## Milestone execution order
 

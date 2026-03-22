@@ -19,7 +19,7 @@ Use this so backlog work isn’t duplicated across near-duplicate UFs.
 | **P1 candidates**                                   | UF-007, UF-008, UF-009, UF-011, UF-012, UF-013    | Highest wrong-expectation / confusion cost in transcript.                                                                                                                                   |
 | **Merged for implementation**                       | UF-006 → **UF-007**; UF-010 → **UF-008 / UF-009** | Keep UF-006/UF-010 text for user voice; file one task per merge target.                                                                                                                     |
 | **Deferred (evidence-gated)**                       | UF-016, UF-018                                    | Nice polish; ship UF-007 onboarding + UF-014 help first, then revisit if still confusing.                                                                                                   |
-| **Extension preflight (active)**                    | UF-021                                            | **`T142` (P2):** full preflight + activation hint in extension — see `docs/product-direction.md`.                                                                                           |
+| **Extension preflight (shipped `v1.1.0`)**           | UF-021                                            | **`T142`:** full preflight + activation hint — see `docs/product-direction.md` and `TASKS_ARCHIVED.md`.                                                                                     |
 | **Deferred (lower ROI / settings)**                 | UF-017                                            | Treat as human-first copy + optional “show codes” setting—not a default must-fix.                                                                                                           |
 | **Deferred (landing / release investment)**         | UF-019                                            | **Closed (not planned):** no dedicated landing / one-click VSIX beyond README + Releases — see `docs/product-direction.md`, GitHub [#59](https://github.com/NJLaPrell/QuickTask/issues/59). |
 | **Docs + agent playbook (not necessarily runtime)** | UF-001                                            | Fix with README order, setup chooser copy, and default assistant answers—don’t assume a product bug until docs are fixed.                                                                   |
@@ -27,7 +27,7 @@ Use this so backlog work isn’t duplicated across near-duplicate UFs.
 
 **Strategic decisions (2026-03-22):** Maintainer answers that set default direction for resolving feedback live in **`docs/product-direction.md`** (audience, run-vs-create, help+init, chat-first entry, release priorities).
 
-**Execution tracking:** Phase 12 tasks **`T133`–`T142`** are **ACCEPTED** (2026-03-23), status **`[ ]` todo**, with **Phase / milestone** (`12a` / `12b` / `12c`) on each task in `TASKS.md`. Index table below maps UF → GitHub → task. UF-012 **T139** decision **(C)** and UF-021 **T142** preflight are in `docs/product-direction.md`. **#46** / **#50** GitHub **completed** (consolidated → **#47** / **#48**).
+**Execution tracking:** Phase 12 (**`T133`–`T142`**) is **complete** — tasks archived as **`[h]`** in `TASKS_ARCHIVED.md`, shipped **`v1.1.0`** (2026-03-22). Wave / milestone labels (`12a` / `12b` / `12c`) remain in `TASKS.md` as historical plan context. Index below maps UF → GitHub issue → task id (issues **#41–#44, #47–#49, #51–#58, #60–#62** closed with **`v1.1.0`**; **#46** / **#50** were completed earlier as consolidations into **#47** / **#48**). UF-012 **T139** decision **(C)** and UF-021 **T142** preflight are in `docs/product-direction.md`.
 
 ---
 
@@ -423,7 +423,7 @@ A quick preflight: “We can write here: …”
 **Notes for tasking**  
 `area:vscode-extension`, `area:core` — Optional activation check: writable workspace + show **tasks** path.
 
-**Tasking status:** **Active — `T142` (P2).** Product decision: **full preflight** in the extension + **visible post-install/activation hint** (not docs-only). See `docs/product-direction.md` and GitHub [#61](https://github.com/NJLaPrell/QuickTask/issues/61).
+**Tasking status:** **Shipped — `T142` in `v1.1.0`.** Product decision: **full preflight** in the extension + **visible post-install/activation hint** (not docs-only). See `docs/product-direction.md`, `TASKS_ARCHIVED.md`, and closed GitHub [#61](https://github.com/NJLaPrell/QuickTask/issues/61).
 
 _Legacy: Issue 25_
 
@@ -490,4 +490,4 @@ _Legacy: Issue 26_
 | Improve empty input                                   | UF-015                                                                                                                           | core, adapters                        |
 | Contributor tooling                                   | UF-002, UF-003                                                                                                                   | monorepo scripts, docs                |
 
-**Suggested next step for maintainers:** Execute **`TASKS.md` Phase 12** (`T133`–`T142`). **T134:** follow **#48, #49, #60** (#50 completed, consolidated into #48). **T135:** follow **#41, #43–#44, #47, #62** (#46 completed, consolidated into #47). Then **#51, #53** (T133). **#52** / **T139**: UF-012 decision **(C)**. **#61** / **T142**: full preflight + extension hint. Use **Tasking consolidation** for UF-006/UF-010 voice vs GitHub tracking.
+**Suggested next step for maintainers:** Phase 12 is done — run a **Phase 13 kickoff** from product backlog / new feedback, or promote the next `[p]` tasks in `TASKS.md`. Keep this file for **user-voice audit**; open new GitHub issues for net-new reports. **#59** (UF-019) remains the explicit “no separate landing” decision thread.
