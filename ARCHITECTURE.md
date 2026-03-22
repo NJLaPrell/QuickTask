@@ -50,6 +50,15 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 3. Resolve the task template.
 4. Return a host-specific response.
 
+## Diagnostics and privacy guardrails
+
+QuickTask diagnostics are local-only runtime telemetry for support/debugging.
+
+- Diagnostics are stored in process memory only (`runtime.getDiagnostics()`); they are not persisted to disk or sent remotely by core runtime behavior.
+- Diagnostics must not include raw user prompts, task template bodies, or other user-content payloads.
+- Adapter fallback/error rendering must keep request correlation IDs while avoiding sensitive payload echoing.
+- Any new diagnostics fields require tests proving zero user-content leakage.
+
 ## Canonical command/result contract
 
 The single source of truth for supported command forms and runtime result codes is:

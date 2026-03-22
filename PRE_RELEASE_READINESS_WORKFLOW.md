@@ -13,7 +13,7 @@ This workflow defines everything that happens before the `Release` workflow take
 ## Blocking policy
 
 - Existing findings already tracked in `TASKS.md`: non-blocking for handoff.
-- New `high`/`medium` findings mapped to the current release phase: blocking.
+- New `high`/`medium` findings mapped to the current release phase: blocking unless explicitly accepted under the formal risk-acceptance policy.
 - New `low` findings: non-blocking.
 
 Current release phase is derived from milestone progress in `TASKS.md` (highest phase with no open tasks).
@@ -47,8 +47,25 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 - `pnpm test`
 - `pnpm build`
 - `pnpm release:docs-check` (with readiness defaults)
+- `pnpm tasks:check`
+- `pnpm release:check-workflow-contracts`
 - pending `.changeset/*.md` release inputs
 - Existing open `TASKS.md` tasks across all phases.
+
+## Risk acceptance protocol (medium/high findings)
+
+Use this only when a blocking finding cannot be resolved before release:
+
+1. Add or update a finding task in `TASKS.md`.
+2. Record an accepted-risk entry in the `Risk acceptance records` section with:
+   - finding/task ID and severity,
+   - approver (human maintainer),
+   - decision date,
+   - scope,
+   - rationale/mitigation,
+   - sunset/revisit date.
+3. Re-run `pnpm release:prepare` and confirm only explicitly accepted blockers remain.
+4. Include accepted-risk IDs in release handoff notes for auditability.
 
 ## Task system policy (required)
 

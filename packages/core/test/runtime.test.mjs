@@ -44,6 +44,16 @@ test("records safe runtime diagnostics events", () => {
     assert.equal(events[events.length - 1].phase, "command.completed");
     assert.equal(events[events.length - 2].commandKind, "run");
     assert.equal(events[events.length - 1].code, "qt:run:not-found");
+    for (const event of events) {
+      const keys = Object.keys(event).sort();
+      assert.ok(keys.includes("requestId"));
+      assert.ok(keys.includes("timestamp"));
+      assert.ok(keys.includes("phase"));
+      assert.ok(keys.includes("commandKind"));
+      assert.ok(!keys.includes("userInput"));
+      assert.ok(!keys.includes("templateBody"));
+      assert.ok(!keys.includes("message"));
+    }
     assert.doesNotMatch(JSON.stringify(events), /sensitive user input/);
   } finally {
     cleanup();

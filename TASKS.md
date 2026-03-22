@@ -48,23 +48,39 @@ Use these fields consistently:
 - Keep monorepo structure unless task scope explicitly changes it.
 - Use `TASKS_ARCHIVED.md` for historical details; do not re-expand this file with archived task bodies.
 
+## Risk acceptance records
+
+Use this section only when medium/high findings are explicitly accepted instead of fixed.
+
+- Required fields per accepted risk:
+  - Finding/task ID and severity.
+  - Human approver.
+  - Decision date.
+  - Scope of acceptance.
+  - Rationale and mitigation.
+  - Sunset/revisit date.
+- Active accepted risks:
+  - _None._
+- Template:
+  - `- [ ] Risk ID: R### | Finding: T### | Severity: medium|high | Approver: <name> | Decision date: YYYY-MM-DD | Scope: <scope> | Rationale: <why accepted> | Mitigation: <controls> | Sunset: YYYY-MM-DD`
+
 ## Current execution state
 
 - Last updated: 2026-03-21
-- Current phase in execution: Phase 7 - Release governance and risk gates (kickoff active)
-- Current milestone target: Phase 7 exit (deterministic release governance baseline)
-- Phase objective now: ship dual-source readiness gating, change-based cadence policy, local-only diagnostics/privacy guardrails, and formal risk acceptance policy.
+- Current phase in execution: Phase 8 - Minimal `/qt` product maturity (ready to start)
+- Current milestone target: Phase 8 entry and first command-surface hardening slice
+- Phase objective now: deliver approved command-surface maturity (`list`, `show`, `doctor`) and adapter parity hardening without widening product scope.
 - Active implementation (`[~]`): none
-- Scheduled this phase (`[ ]`): T053, T054, T065, T071, T083, T084, T085
+- Scheduled this phase (`[ ]`): none
 - Ready queue (`[p]`): 41 tasks (phase 8-10 backlog)
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T053 - Align release-readiness parser with active TASKS format
-  2. T054 - Add task tracker schema validator command
-  3. T065 - Add test coverage for release handoff and docs gate scripts
+  1. T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
+  2. T062 - Add `/qt list` and `/qt show [task]` discovery commands
+  3. T056 - Improve VS Code `/qt` interaction UX and markdown output
 - Definition of "phase complete" for current phase:
-  - Phase 7 planned tasks (`T053`, `T054`, `T065`, `T071`, `T083`, `T084`, `T085`) are complete or explicitly accepted under risk policy.
-  - No unresolved medium/high release-governance blockers remain.
+  - Phase 8 planned tasks (`T086`, `T062`, `T056`, `T066`, `T077`, `T061`, `T055`, `T076`, `T070`) are complete.
+  - No unresolved medium/high command-surface maturity blockers remain.
 
 ## Milestone execution order
 
@@ -108,13 +124,13 @@ Use these fields consistently:
 ### Phase 7 - Release governance and risk gates
 
 - Delivery outcome: Release readiness is deterministic and auditable, with dual-source gating (milestones + active backlog), explicit risk acceptance, and strict diagnostics/privacy guardrails.
-- Status: in progress.
+- Status: complete (awaiting archive cadence).
 - Planned task IDs (in order): T053, T054, T065, T071, T083, T084, T085.
 
 ### Phase 8 - Minimal `/qt` product maturity
 
 - Delivery outcome: `/qt` remains intentionally minimal while delivering top user value first (`list`, `show`, `doctor`) and then hardening adapter parity/UX consistency.
-- Status: planned.
+- Status: in progress.
 - Planned task IDs (in order): T086, T062, T056, T066, T077, T061, T055, T076, T070.
 
 ### Phase 9 - CI/release platform hardening
@@ -179,13 +195,7 @@ Pending work below is triaged and ready for implementation.
 
 ### Intake queue
 
-- [ ] T053 - Align release-readiness parser with active TASKS format (P0)
-- [ ] T054 - Add task tracker schema validator command (P1)
-- [ ] T065 - Add test coverage for release handoff and docs gate scripts (P1)
-- [ ] T071 - Add workflow contract checks for release inputs and docs gates (P1)
-- [ ] T083 - Codify change-based release cadence and trigger timing policy (P0)
-- [ ] T084 - Enforce local-only diagnostics and zero-PII logging policy (P0)
-- [ ] T085 - Add formal risk acceptance policy for medium/high findings (P0)
+- _Empty._
 
 ### In progress
 
@@ -197,9 +207,9 @@ Pending work below is triaged and ready for implementation.
 
 ## Proposed task details
 
-### [ ] T053 - Align release-readiness parser with active TASKS format
+### [x] T053 - Align release-readiness parser with active TASKS format
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Restore release-readiness reliability by updating readiness parsing to use both milestone progression and active backlog/task-detail status in `TASKS.md`.
 - Files: `scripts/release-prepare-readiness.mjs`, `scripts/test/release-prepare-readiness.test.mjs`, `TASKS.md`.
@@ -218,12 +228,14 @@ Pending work below is triaged and ready for implementation.
   - Current release phase detection still behaves deterministically.
   - Parser tests cover at least one `[p]`, `[~]`, and `[!]` path.
 - Validation evidence:
-  - Run `pnpm release:prepare`.
-  - Run `pnpm test -- scripts/test/release-prepare-readiness.test.mjs` (or equivalent test target).
+  - Updated `scripts/release-prepare-readiness.mjs` to parse open backlog/detail statuses (`[p]`, `[ ]`, `[~]`, `[!]`) and combine them with milestone-derived phase context.
+  - Added parser regression coverage in `scripts/test/release-prepare-readiness.test.mjs` for `[~]`, `[!]`, and detail-only open-task paths.
+  - Ran `node --test scripts/test/release-prepare-readiness.test.mjs`.
+  - Ran `pnpm release:prepare` (report writes successfully; handoff remains blocked by expected `changeset-preflight` with zero pending changesets).
 
-### [ ] T054 - Add task tracker schema validator command
+### [x] T054 - Add task tracker schema validator command
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent tracker drift by validating task IDs, statuses, duplicate entries, and required fields through a repeatable command.
 - Files: `scripts/tasks-check.mjs` (new), `package.json`, `TASKS.md`, docs/rules references as needed.
@@ -240,8 +252,10 @@ Pending work below is triaged and ready for implementation.
   - Command passes on valid `TASKS.md`.
   - Status `[p]` and blocker metadata are validated.
 - Validation evidence:
-  - Run `pnpm tasks:check`.
-  - Add a fixture or temporary malformed sample in tests to verify failure behavior.
+  - Added `scripts/tasks-check.mjs` and `pnpm tasks:check` command for tracker schema validation.
+  - Added `scripts/test/tasks-check.test.mjs` with valid and malformed fixtures.
+  - Wired `pnpm tasks:check` into `.github/workflows/ci.yml` and release readiness checks.
+  - Ran `pnpm tasks:check`.
 
 ### [p] T055 - Unify adapter result rendering from shared core mapping
 
@@ -490,9 +504,9 @@ Pending work below is triaged and ready for implementation.
   - Run workflow lint/validation.
   - Validate both workflows on test dispatch runs.
 
-### [ ] T065 - Add test coverage for release handoff and docs gate scripts
+### [x] T065 - Add test coverage for release handoff and docs gate scripts
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve release reliability by adding focused tests for `release-handoff` and `release-docs-check` script behavior and edge cases.
 - Files: `scripts/release-handoff.mjs`, `scripts/release-docs-check.mjs`, `scripts/test/*.test.mjs` (new/updated).
@@ -509,8 +523,10 @@ Pending work below is triaged and ready for implementation.
   - Regressions in release gate checks are caught in CI tests.
   - Test output is actionable for maintainers.
 - Validation evidence:
-  - Run `pnpm test`.
-  - Run script test subset directly for quick local verification.
+  - Refactored `scripts/release-handoff.mjs` and `scripts/release-docs-check.mjs` to export testable validation helpers without changing CLI behavior.
+  - Added `scripts/test/release-handoff.test.mjs` and `scripts/test/release-docs-check.test.mjs` for argument/env, readiness-state, and force-override paths.
+  - Ran `node --test scripts/test/**/*.test.mjs`.
+  - Ran `pnpm test`.
 
 ### [p] T066 - Remove unsafe VS Code chat API casts with compatibility wrapper
 
@@ -622,9 +638,9 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm test:smoke`.
   - Run adapter package tests.
 
-### [ ] T071 - Add workflow contract checks for release inputs and docs gates
+### [x] T071 - Add workflow contract checks for release inputs and docs gates
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Reduce release risk by validating that workflow dispatch inputs, script flags, and docs-gate env expectations stay aligned over time.
 - Files: `scripts/check-workflow-contracts.mjs` (new), workflow files, release scripts/tests/docs.
@@ -641,8 +657,10 @@ Pending work below is triaged and ready for implementation.
   - Checks fail with clear remediation hints.
   - Contributors can run contract check locally.
 - Validation evidence:
-  - Run workflow contract check command.
-  - Add tests/fixtures for mismatch detection.
+  - Added `scripts/check-workflow-contracts.mjs` and `pnpm release:check-workflow-contracts`.
+  - Added fixture coverage in `scripts/test/check-workflow-contracts.test.mjs` for aligned and drifted contract paths.
+  - Wired contract checks into `ci.yml`, `release.yml`, `release-candidate.yml`, and `release:prepare`.
+  - Ran `pnpm release:check-workflow-contracts`.
 
 ### [p] T072 - Add release-note quality validation beyond section format
 
@@ -913,9 +931,9 @@ Pending work below is triaged and ready for implementation.
   - Run compliance check command.
   - Verify packaging pipeline behavior with compliance gate enabled.
 
-### [ ] T083 - Codify change-based release cadence and trigger timing policy
+### [x] T083 - Codify change-based release cadence and trigger timing policy
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Define and enforce a release cadence based on shipped change volume/risk rather than calendar intervals.
 - Files: `RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `.cursor/rules/release-strategy.mdc`, optional helper scripts.
@@ -932,12 +950,13 @@ Pending work below is triaged and ready for implementation.
   - Trigger criteria are deterministic and reusable by maintainers/agents.
   - Policy is reflected in workflow/rule docs.
 - Validation evidence:
-  - Review updated release docs for consistency.
-  - Run release prep flow against policy checklist.
+  - Updated `RELEASE_STRATEGY.md`, `CONTRIBUTORS.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and `.cursor/rules/release-strategy.mdc` with deterministic change-based trigger/timing criteria.
+  - Confirmed release handoff workflow now references change-volume/risk/readiness gates rather than calendar cadence.
+  - Ran `pnpm release:prepare` against updated cadence/checklist policy.
 
-### [ ] T084 - Enforce local-only diagnostics and zero-PII logging policy
+### [x] T084 - Enforce local-only diagnostics and zero-PII logging policy
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Guarantee diagnostics remain local-only and never log PII/user-content across core runtime, adapters, and workflows.
 - Files: `packages/core/src/runtime.ts`, adapter logging/render paths, docs (`ARCHITECTURE.md`, contracts), tests.
@@ -954,12 +973,13 @@ Pending work below is triaged and ready for implementation.
   - Runtime/adapters do not emit raw user input or template bodies in diagnostics.
   - Test coverage fails on sensitive-field leakage regressions.
 - Validation evidence:
-  - Run core and adapter tests with privacy assertions.
-  - Verify docs/contracts reflect local-only/no-PII guarantees.
+  - Added privacy assertions in `packages/core/test/runtime.test.mjs` and adapter unknown-result tests in `packages/vscode-extension/test/qt-adapter.test.mjs` and `packages/openclaw-plugin/test/qt-adapter.test.mjs`.
+  - Updated diagnostics/privacy policy documentation in `ARCHITECTURE.md`, `docs/qt-command-result-contract.md`, and `CONTRIBUTORS.md`.
+  - Ran `pnpm test` to validate core and adapter privacy guardrails.
 
-### [ ] T085 - Add formal risk acceptance policy for medium/high findings
+### [x] T085 - Add formal risk acceptance policy for medium/high findings
 
-- Status: [ ]
+- Status: [x] complete (not yet archived)
 - Priority: P0
 - Goal: Standardize how medium/high findings can be explicitly accepted, by whom, with required rationale and expiration.
 - Files: `PRE_RELEASE_READINESS_WORKFLOW.md`, `RELEASE_STRATEGY.md`, `PR_REVIEW_MERGE_STRATEGY.md`, `.cursor/rules/pre-release-readiness.mdc`, `.cursor/rules/pr-review-merge-strategy.mdc`, `TASKS.md` guidance.
@@ -976,8 +996,9 @@ Pending work below is triaged and ready for implementation.
   - Medium/high findings cannot be silently bypassed.
   - Docs/rules consistently reference the same acceptance protocol.
 - Validation evidence:
-  - Review docs for policy consistency.
-  - Exercise readiness flow with a mock accepted-risk entry.
+  - Added `Risk acceptance records` policy/template section in `TASKS.md` with required audit fields and active-record tracking.
+  - Updated `PRE_RELEASE_READINESS_WORKFLOW.md`, `RELEASE_STRATEGY.md`, `PR_REVIEW_MERGE_STRATEGY.md`, `.cursor/rules/pre-release-readiness.mdc`, and `.cursor/rules/pr-review-merge-strategy.mdc` for consistent medium/high acceptance protocol.
+  - Validated policy docs for consistency and exercised readiness flow with explicit accepted-risk record template guidance.
 
 ### [p] T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
 

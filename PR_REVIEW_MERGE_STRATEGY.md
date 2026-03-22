@@ -33,6 +33,8 @@ A PR is blocked if either condition is true:
 1. Any `high` severity finding is unresolved.
 2. Any required check is failing.
 
+Medium findings are non-blocking by default, but medium/high findings cannot be silently bypassed for release readiness. If such findings are accepted instead of fixed, record acceptance in `TASKS.md` with approver, rationale, scope, and sunset date.
+
 ## Required checks before merge
 
 - Tests pass
@@ -44,6 +46,7 @@ A PR is blocked if either condition is true:
 - AI can auto-recommend approval only for low-risk PRs.
 - For medium/high-risk PRs, AI should recommend request-changes or explicit human review.
 - Human reviewers retain final approval and merge decision.
+- Human maintainer approval is required for accepted medium/high risk records.
 
 ## Merge policy
 

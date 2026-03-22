@@ -11,7 +11,7 @@ When the user asks to prepare a release (or equivalent), run `PRE_RELEASE_READIN
 
 1. Run `pnpm release:prepare` (always full-product scope across all phases).
 2. Read `docs/release-readiness-report.md`.
-3. Treat only new `medium` and `high` findings for the current release phase as blocking.
+3. Treat only new `medium` and `high` findings for the current release phase as blocking unless explicitly accepted with full risk record fields.
 4. Use `TASKS.md` as the active issue system:
    - update existing tasks when findings map to open work,
    - add new tasks when findings are unmapped.
@@ -25,3 +25,4 @@ When the user asks to prepare a release (or equivalent), run `PRE_RELEASE_READIN
 - Do not create GitHub issues for readiness findings.
 - Do not assign owners/assignees in this flow.
 - Keep `TASKS_ARCHIVED.md` for historical records only; readiness findings belong in active `TASKS.md`.
+- For accepted medium/high risk, require approver + rationale + scope + sunset date in `TASKS.md`.

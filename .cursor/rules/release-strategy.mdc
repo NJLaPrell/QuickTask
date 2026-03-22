@@ -15,6 +15,7 @@ Use `RELEASE_STRATEGY.md` as the source of truth for production releases.
 - Keep package versions lockstep unless the user explicitly changes this policy.
 - Tag releases as `vMAJOR.MINOR.PATCH`.
 - Publish GitHub Releases from the tagged release commit.
+- Use change-based cadence triggers (change volume/risk/readiness), not fixed calendar intervals.
 
 ## Docs synchronization gate
 
@@ -45,3 +46,13 @@ Block release if any of these fail:
 - Track readiness findings in active `TASKS.md`, not GitHub issues.
 - Keep `TASKS_ARCHIVED.md` as historical context only (do not file new findings there).
 - Treat `medium` and `high` readiness findings as blocking until resolved or explicitly accepted by the user.
+
+## Accepted risk requirements
+
+If medium/high findings are accepted instead of fixed, require an auditable `TASKS.md` record containing:
+
+- finding/task ID and severity
+- human approver
+- rationale and scope
+- mitigation notes
+- sunset/revisit date

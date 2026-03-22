@@ -34,3 +34,4 @@ A PR is blocked when:
 - Recommend merge only when required checks are green and no blockers remain.
 - If no findings exist, explicitly state no findings and mention residual risks/testing gaps.
 - Use GitHub MCP tools for review and merge actions when available; use CLI only as fallback.
+- Medium/high findings accepted without fix must reference a `TASKS.md` accepted-risk record (approver, rationale, scope, sunset date).

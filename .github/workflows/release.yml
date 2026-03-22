@@ -106,6 +106,9 @@ jobs:
       - name: Validate pending changeset structure
         run: pnpm release:validate-changesets
 
+      - name: Validate release workflow contracts
+        run: pnpm release:check-workflow-contracts
+
       - name: Docs synchronization gate
         env:
           RELEASE_README_STATUS: ${{ inputs.readme_status }}

@@ -55,3 +55,16 @@ test("routes slash command through runtime boundary", () => {
   assert.equal(response.result.code, "qt:improve:accept:applied");
   assert.match(response.text, /accepted and applied/);
 });
+
+test("unknown result rendering keeps diagnostics local and redacted", () => {
+  const text = renderOpenClawQtResult({
+    code: "qt:unknown",
+    requestId: "qt-safe",
+    userInput: "sensitive input",
+    templateBody: "sensitive template"
+  });
+
+  assert.match(text, /unsupported result code/i);
+  assert.doesNotMatch(text, /sensitive input/);
+  assert.doesNotMatch(text, /sensitive template/);
+});
