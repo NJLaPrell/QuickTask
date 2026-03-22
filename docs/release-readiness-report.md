@@ -1,28 +1,31 @@
 # Release Readiness Report
 
-- Generated at: 2026-03-22T19:26:58.986Z
+- Generated at: 2026-03-22T19:30:58.376Z
 - Scope target: all phases (fixed)
 - Current release phase: Phase 9
 - Scope: pre-release readiness checks before `Release` workflow handoff
 - Blocking policy: only new medium/high findings for the current release phase block handoff
-- Pending changesets: 1
+- Pending changesets: 0
 
 ## Command checks
 
 | Check | Result | Severity on failure | Duration |
 | --- | --- | --- | --- |
-| Workspace typecheck | pass | high | 1975ms |
-| Workspace tests | pass | high | 2495ms |
-| Workspace build | pass | high | 1313ms |
-| Release docs sync gate | pass | medium | 205ms |
-| Task tracker schema check | pass | medium | 204ms |
-| Release workflow contract check | pass | medium | 204ms |
-| Docs link integrity check | pass | medium | 212ms |
-| Command entrypoint reference check | pass | medium | 203ms |
-| Generated artifact policy check | pass | medium | 215ms |
+| Workspace typecheck | pass | high | 2142ms |
+| Workspace tests | pass | high | 2714ms |
+| Workspace build | pass | high | 1365ms |
+| Release docs sync gate | pass | medium | 207ms |
+| Task tracker schema check | pass | medium | 208ms |
+| Release workflow contract check | pass | medium | 213ms |
+| Docs link integrity check | pass | medium | 210ms |
+| Command entrypoint reference check | pass | medium | 217ms |
+| Generated artifact policy check | pass | medium | 236ms |
 
 ## Findings
 
+- [medium] No pending releaseable changeset entries were found
+  - Source: changeset-preflight
+  - Details: Add a .changeset/*.md file with user-visible release notes before handoff so release:version has explicit input.
 - [medium] Open release-readiness task remains: T112 (existing task: T112)
   - Source: tasks-backlog
   - Details: Phase 10 | T112 (P1) - Define template variable syntax and contract
@@ -53,13 +56,10 @@
 - [medium] Open release-readiness task remains: T126 (existing task: T126)
   - Source: tasks-backlog
   - Details: Phase 10 | T126 (P2) - Add privacy-safe product feedback loop for UX friction
-- [medium] Open release-readiness task remains: T131 (existing task: T131)
-  - Source: tasks-backlog
-  - Details: Phase 10 | T131 (P0) - Dispatch and verify `v1.0.0` production release workflow
 
 ## Handoff decision
 
-- READY: no medium/high findings; release workflow handoff is allowed.
+- BLOCKED: 1 medium/high finding(s) must be resolved or accepted before running the release workflow.
 
 ## Task maintenance action
 

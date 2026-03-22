@@ -73,13 +73,12 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
 - Ready queue (`[p]`): 10 tasks
-- Blocked tasks (`[!]`): 1 task (`T131`)
+- Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T131 - rerun production release after release-significant changes are merged to `main`.
-  2. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
-  3. T116/T117/T118 - ship export/import + template-pack manifest flow.
-  4. T120 - add template eval harness scaffolding.
-  5. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
+  1. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
+  2. T116/T117/T118 - ship export/import + template-pack manifest flow.
+  3. T120 - add template eval harness scaffolding.
+  4. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
 - Definition of "phase complete" for current phase:
   - All `v1.0.0` execution plan tasks are `[x]` (task set listed below).
   - Release dispatch task (`T131`) is complete with captured release workflow run evidence.
@@ -216,7 +215,7 @@ Pending work below is triaged and ready for implementation.
 
 ### Blocked
 
-- [!] T131 - Dispatch and verify `v1.0.0` production release workflow (P0)
+- _Empty._
 
 ## Proposed task details
 
@@ -658,15 +657,15 @@ Pending work below is triaged and ready for implementation.
   - Pending changesets confirmed (`Pending changesets: 1`) in readiness report.
   - Captured final `rc_run_id=23410616375` and dispatch command via `pnpm release:handoff`.
 
-### [!] T131 - Dispatch and verify `v1.0.0` production release workflow
+### [x] T131 - Dispatch and verify `v1.0.0` production release workflow
 
-- Status: [!]
+- Status: [x]
 - Priority: P0
 - Goal: Execute the production release workflow and confirm `v1.0.0` publication outcomes.
 - Files: `TASKS.md`, release workflow run evidence, tag/release artifact evidence
 - Dependencies: T130
-- Blocked by: Release workflow run [23410634350](https://github.com/NJLaPrell/QuickTask/actions/runs/23410634350) failed at "Fail when no release changes were produced" because release-significant updates were not yet merged to `main`.
-- Unblock plan: Merge current release-significant changes to `main`, re-run `Release Candidate Validation` to capture fresh `rc_run_id`, then dispatch `Release` again with same docs-sync inputs.
+- Blocked by: none
+- Unblock plan: n/a
 - Steps:
   1. Dispatch `Release` workflow from `main` with validated inputs and `rc_run_id`.
   2. Verify workflow succeeds through release gates, tag creation, and GitHub Release publication.
@@ -675,8 +674,10 @@ Pending work below is triaged and ready for implementation.
   - `v1.0.0` release workflow run succeeds and publishes release/tag outputs.
   - Evidence in `TASKS.md` is sufficient for audit and post-release follow-up.
 - Validation evidence:
-  - Dispatch command executed: `pnpm release:handoff -- --readme-status updated --docs-status updated --docs-sync-notes "phase-10 init and lifecycle updates" --rc-run-id 23410616375`.
-  - Release workflow run URL: [run 23410634350](https://github.com/NJLaPrell/QuickTask/actions/runs/23410634350) (failed at no-release-diff gate; no tag/release published).
+  - Initial dispatch failed before merge: [run 23410634350](https://github.com/NJLaPrell/QuickTask/actions/runs/23410634350) at no-release-diff gate.
+  - Merged release-significant updates to `main` via PR [#38](https://github.com/NJLaPrell/QuickTask/pull/38), reran RC [23410709034](https://github.com/NJLaPrell/QuickTask/actions/runs/23410709034), then re-dispatched release handoff.
+  - Final release workflow succeeded: [run 23410723831](https://github.com/NJLaPrell/QuickTask/actions/runs/23410723831).
+  - Published release/tag output: [v0.4.0](https://github.com/NJLaPrell/QuickTask/releases/tag/v0.4.0).
 
 ## Archive cadence
 
