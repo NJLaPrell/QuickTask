@@ -36,6 +36,18 @@ test("returns proposal id in improve rendering", () => {
   assert.match(markdown, /Proposal ID: `p_123`/);
 });
 
+test("renders missing-variable guidance", () => {
+  const markdown = renderQtRuntimeResult({
+    kind: "run_missing_variables",
+    code: "qt:run:missing-variables",
+    taskName: "summarize",
+    missingVariables: ["topic"],
+    usage: "/qt/summarize topic=<value>",
+    message: "Missing required template variables: topic."
+  });
+  assert.match(markdown, /Missing required template variables/);
+});
+
 test("delegates prompt handling to runtime boundary", () => {
   const runtime = {
     handle(input) {

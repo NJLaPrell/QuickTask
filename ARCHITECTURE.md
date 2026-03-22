@@ -46,7 +46,7 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 ## Runtime flow
 
 1. Parse the `/qt` command.
-2. Decide whether the request is help, create, run, list, show, doctor, improve, or improve-action.
+2. Decide whether the request is help, init, create, run, export/import, list/show/doctor, improve, improve-action, or import-pack.
 3. Resolve the task template.
 4. Return a host-specific response.
 
@@ -74,6 +74,7 @@ QuickTask keeps an intentionally minimal `/qt` surface:
 
 - `/qt` help
 - create/run/improve lifecycle
+- export/import/template-pack portability
 - discovery and diagnostics commands: `/qt list`, `/qt show [task]`, `/qt doctor`
 
 Additional command expansion is deferred by default and requires explicit re-approval.

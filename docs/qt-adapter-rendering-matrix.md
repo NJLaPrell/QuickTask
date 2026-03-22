@@ -16,61 +16,81 @@ Use this file together with `docs/qt-command-result-contract.md`:
 
 ## Result payload reference
 
-| Code                            | Kind               | Required fields beyond `kind`/`code`                                  |
-| ------------------------------- | ------------------ | --------------------------------------------------------------------- |
-| `qt:help`                       | `help`             | `usage[]`                                                             |
-| `qt:init:initialized`           | `init_status`      | `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message` |
-| `qt:init:already-initialized`   | `init_status`      | `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message` |
-| `qt:init:partial`               | `init_status`      | `status`, `createdAssets[]`, `skippedAssets[]`, `warnings[]`, `nextCommands[]`, `message` |
-| `qt:create:clarify`             | `clarification`    | `taskName`, `usage`, `message`                                        |
-| `qt:create:already-exists`      | `already_exists`   | `taskName`, `message`                                                 |
-| `qt:create:created`             | `created`          | `taskName`, `filename`, `templateBody`                                |
-| `qt:incomplete`                 | `incomplete`       | `usage`, `message`                                                    |
-| `qt:run:not-found`              | `not_found`        | `taskName`, `message`                                                 |
-| `qt:run:executed`               | `run_executed`     | `taskName`, `templateBody`, `userInput`                               |
-| `qt:list:listed`                | `list`             | `tasks[]`, `message`                                                  |
-| `qt:show:template`              | `show`             | `taskName`, `templateBody`                                            |
-| `qt:doctor:status`              | `doctor`           | `diagnostics`                                                         |
-| `qt:improve:not-found`          | `not_found`        | `taskName`, `message`                                                 |
-| `qt:improve:proposal-not-found` | `not_found`        | `taskName`, `message`                                                 |
-| `qt:improve:proposed`           | `improve_proposed` | `taskName`, `proposalId`, `source`, `oldTemplate`, `proposedTemplate` |
-| `qt:improve:accept:applied`     | `improve_action`   | `taskName`, `action`, `proposalId`, `status`, `message`               |
-| `qt:improve:reject:recorded`    | `improve_action`   | `taskName`, `action`, `proposalId`, `status`, `message`               |
-| `qt:improve:abandon:recorded`   | `improve_action`   | `taskName`, `action`, `proposalId`, `status`, `message`               |
-| `qt:improve:proposal-expired`   | `improve_action`   | `taskName`, `action`, `proposalId`, `status`, `message`               |
-| `qt:improve:already-finalized`  | `improve_action`   | `taskName`, `action`, `proposalId`, `status`, `message`               |
-| `qt:init:failed`                | `error`            | `diagnosticCode`, `requestId`, `message`                              |
-| `qt:parse:error`                | `error`            | `diagnosticCode`, `requestId`, `message`                              |
-| `qt:storage:error`              | `error`            | `diagnosticCode`, `requestId`, `message`                              |
+| Code                            | Kind                    | Required fields beyond `kind`/`code`                                                      |
+| ------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------- |
+| `qt:help`                       | `help`                  | `usage[]`                                                                                 |
+| `qt:init:initialized`           | `init_status`           | `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message`               |
+| `qt:init:already-initialized`   | `init_status`           | `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message`               |
+| `qt:init:partial`               | `init_status`           | `status`, `createdAssets[]`, `skippedAssets[]`, `warnings[]`, `nextCommands[]`, `message` |
+| `qt:create:clarify`             | `clarification`         | `taskName`, `usage`, `message`                                                            |
+| `qt:create:already-exists`      | `already_exists`        | `taskName`, `message`                                                                     |
+| `qt:create:created`             | `created`               | `taskName`, `filename`, `templateBody`                                                    |
+| `qt:incomplete`                 | `incomplete`            | `usage`, `message`                                                                        |
+| `qt:run:not-found`              | `not_found`             | `taskName`, `message`                                                                     |
+| `qt:run:missing-variables`      | `run_missing_variables` | `taskName`, `missingVariables[]`, `usage`, `message`                                      |
+| `qt:run:executed`               | `run_executed`          | `taskName`, `templateBody`, `userInput`                                                   |
+| `qt:export:task`                | `exported`              | `taskName`, `taskCount`, `payload`, `message`                                             |
+| `qt:export:all`                 | `exported`              | `taskCount`, `payload`, `message`                                                         |
+| `qt:import:created`             | `imported`              | `createdCount`, `updatedCount`, `skippedCount`, `message`                                 |
+| `qt:import:updated`             | `imported`              | `createdCount`, `updatedCount`, `skippedCount`, `message`                                 |
+| `qt:import:conflict`            | `imported`              | `createdCount`, `updatedCount`, `skippedCount`, `message`                                 |
+| `qt:import:invalid`             | `imported`              | `createdCount`, `updatedCount`, `skippedCount`, `message`                                 |
+| `qt:pack:resolved`              | `pack_resolved`         | `manifestPath`, `importedCount`, `skippedCount`, `message`                                |
+| `qt:pack:invalid`               | `pack_resolved`         | `manifestPath`, `importedCount`, `skippedCount`, `message`                                |
+| `qt:pack:not-found`             | `not_found`             | `taskName`, `message`                                                                     |
+| `qt:list:listed`                | `list`                  | `tasks[]`, `message`                                                                      |
+| `qt:show:template`              | `show`                  | `taskName`, `templateBody`                                                                |
+| `qt:doctor:status`              | `doctor`                | `diagnostics`                                                                             |
+| `qt:improve:not-found`          | `not_found`             | `taskName`, `message`                                                                     |
+| `qt:improve:proposal-not-found` | `not_found`             | `taskName`, `message`                                                                     |
+| `qt:improve:proposed`           | `improve_proposed`      | `taskName`, `proposalId`, `source`, `oldTemplate`, `proposedTemplate`                     |
+| `qt:improve:accept:applied`     | `improve_action`        | `taskName`, `action`, `proposalId`, `status`, `message`                                   |
+| `qt:improve:reject:recorded`    | `improve_action`        | `taskName`, `action`, `proposalId`, `status`, `message`                                   |
+| `qt:improve:abandon:recorded`   | `improve_action`        | `taskName`, `action`, `proposalId`, `status`, `message`                                   |
+| `qt:improve:proposal-expired`   | `improve_action`        | `taskName`, `action`, `proposalId`, `status`, `message`                                   |
+| `qt:improve:already-finalized`  | `improve_action`        | `taskName`, `action`, `proposalId`, `status`, `message`                                   |
+| `qt:init:failed`                | `error`                 | `diagnosticCode`, `requestId`, `message`                                                  |
+| `qt:parse:error`                | `error`                 | `diagnosticCode`, `requestId`, `message`                                                  |
+| `qt:storage:error`              | `error`                 | `diagnosticCode`, `requestId`, `message`                                                  |
 
 ## Rendering matrix by host
 
-| Result code                     | VS Code extension                                                               | Cursor command adapter                                                  | OpenClaw plugin                                              |
-| ------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `qt:help`                       | Show command usage list in info panel or chat response.                         | Return usage list to command output.                                    | Show usage list in plugin response area.                     |
-| `qt:init:initialized`           | Show success with created/skipped assets and copyable next commands.            | Return init summary plus deterministic next-command list.               | Show success panel with created/skipped assets and next steps. |
-| `qt:init:already-initialized`   | Show idempotent info message and next commands without warnings.                | Return non-fatal already-initialized summary for repeat runs.           | Show info panel confirming no new bootstrap work required.   |
-| `qt:init:partial`               | Show warning-level partial result with warnings and suggested follow-up.         | Return partial status and warnings; preserve next-command guidance.     | Show warning panel with explicit remediation hints.          |
-| `qt:create:clarify`             | Show warning with exact usage hint.                                             | Show warning and keep user in input loop.                               | Show guidance in response panel with suggested command form. |
-| `qt:create:already-exists`      | Show non-fatal warning; do not overwrite.                                       | Show warning and suggest `/qt improve`.                                 | Show warning and suggested next action.                      |
-| `qt:create:created`             | Show success with created filename and preview snippet.                         | Show success with task and filename.                                    | Show success toast/panel message and include filename.       |
-| `qt:incomplete`                 | Show warning with `usage`.                                                      | Show warning and let user retry with full command.                      | Show warning with required command shape.                    |
-| `qt:run:not-found`              | Show warning and suggest create command.                                        | Show warning and suggest `/qt [task] [instructions]`.                   | Show warning and suggest create flow.                        |
-| `qt:run:executed`               | Render template plus user input in execution panel.                             | Return rendered output payload to command client.                       | Render template and input in plugin output surface.          |
-| `qt:list:listed`                | Render ordered list of available task names.                                    | Return deterministic task name list with summary message.               | Render plain list of available task names.                   |
-| `qt:show:template`              | Render template markdown for one task body.                                     | Return task template preview payload for one task.                      | Render plain template preview for one task.                  |
-| `qt:doctor:status`              | Render diagnostics block with tasks dir, writability, and recent runtime codes. | Return safe diagnostics payload (no user-content fields).               | Render diagnostics text for support triage.                  |
-| `qt:improve:not-found`          | Show warning that task template is missing.                                     | Show warning and suggest creating the task first.                       | Show warning and suggested create command.                   |
-| `qt:improve:proposal-not-found` | Show warning that proposal is unavailable (expired/finalized/missing).         | Show warning and suggest generating a new proposal.                     | Show warning with lifecycle guidance.                        |
-| `qt:improve:proposed`           | Show side-by-side old vs proposed template and proposal ID.                     | Return proposal object and emphasize proposal ID for follow-up actions. | Render comparison and copyable proposal ID.                  |
-| `qt:improve:accept:applied`     | Show success and confirm template was updated on disk.                          | Show success with applied status and proposal ID.                       | Show success with applied state.                             |
-| `qt:improve:reject:recorded`    | Show info-level state update (no template mutation).                            | Show info-level update with status and proposal ID.                     | Show info-level update only.                                 |
-| `qt:improve:abandon:recorded`   | Show info-level state update (proposal closed).                                 | Show info-level update with status and proposal ID.                     | Show info-level update only.                                 |
-| `qt:improve:proposal-expired`   | Show warning to generate a new proposal.                                        | Show warning with retry guidance.                                       | Show warning with retry guidance.                            |
-| `qt:improve:already-finalized`  | Show info-level idempotent status result.                                       | Show idempotent status message.                                         | Show idempotent status message.                              |
-| `qt:init:failed`                | Show error with request ID and suggest rerunning `/qt init` after fixing storage permissions. | Return error payload with request ID and remediation hint.              | Show error with request ID and storage/setup retry guidance. |
-| `qt:parse:error`                | Show error with safe message and request ID.                                    | Return error payload with request ID surfaced.                          | Show error message with request ID.                          |
-| `qt:storage:error`              | Show error with safe message and request ID; suggest retry.                     | Return error payload with request ID and retry suggestion.              | Show error message with request ID and retry guidance.       |
+| Result code                     | VS Code extension                                                                             | Cursor command adapter                                                   | OpenClaw plugin                                                |
+| ------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| `qt:help`                       | Show command usage list in info panel or chat response.                                       | Return usage list to command output.                                     | Show usage list in plugin response area.                       |
+| `qt:init:initialized`           | Show success with created/skipped assets and copyable next commands.                          | Return init summary plus deterministic next-command list.                | Show success panel with created/skipped assets and next steps. |
+| `qt:init:already-initialized`   | Show idempotent info message and next commands without warnings.                              | Return non-fatal already-initialized summary for repeat runs.            | Show info panel confirming no new bootstrap work required.     |
+| `qt:init:partial`               | Show warning-level partial result with warnings and suggested follow-up.                      | Return partial status and warnings; preserve next-command guidance.      | Show warning panel with explicit remediation hints.            |
+| `qt:create:clarify`             | Show warning with exact usage hint.                                                           | Show warning and keep user in input loop.                                | Show guidance in response panel with suggested command form.   |
+| `qt:create:already-exists`      | Show non-fatal warning; do not overwrite.                                                     | Show warning and suggest `/qt improve`.                                  | Show warning and suggested next action.                        |
+| `qt:create:created`             | Show success with created filename and preview snippet.                                       | Show success with task and filename.                                     | Show success toast/panel message and include filename.         |
+| `qt:incomplete`                 | Show warning with `usage`.                                                                    | Show warning and let user retry with full command.                       | Show warning with required command shape.                      |
+| `qt:run:not-found`              | Show warning and suggest create command.                                                      | Show warning and suggest `/qt [task] [instructions]`.                    | Show warning and suggest create flow.                          |
+| `qt:run:missing-variables`      | Show warning listing missing variables and copyable re-run usage hint.                        | Return missing-variable guidance with exact `/qt/[task] key=value` form. | Show warning and exact variable completion command.            |
+| `qt:run:executed`               | Render template plus user input in execution panel.                                           | Return rendered output payload to command client.                        | Render template and input in plugin output surface.            |
+| `qt:export:task`                | Show success plus export payload JSON block for copy/export pipelines.                        | Return deterministic JSON payload object/string for portable sharing.    | Render export payload text and task count summary.             |
+| `qt:export:all`                 | Show success plus full export payload JSON block and task count.                              | Return full export payload for all templates.                            | Render export summary and payload output.                      |
+| `qt:import:created`             | Show success summary with created/updated/skipped counts.                                     | Return deterministic import counts and summary message.                  | Show import result summary.                                    |
+| `qt:import:updated`             | Show success summary including overwrite updates.                                             | Return updated import status and counts.                                 | Show overwrite/import summary.                                 |
+| `qt:import:conflict`            | Show non-fatal conflict summary with `--force` remediation hint.                              | Return conflict status and force-retry guidance.                         | Show conflict summary and next command hint.                   |
+| `qt:import:invalid`             | Show parse/validation error for import payload.                                               | Return invalid payload message without crashing host.                    | Show invalid import payload guidance.                          |
+| `qt:pack:resolved`              | Show pack resolution summary with imported/skipped counts.                                    | Return deterministic pack import summary payload.                        | Show pack-import summary in response panel.                    |
+| `qt:pack:invalid`               | Show manifest validation errors and remediation hint.                                         | Return manifest validation errors safely.                                | Show manifest validation failure details.                      |
+| `qt:pack:not-found`             | Show missing-manifest warning with path.                                                      | Return missing-manifest warning.                                         | Show missing pack path warning.                                |
+| `qt:list:listed`                | Render ordered list of available task names.                                                  | Return deterministic task name list with summary message.                | Render plain list of available task names.                     |
+| `qt:show:template`              | Render template markdown for one task body.                                                   | Return task template preview payload for one task.                       | Render plain template preview for one task.                    |
+| `qt:doctor:status`              | Render diagnostics block with tasks dir, writability, and recent runtime codes.               | Return safe diagnostics payload (no user-content fields).                | Render diagnostics text for support triage.                    |
+| `qt:improve:not-found`          | Show warning that task template is missing.                                                   | Show warning and suggest creating the task first.                        | Show warning and suggested create command.                     |
+| `qt:improve:proposal-not-found` | Show warning that proposal is unavailable (expired/finalized/missing).                        | Show warning and suggest generating a new proposal.                      | Show warning with lifecycle guidance.                          |
+| `qt:improve:proposed`           | Show side-by-side old vs proposed template and proposal ID.                                   | Return proposal object and emphasize proposal ID for follow-up actions.  | Render comparison and copyable proposal ID.                    |
+| `qt:improve:accept:applied`     | Show success and confirm template was updated on disk.                                        | Show success with applied status and proposal ID.                        | Show success with applied state.                               |
+| `qt:improve:reject:recorded`    | Show info-level state update (no template mutation).                                          | Show info-level update with status and proposal ID.                      | Show info-level update only.                                   |
+| `qt:improve:abandon:recorded`   | Show info-level state update (proposal closed).                                               | Show info-level update with status and proposal ID.                      | Show info-level update only.                                   |
+| `qt:improve:proposal-expired`   | Show warning to generate a new proposal.                                                      | Show warning with retry guidance.                                        | Show warning with retry guidance.                              |
+| `qt:improve:already-finalized`  | Show info-level idempotent status result.                                                     | Show idempotent status message.                                          | Show idempotent status message.                                |
+| `qt:init:failed`                | Show error with request ID and suggest rerunning `/qt init` after fixing storage permissions. | Return error payload with request ID and remediation hint.               | Show error with request ID and storage/setup retry guidance.   |
+| `qt:parse:error`                | Show error with safe message and request ID.                                                  | Return error payload with request ID surfaced.                           | Show error message with request ID.                            |
+| `qt:storage:error`              | Show error with safe message and request ID; suggest retry.                                   | Return error payload with request ID and retry suggestion.               | Show error message with request ID and retry guidance.         |
 
 ## Unknown/new code fallback
 
@@ -89,4 +109,6 @@ When adapters receive a code not listed above:
 - Ensure parse/storage errors display `requestId`.
 - Ensure improve proposal renderers expose `proposalId` for action commands.
 - Ensure `list`/`show`/`doctor` renderers remain available as approved core command-surface behavior.
+- Ensure missing-variable guidance for `qt:run:missing-variables` includes copyable `key=value` usage.
+- Ensure export/import and pack-result codes are covered and non-crashing.
 - Keep host docs linking to this matrix and `docs/qt-command-result-contract.md`.

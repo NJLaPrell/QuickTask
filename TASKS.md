@@ -68,19 +68,16 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-22
 - Current phase in execution: Phase 11 - Post-release expansion and workflow modernization
-- Current milestone target: Deliver accepted post-release scope moved from Phase 10 and keep release/CI workflows modernized.
-- Phase objective now: ship deferred product/governance improvements and remove action-runtime deprecation risk in GitHub workflows.
+- Current milestone target: Phase 11 scope delivered and ready for release.
+- Phase objective now: complete post-release expansion set and release as `v1.0.0`.
 - Phase kickoff assessment: complete (reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and active contracts).
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 11 tasks
+- Ready queue (`[p]`): 0 tasks
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T132 - remove Node 20 GitHub Actions deprecation warnings (Node 24-ready workflow actions).
-  2. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
-  3. T116/T117/T118 - ship export/import + template-pack manifest flow.
-  4. T120 - add template eval harness scaffolding.
-  5. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
+  1. Release prep and `v1.0.0` go/no-go validation.
+  2. Dispatch release once readiness and RC remain green.
 - Definition of "phase complete" for current phase:
   - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) are `[x]`.
   - CI/release workflow validation remains green after action-version modernization changes.
@@ -193,7 +190,7 @@ Validation expectations are enforced within those tasks' acceptance criteria and
 ### Phase 11 - Post-release expansion and workflow modernization
 
 - Delivery outcome: Deferred feature/governance enhancements land after the `v0.4.0` release, and CI/release workflows are modernized for current GitHub Actions runtime policy.
-- Status: kickoff complete; implementation in progress.
+- Status: scope complete; release prep in progress.
 - Planned task IDs (in order): T132, T112, T113, T114, T116, T117, T118, T120, T123, T124, T126.
 - Archived task IDs: none.
 
@@ -203,17 +200,7 @@ Pending work below is triaged and ready for implementation.
 
 ### Proposed
 
-- [p] T112 - Define template variable syntax and contract (P1)
-- [p] T113 - Implement template variable interpolation in core runtime (P1)
-- [p] T114 - Add adapter prompts for missing template variables (P2)
-- [p] T116 - Add task export command and runtime behavior (P1)
-- [p] T117 - Add task import command with conflict policies (P1)
-- [p] T118 - Define template-pack manifest and local resolution rules (P2)
-- [p] T120 - Create template eval harness scaffolding (P1)
-- [p] T123 - Define low-risk fast-lane workflow policy (P1)
-- [p] T124 - Add governance doc simplification and canonicalization pass (P2)
-- [p] T126 - Add privacy-safe product feedback loop for UX friction (P2)
-- [p] T132 - Upgrade GitHub Actions to Node 24-compatible versions (P1)
+- _Empty._
 
 ### Intake queue
 
@@ -416,9 +403,9 @@ Pending work below is triaged and ready for implementation.
   - Added restart accept-action coverage in `packages/core/test/runtime.test.mjs`.
   - Updated lifecycle contract wording in `docs/qt-command-result-contract.md`.
 
-### [p] T112 - Define template variable syntax and contract
+### [x] T112 - Define template variable syntax and contract
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Introduce reusable parameterized templates with deterministic syntax.
 - Files: `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, core types
@@ -433,11 +420,13 @@ Pending work below is triaged and ready for implementation.
   - Contract docs define syntax, defaults, and error modes.
   - Existing non-parameterized templates remain valid.
 - Validation evidence:
-  - <add after implementation>
+  - Added template variable contract semantics (`{{name}}`, `{{name|default}}`, escape `\{{`) and backward-compatibility notes in `docs/qt-command-result-contract.md`.
+  - Added result/rendering coverage for missing-variable handling in `docs/qt-adapter-rendering-matrix.md`.
+  - Extended runtime result/type contracts in `packages/core/src/types.ts` for deterministic missing-variable guidance (`qt:run:missing-variables`).
 
-### [p] T113 - Implement template variable interpolation in core runtime
+### [x] T113 - Implement template variable interpolation in core runtime
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Execute parameterized templates safely and predictably during run/improve.
 - Files: `packages/core/src/*`, `packages/core/test/*`
@@ -452,11 +441,13 @@ Pending work below is triaged and ready for implementation.
   - Runtime resolves variables correctly with clear failure signals when missing.
   - Core tests cover defaults, required fields, and malformed variables.
 - Validation evidence:
-  - <add after implementation>
+  - Added extraction/interpolation/input parsing engine in `packages/core/src/templateVariables.ts`.
+  - Wired runtime interpolation + missing-variable signal path in `packages/core/src/runtime.ts`.
+  - Added coverage in `packages/core/test/template-variables.test.mjs` and `packages/core/test/runtime.test.mjs`.
 
-### [p] T114 - Add adapter prompts for missing template variables
+### [x] T114 - Add adapter prompts for missing template variables
 
-- Status: [p]
+- Status: [x]
 - Priority: P2
 - Goal: Make variable-enabled templates easy to run without memorizing syntax.
 - Files: adapters, `.cursor/commands/qt.md`, adapter tests
@@ -471,11 +462,13 @@ Pending work below is triaged and ready for implementation.
   - Missing-variable failures include a clear re-run command with values.
   - Host renderers preserve parity with contract docs.
 - Validation evidence:
-  - <add after implementation>
+  - Added renderer handling for `qt:run:missing-variables` in `packages/core/src/rendering.ts`.
+  - Added adapter boundary tests for missing-variable guidance in `packages/vscode-extension/test/qt-adapter.test.mjs` and `packages/openclaw-plugin/test/qt-adapter.test.mjs`.
+  - Synced command/render contract docs (`docs/qt-adapter-rendering-matrix.md`).
 
-### [p] T116 - Add task export command and runtime behavior
+### [x] T116 - Add task export command and runtime behavior
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Enable portable sharing of task templates from one repository/host to another.
 - Files: core parser/runtime, contract docs, tests
@@ -490,11 +483,13 @@ Pending work below is triaged and ready for implementation.
   - Users can export template definitions without hand-copying markdown.
   - Export output is documented and stable for import workflows.
 - Validation evidence:
-  - <add after implementation>
+  - Added parser/runtime support for `/qt export [task|--all]` in `packages/core/src/parser.ts` and `packages/core/src/runtime.ts`.
+  - Added deterministic export envelope (`quicktask-export` v1) with stable payload rendering.
+  - Added runtime tests for single-task export flow in `packages/core/test/runtime.test.mjs`.
 
-### [p] T117 - Add task import command with conflict policies
+### [x] T117 - Add task import command with conflict policies
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Support controlled template ingestion with safe collision handling.
 - Files: core runtime/store, contract docs, tests
@@ -509,11 +504,13 @@ Pending work below is triaged and ready for implementation.
   - Import supports safe default behavior and explicit override path.
   - Conflict outcomes are deterministic and tested.
 - Validation evidence:
-  - <add after implementation>
+  - Added parser/runtime support for `/qt import [--force] [payload-json]`.
+  - Implemented default conflict-skip behavior and explicit overwrite mode with deterministic status codes (`qt:import:*`).
+  - Added import/export integration coverage in `packages/core/test/runtime.test.mjs`.
 
-### [p] T118 - Define template-pack manifest and local resolution rules
+### [x] T118 - Define template-pack manifest and local resolution rules
 
-- Status: [p]
+- Status: [x]
 - Priority: P2
 - Goal: Provide an organized unit for distributing sets of templates.
 - Files: docs contracts, core support utilities, tests
@@ -528,11 +525,13 @@ Pending work below is triaged and ready for implementation.
   - Manifest schema is documented with examples and validation checks.
   - Runtime can resolve valid packs and reject invalid manifests safely.
 - Validation evidence:
-  - <add after implementation>
+  - Added pack manifest schema validation/resolution utilities in `packages/core/src/templatePacks.ts`.
+  - Added runtime pack import command (`/qt import-pack [--force] [manifest-path]`) with invalid/missing-safe behavior.
+  - Added tests in `packages/core/test/template-packs.test.mjs` and `packages/core/test/runtime.test.mjs`.
 
-### [p] T120 - Create template eval harness scaffolding
+### [x] T120 - Create template eval harness scaffolding
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Introduce measurable quality checks for templates over time.
 - Files: `tools/*` or `scripts/*`, CI workflow files, docs
@@ -547,11 +546,14 @@ Pending work below is triaged and ready for implementation.
   - Repository includes runnable eval harness with deterministic output.
   - Maintainers can add new template eval scenarios with documented steps.
 - Validation evidence:
-  - <add after implementation>
+  - Added deterministic eval harness script `scripts/template-eval-harness.mjs`.
+  - Added baseline dataset + sample templates in `docs/templates/eval-dataset.json` and `docs/templates/samples/*.md`.
+  - Added `pnpm templates:eval` script and optional CI signal job in `.github/workflows/ci.yml`.
+  - Documented eval expansion steps in `CONTRIBUTORS.md`.
 
-### [p] T123 - Define low-risk fast-lane workflow policy
+### [x] T123 - Define low-risk fast-lane workflow policy
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Reduce process overhead for small low-risk changes without weakening release gates.
 - Files: `docs/workflows/task-pr-delivery-workflow.md`, policy docs, contributor guide
@@ -566,11 +568,12 @@ Pending work below is triaged and ready for implementation.
   - Policy clearly identifies what qualifies and what is excluded.
   - Contributor docs include a deterministic decision table.
 - Validation evidence:
-  - <add after implementation>
+  - Added fast-lane policy decision table, minimum validations, and exclusions in `docs/workflows/task-pr-delivery-workflow.md`.
+  - Scope guardrails explicitly exclude release-critical/runtime-affecting changes from fast-lane behavior.
 
-### [p] T124 - Add governance doc simplification and canonicalization pass
+### [x] T124 - Add governance doc simplification and canonicalization pass
 
-- Status: [p]
+- Status: [x]
 - Priority: P2
 - Goal: Lower contributor cognitive load by reducing policy duplication.
 - Files: `docs/governance-map.md`, policy docs, `CONTRIBUTORS.md`, `.cursor/rules/*.mdc`
@@ -585,11 +588,13 @@ Pending work below is triaged and ready for implementation.
   - Governance docs are shorter and still auditable.
   - Duplicate/conflicting guidance is reduced and linked to one source of truth.
 - Validation evidence:
-  - <add after implementation>
+  - Updated `docs/governance-map.md` to point canonical sources at `docs/policies/*` and `docs/workflows/*`.
+  - Retained root pointer docs as explicit stable aliases to reduce duplication drift.
+  - Updated contributor policy references in `CONTRIBUTORS.md` to canonical-first links.
 
-### [p] T126 - Add privacy-safe product feedback loop for UX friction
+### [x] T126 - Add privacy-safe product feedback loop for UX friction
 
-- Status: [p]
+- Status: [x]
 - Priority: P2
 - Goal: Capture actionable UX pain without collecting sensitive user content.
 - Files: core diagnostics policy/implementation, docs, tests
@@ -604,11 +609,13 @@ Pending work below is triaged and ready for implementation.
   - Product feedback signals exist for key UX drop-off points.
   - Privacy constraints remain enforced and tested.
 - Validation evidence:
-  - <add after implementation>
+  - Added aggregate, content-free friction counters (`clarification`, `incomplete`, `parse/storage error`, `missing-task`) to doctor diagnostics in `packages/core/src/runtime.ts`.
+  - Updated doctor status contracts in `packages/core/src/types.ts` and rendering in `packages/core/src/rendering.ts`.
+  - Extended runtime tests to assert feedback-signal diagnostics shape in `packages/core/test/runtime.test.mjs`.
 
-### [p] T132 - Upgrade GitHub Actions to Node 24-compatible versions
+### [x] T132 - Upgrade GitHub Actions to Node 24-compatible versions
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Remove GitHub-hosted workflow deprecation warnings by upgrading Node 20-based actions and validating RC/release workflows remain green.
 - Files: `.github/workflows/*.yml`, `.github/actions/*` (if needed), `CONTRIBUTORS.md`/release docs as needed
@@ -624,7 +631,12 @@ Pending work below is triaged and ready for implementation.
   - RC/release workflow runs no longer emit Node 20 deprecation warnings.
   - Updated action versions and any phase-check doc references are documented and verified in workflow validation.
 - Validation evidence:
-  - <add after implementation>
+  - Updated release-critical workflows/composite action to Node-24-ready action versions:
+    - `.github/workflows/release-candidate.yml`: `actions/checkout@v5`, `actions/upload-artifact@v5`
+    - `.github/workflows/release.yml`: `actions/checkout@v5`, `actions/upload-artifact@v5`
+    - `.github/actions/setup-quicktask-workspace/action.yml`: `actions/setup-node@v5`
+  - Replaced JS release action with CLI-based publish step in `.github/workflows/release.yml` to avoid Node 20 action-runtime dependency.
+  - Aligned contributor docs to active phase checks (`pnpm phase:check -- --phase 11`) in `CONTRIBUTORS.md`.
 
 ### [x] T128 - Add contributor onboarding quickstart and first-task path
 

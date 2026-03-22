@@ -73,7 +73,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -156,7 +156,7 @@ jobs:
         run: pnpm release:validate-host-installs
 
       - name: Upload packaged release assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-assets-v${{ steps.detect_version.outputs.release_version }}
           path: |
@@ -182,14 +182,19 @@ jobs:
           git push origin "v${{ steps.detect_version.outputs.release_version }}"
 
       - name: Publish GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.detect_version.outputs.release_version }}
-          body_path: artifacts/release-notes.md
-          files: |
-            artifacts/*.vsix
-            artifacts/*.tgz
-            artifacts/checksums.txt
-            artifacts/release-integrity-metadata.json
-            artifacts/sbom.json
-          generate_release_notes: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v${{ steps.detect_version.outputs.release_version }}
+        run: |
+          if gh release view "${RELEASE_TAG}" > /dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" --notes-file artifacts/release-notes.md
+          else
+            gh release create "${RELEASE_TAG}" \
+              artifacts/*.vsix \
+              artifacts/*.tgz \
+              artifacts/checksums.txt \
+              artifacts/release-integrity-metadata.json \
+              artifacts/sbom.json \
+              --notes-file artifacts/release-notes.md \
+              --generate-notes
+          fi

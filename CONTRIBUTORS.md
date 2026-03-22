@@ -63,7 +63,8 @@ pnpm tasks:check-templates
 pnpm docs:check-links
 pnpm check:generated-artifacts
 pnpm check:command-entrypoints
-pnpm phase:check -- --phase 10
+pnpm phase:check -- --phase 11
+pnpm templates:eval
 pnpm qt:sandbox -- /qt help
 pnpm check:package-manager
 pnpm clean
@@ -83,10 +84,10 @@ pnpm --filter quicktask-openclaw package:artifact
 
 Use these documents as policy:
 
-- `TASK_PR_DELIVERY_WORKFLOW.md`
-- `COMMIT_STRATEGY.md`
-- `BRANCHING_TAGGING_STRATEGY.md`
-- `PR_REVIEW_MERGE_STRATEGY.md`
+- `docs/workflows/task-pr-delivery-workflow.md` (canonical; `TASK_PR_DELIVERY_WORKFLOW.md` is stable pointer)
+- `docs/policies/commit-strategy.md` (canonical; `COMMIT_STRATEGY.md` is stable pointer)
+- `docs/policies/branching-tagging-strategy.md` (canonical; `BRANCHING_TAGGING_STRATEGY.md` is stable pointer)
+- `docs/policies/pr-review-merge-strategy.md` (canonical; `PR_REVIEW_MERGE_STRATEGY.md` is stable pointer)
 - `docs/governance-map.md`
 
 Working defaults:
@@ -138,6 +139,21 @@ pnpm --filter quicktask-openclaw test
 ```
 
 These tests validate command normalization, runtime-boundary routing, and result rendering behavior without duplicating core task logic.
+
+## Template eval harness
+
+Use the baseline harness to score template quality signals over time:
+
+```bash
+pnpm templates:eval
+```
+
+- Dataset: `docs/templates/eval-dataset.json`
+- Sample templates: `docs/templates/samples/*.md`
+- Add a new eval case by appending to `cases[]` with:
+  - `taskName`
+  - `templatePath` (relative to dataset file)
+  - `checks[]` (`includes` or `regex` with optional penalty)
 
 ## Validation expectations
 
@@ -198,6 +214,10 @@ Once readiness is green (or explicitly accepted), hand off to the release strate
 4. Provide required docs sync and RC inputs (`readme_status`, `docs_status`, `docs_sync_notes`, `rc_run_id`).
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
+
+Runtime-policy note:
+
+- Release/RC workspace setup uses Node-24-ready GitHub Actions versions (`actions/checkout@v5`, `actions/setup-node@v5`, `actions/upload-artifact@v5`) and CLI-based release publish to avoid Node 20 deprecation paths.
 
 ### Change-based cadence and timing rules
 
