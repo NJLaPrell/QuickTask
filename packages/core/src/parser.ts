@@ -88,6 +88,10 @@ export function parseQtCommand(input: string): QtCommand {
     return { kind: "help" };
   }
 
+  if (value === "/qt init") {
+    return { kind: "init" };
+  }
+
   if (value.startsWith("/qt help ")) {
     const topic = value.slice("/qt help ".length).trim().toLowerCase();
     return {

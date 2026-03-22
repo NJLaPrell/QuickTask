@@ -91,16 +91,17 @@ test("renders list/show/doctor command outputs", () => {
   const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-openclaw-adapter-"));
   try {
     const runtime = createOpenClawQtRuntime(tasksDir);
-    handleOpenClawQtInput("summarize write concise bullets", runtime);
-    handleOpenClawQtInput("triage rank bugs by impact", runtime);
+    const init = handleOpenClawQtInput("/qt init", runtime);
+    assert.equal(init.result.code, "qt:init:initialized");
+    assert.match(init.text, /Next commands/i);
 
     const listed = handleOpenClawQtInput("/qt list", runtime);
     assert.equal(listed.result.code, "qt:list:listed");
-    assert.match(listed.text, /Found 2 task templates/);
+    assert.match(listed.text, /Found 4 task templates/);
 
-    const shown = handleOpenClawQtInput("/qt show summarize", runtime);
+    const shown = handleOpenClawQtInput("/qt show standup", runtime);
     assert.equal(shown.result.code, "qt:show:template");
-    assert.match(shown.text, /Template for summarize:/);
+    assert.match(shown.text, /Template for standup:/);
 
     const doctor = handleOpenClawQtInput("/qt doctor", runtime);
     assert.equal(doctor.result.code, "qt:doctor:status");

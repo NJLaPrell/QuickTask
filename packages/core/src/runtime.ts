@@ -1,4 +1,6 @@
 import { parseQtCommand } from "./parser.js";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import {
   checkTaskStoreHealth,
   createFileTaskStore,
@@ -22,8 +24,23 @@ type PendingProposal = {
   createdAtMs: number;
 };
 
+type PersistedProposalRecord = {
+  proposalId: string;
+  taskName: string;
+  oldTemplate: string;
+  proposedTemplate: string;
+  status: ImprovementProposalStatus;
+  createdAtMs: number;
+};
+
 const QT_RUNTIME_VERSION = "1.1.0";
 const MAX_PROPOSAL_CACHE_SIZE = 200;
+const STARTER_TEMPLATES: Array<{ taskName: string; instructions: string }> = [
+  { taskName: "standup", instructions: "Summarize yesterday/today/blockers in concise bullets." },
+  { taskName: "incident-triage", instructions: "Collect incident facts, impact, owner, and next action." },
+  { taskName: "release-notes", instructions: "Draft user-facing release notes from merged changes." },
+  { taskName: "pr-review", instructions: "Review pull requests for risks, regressions, and missing tests." }
+];
 const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
   create: {
     usage: ["/qt [task] [instructions]"],
@@ -38,17 +55,25 @@ const HELP_TOPICS: Record<string, { usage: string[]; message: string }> = {
       "/qt improve [task] [input]",
       "/qt improve <accept|reject|abandon> [task] [proposal-id]"
     ],
-    message: "Propose and manage template improvements for the current session."
+    message: "Propose and manage template improvements with restart-safe proposal state."
   },
   actions: {
     usage: ["/qt improve <accept|reject|abandon> [task] [proposal-id]"],
-    message: "Apply, reject, or abandon an in-session proposal."
+    message: "Apply, reject, or abandon a persisted active proposal."
   },
   discover: {
     usage: ["/qt list", "/qt show [task]", "/qt doctor"],
     message: "Discover templates and inspect local runtime health."
   }
 };
+
+function getRuntimeStatePaths(tasksDir: string): { stateDir: string; proposalsPath: string } {
+  const stateDir = path.resolve(tasksDir, "..", ".quicktask");
+  return {
+    stateDir,
+    proposalsPath: path.join(stateDir, "proposals.json")
+  };
+}
 
 export type CreateQtRuntimeOptions = {
   proposalTtlMs?: number;
@@ -64,6 +89,7 @@ export function createQtRuntime(
   let requestCounter = 0;
   const proposalTtlMs = options.proposalTtlMs ?? 30 * 60 * 1000;
   const now = options.now ?? (() => Date.now());
+  const statePaths = getRuntimeStatePaths(store.tasksDir);
 
   function nextRequestId(): string {
     requestCounter += 1;
@@ -96,15 +122,67 @@ export function createQtRuntime(
     return now() - proposal.createdAtMs > proposalTtlMs;
   }
 
-  function collectProposalGarbage(): void {
+  function loadPersistedProposals(): void {
+    if (!existsSync(statePaths.proposalsPath)) {
+      return;
+    }
+    try {
+      const records = JSON.parse(readFileSync(statePaths.proposalsPath, "utf8")) as
+        | PersistedProposalRecord[]
+        | undefined;
+      if (!Array.isArray(records)) {
+        return;
+      }
+      for (const record of records) {
+        if (
+          !record ||
+          typeof record.proposalId !== "string" ||
+          typeof record.taskName !== "string" ||
+          typeof record.oldTemplate !== "string" ||
+          typeof record.proposedTemplate !== "string" ||
+          typeof record.createdAtMs !== "number"
+        ) {
+          continue;
+        }
+        proposals.set(record.proposalId, {
+          taskName: record.taskName,
+          oldTemplate: record.oldTemplate,
+          proposedTemplate: record.proposedTemplate,
+          status: record.status,
+          createdAtMs: record.createdAtMs
+        });
+      }
+    } catch {
+      // Ignore malformed state and continue startup safely.
+    }
+  }
+
+  function persistProposals(): void {
+    mkdirSync(statePaths.stateDir, { recursive: true });
+    const payload: PersistedProposalRecord[] = [...proposals.entries()].map(([proposalId, proposal]) => ({
+      proposalId,
+      taskName: proposal.taskName,
+      oldTemplate: proposal.oldTemplate,
+      proposedTemplate: proposal.proposedTemplate,
+      status: proposal.status,
+      createdAtMs: proposal.createdAtMs
+    }));
+    const tempPath = `${statePaths.proposalsPath}.${process.pid}.${Date.now()}.tmp`;
+    writeFileSync(tempPath, JSON.stringify(payload, null, 2), "utf8");
+    renameSync(tempPath, statePaths.proposalsPath);
+  }
+
+  function collectProposalGarbage(): boolean {
+    let mutated = false;
     for (const [proposalId, proposal] of proposals) {
       if (isProposalExpired(proposal)) {
         proposals.delete(proposalId);
+        mutated = true;
       }
     }
 
     if (proposals.size <= MAX_PROPOSAL_CACHE_SIZE) {
-      return;
+      return mutated;
     }
 
     const finalizedByAge = [...proposals.entries()]
@@ -116,7 +194,14 @@ export function createQtRuntime(
         break;
       }
       proposals.delete(proposalId);
+      mutated = true;
     }
+    return mutated;
+  }
+
+  loadPersistedProposals();
+  if (collectProposalGarbage()) {
+    persistProposals();
   }
 
   return {
@@ -144,6 +229,7 @@ export function createQtRuntime(
             code: "qt:help",
             usage: [
               "/qt",
+              "/qt init",
               "/qt [task] [instructions]",
               "/qt/[task] [input]",
               "/qt improve [task] [input]",
@@ -162,6 +248,7 @@ export function createQtRuntime(
               code: "qt:help",
               usage: [
                 "/qt",
+                "/qt init",
                 "/qt [task] [instructions]",
                 "/qt/[task] [input]",
                 "/qt improve [task] [input]",
@@ -182,6 +269,7 @@ export function createQtRuntime(
               usage: [
                 "/qt help [create|run|improve|actions|discover]",
                 "/qt",
+                "/qt init",
                 "/qt list",
                 "/qt doctor"
               ],
@@ -195,6 +283,86 @@ export function createQtRuntime(
             usage: topic.usage,
             message: topic.message
           });
+        }
+
+        if (command.kind === "init") {
+          collectProposalGarbage();
+          const createdAssets: string[] = [];
+          const skippedAssets: string[] = [];
+          const warnings: string[] = [];
+          try {
+            const tasksDirExisted = existsSync(store.tasksDir);
+            mkdirSync(store.tasksDir, { recursive: true });
+            if (tasksDirExisted) {
+              skippedAssets.push("tasks/");
+            } else {
+              createdAssets.push("tasks/");
+            }
+
+            for (const starter of STARTER_TEMPLATES) {
+              const existing = getTaskTemplate(store, starter.taskName);
+              if (existing) {
+                skippedAssets.push(`tasks/${existing.filename}`);
+                continue;
+              }
+              try {
+                const created = saveTaskTemplate(
+                  store,
+                  createTaskTemplate(starter.taskName, starter.instructions)
+                );
+                createdAssets.push(`tasks/${created.filename}`);
+              } catch (error) {
+                warnings.push(
+                  `Failed to seed starter template "${starter.taskName}": ${
+                    error instanceof Error ? error.message : "unknown error"
+                  }`
+                );
+              }
+            }
+
+            const nextCommands = [
+              "/qt list",
+              "/qt show standup",
+              "/qt/standup today's updates",
+              "/qt improve standup include risks and blockers"
+            ];
+            const onlySkipped = createdAssets.length === 0 && warnings.length === 0;
+            if (warnings.length > 0) {
+              return finalizeResult(requestId, command.kind, {
+                kind: "init_status",
+                code: "qt:init:partial",
+                status: "partial",
+                createdAssets,
+                skippedAssets,
+                warnings,
+                nextCommands,
+                message: "QuickTask initialization completed with warnings."
+              });
+            }
+
+            return finalizeResult(requestId, command.kind, {
+              kind: "init_status",
+              code: onlySkipped ? "qt:init:already-initialized" : "qt:init:initialized",
+              status: onlySkipped ? "already_initialized" : "initialized",
+              createdAssets,
+              skippedAssets,
+              nextCommands,
+              message: onlySkipped
+                ? "QuickTask is already initialized."
+                : "QuickTask initialization completed."
+            });
+          } catch (error) {
+            return finalizeResult(requestId, command.kind, {
+              kind: "error",
+              code: "qt:init:failed",
+              diagnosticCode: "init-bootstrap-failure",
+              requestId,
+              message:
+                error instanceof Error
+                  ? `QuickTask initialization failed: ${error.message}`
+                  : "QuickTask initialization failed."
+            });
+          }
         }
 
         if (command.kind === "list") {
@@ -304,13 +472,14 @@ export function createQtRuntime(
               kind: "not_found",
               code: "qt:improve:proposal-not-found",
               taskName: command.taskName,
-              message: `No active proposal exists for ${command.taskName} with ID ${command.proposalId}. Proposals are session-scoped and may expire or be cleared after restart.`
+              message: `No active proposal exists for ${command.taskName} with ID ${command.proposalId}. It may be expired, finalized, or missing from persisted proposal state.`
             });
           }
 
           if (isProposalExpired(proposal)) {
             proposal.status = "expired";
             proposals.delete(command.proposalId);
+            persistProposals();
             return finalizeResult(requestId, command.kind, {
               kind: "improve_action",
               code: "qt:improve:proposal-expired",
@@ -341,7 +510,11 @@ export function createQtRuntime(
               body: proposal.proposedTemplate
             });
             proposal.status = "accepted";
-            collectProposalGarbage();
+            if (collectProposalGarbage()) {
+              persistProposals();
+            } else {
+              persistProposals();
+            }
             return finalizeResult(requestId, command.kind, {
               kind: "improve_action",
               code: "qt:improve:accept:applied",
@@ -354,7 +527,11 @@ export function createQtRuntime(
           }
 
           proposal.status = command.action === "reject" ? "rejected" : "abandoned";
-          collectProposalGarbage();
+          if (collectProposalGarbage()) {
+            persistProposals();
+          } else {
+            persistProposals();
+          }
           return finalizeResult(requestId, command.kind, {
             kind: "improve_action",
             code:
@@ -390,7 +567,9 @@ export function createQtRuntime(
           });
         }
 
-        collectProposalGarbage();
+        if (collectProposalGarbage()) {
+          persistProposals();
+        }
         const template = getTaskTemplate(store, command.taskName);
         if (!template) {
           return finalizeResult(requestId, command.kind, {
@@ -413,7 +592,11 @@ export function createQtRuntime(
           status: "proposed",
           createdAtMs: now()
         });
-        collectProposalGarbage();
+        if (collectProposalGarbage()) {
+          persistProposals();
+        } else {
+          persistProposals();
+        }
 
         return finalizeResult(requestId, command.kind, {
           kind: "improve_proposed",

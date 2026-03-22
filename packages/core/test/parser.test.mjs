@@ -80,6 +80,10 @@ test("parses contextual help command", () => {
   });
 });
 
+test("parses init command", () => {
+  assert.deepEqual(parseQtCommand("/qt init"), { kind: "init" });
+});
+
 test("parses improve command with task and input", () => {
   assert.deepEqual(parseQtCommand("/qt improve summarize favor action items"), {
     kind: "improve",

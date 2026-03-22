@@ -67,20 +67,60 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-22
-- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (completion + release)
-- Current milestone target: Phase 10 tasks completed, release readiness prepared, and release dispatched.
-- Phase objective now: finalize deferred enhancements, enforce governance automation, and close the phase with a production release.
+- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (`v1.0.0` hardening)
+- Current milestone target: Complete `v1.0.0` must-have scope, pass RC + release gates, and dispatch production release.
+- Phase objective now: close first-run UX gaps, lock restart-safe improve lifecycle behavior, and ship a stable `v1.0.0` baseline.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 0 tasks
-- Blocked tasks (`[!]`): none
+- Ready queue (`[p]`): 10 tasks
+- Blocked tasks (`[!]`): 1 task (`T131`)
 - Next tasks in order:
-  1. Run post-release verification and marketplace follow-through.
-  2. Promote next milestone backlog from ready-proposed queue.
-  3. Add/triage newly discovered work for the next phase.
+  1. T131 - rerun production release after release-significant changes are merged to `main`.
+  2. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
+  3. T116/T117/T118 - ship export/import + template-pack manifest flow.
+  4. T120 - add template eval harness scaffolding.
+  5. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
 - Definition of "phase complete" for current phase:
-  - Phase 9 planned tasks (`T060`, `T064`, `T068`, `T073`, `T074`, `T080`, `T082`, `T098`, `T099`, `T100`, `T075`, `T081`) are complete.
-  - No unresolved medium/high CI/release platform blockers remain.
+  - All `v1.0.0` execution plan tasks are `[x]` (task set listed below).
+  - Release dispatch task (`T131`) is complete with captured release workflow run evidence.
+
+## `v1.0.0` release execution plan
+
+Use this as the active board for release planning and go/no-go decisions.
+
+### Scope buckets
+
+- Must-have product scope for `v1.0.0` (ship before RC freeze):
+  - T101, T102, T103
+  - T105, T104
+  - T109, T110, T111
+- Must-have release execution scope for `v1.0.0`:
+  - T129, T130, T131
+- Should-have for `v1.0.0` (include only if must-have is complete and RC remains green):
+  - T106
+  - T128
+- Explicitly deferred to `1.1.0+` by default:
+  - T112, T113, T114
+  - T116, T117, T118
+  - T120, T123, T124, T126
+
+### Ordered delivery waves
+
+1. Wave A - `/qt init` GA path: T101 -> T102 -> T103
+2. Wave B - onboarding and docs: T105 -> T104
+3. Wave C - improve proposal durability: T109 -> T110 -> T111
+4. Wave D (optional) - adoption polish: T106, T128
+5. Wave E - stabilization and RC/release: T129 -> T130 -> T131
+6. Post-`1.0.0` wave - deferred scope unless explicitly promoted: T112/T113/T114, T116/T117/T118, T120, T123, T124, T126
+
+### Execution plan completion gate (`v1.0.0`)
+
+The `v1.0.0` execution plan is complete when every task in this set is `[x]`:
+
+- Product must-have task set: `T101`, `T102`, `T103`, `T105`, `T104`, `T109`, `T110`, `T111`
+- Release execution task set: `T129`, `T130`, `T131`
+
+Validation expectations are enforced within those tasks' acceptance criteria and evidence blocks.
 
 ## Milestone execution order
 
@@ -145,7 +185,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ### Phase 10 - Operational polish and deferred enhancements
 
 - Delivery outcome: Deferred enhancements, lifecycle polish, and governance automation are delivered after core release and product milestones are stable.
-- Status: complete and archived.
+- Status: archived base scope complete; follow-on backlog active for `v1.0.0` completion.
 - Planned task IDs (in order): T057, T058, T059, T063, T087, T088, T089, T090, T092, T067, T069, T072, T091, T094, T095, T097, T078, T079, T093, T096.
 - Archived task IDs: T057, T058, T059, T063, T087, T088, T089, T090, T092, T067, T069, T072, T091, T094, T095, T097, T078, T079, T093, T096.
 
@@ -155,7 +195,16 @@ Pending work below is triaged and ready for implementation.
 
 ### Proposed
 
-- _Empty._
+- [p] T112 - Define template variable syntax and contract (P1)
+- [p] T113 - Implement template variable interpolation in core runtime (P1)
+- [p] T114 - Add adapter prompts for missing template variables (P2)
+- [p] T116 - Add task export command and runtime behavior (P1)
+- [p] T117 - Add task import command with conflict policies (P1)
+- [p] T118 - Define template-pack manifest and local resolution rules (P2)
+- [p] T120 - Create template eval harness scaffolding (P1)
+- [p] T123 - Define low-risk fast-lane workflow policy (P1)
+- [p] T124 - Add governance doc simplification and canonicalization pass (P2)
+- [p] T126 - Add privacy-safe product feedback loop for UX friction (P2)
 
 ### Intake queue
 
@@ -167,11 +216,467 @@ Pending work below is triaged and ready for implementation.
 
 ### Blocked
 
-- _Empty._
+- [!] T131 - Dispatch and verify `v1.0.0` production release workflow (P0)
 
 ## Proposed task details
 
-- _None. Archived records are tracked in `TASKS_ARCHIVED.md`._
+### [x] T101 - Specify `/qt init` command contract and result codes
+
+- Status: [x]
+- Priority: P0
+- Goal: Define deterministic command/result behavior for first-run initialization.
+- Files: `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, `packages/core/src/types.ts`
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add `/qt init` command form and result-code set.
+  2. Define payload fields for success, partial success, and failure.
+  3. Add drift-check notes for adapter parity.
+- Acceptance criteria:
+  - Contract docs include `/qt init` command forms and result semantics.
+  - Result codes include deterministic success/error variants for init flow.
+- Validation evidence:
+  - Added `/qt init` command form, approved command-surface policy entry, and deterministic init result-code contract in `docs/qt-command-result-contract.md`.
+  - Added init payload field requirements and adapter rendering expectations in `docs/qt-adapter-rendering-matrix.md`.
+  - Added `init_status` runtime result typing (`qt:init:initialized`, `qt:init:already-initialized`, `qt:init:partial`) and explicit `qt:init:failed` error typing in `packages/core/src/types.ts`.
+  - Validation run: `pnpm check && pnpm test` (pass, 2026-03-22).
+
+### [x] T102 - Implement core `/qt init` runtime flow
+
+- Status: [x]
+- Priority: P0
+- Goal: Create `tasks/`, seed templates, run diagnostics, and return guided next steps.
+- Files: `packages/core/src/*`, `tasks/*.md` (seed templates), `packages/core/test/*`
+- Dependencies: T101
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add parser/runtime handling for `/qt init`.
+  2. Create idempotent directory/bootstrap behavior and seed template creation.
+  3. Return actionable next-command guidance in result payload.
+- Acceptance criteria:
+  - `/qt init` is idempotent and safe on existing repositories.
+  - Runtime returns created/skipped assets and recommended next commands.
+  - Core tests cover first-run and repeat-run behavior.
+- Validation evidence:
+  - Added parser/runtime `/qt init` handling with idempotent asset bootstrap in `packages/core/src/parser.ts` and `packages/core/src/runtime.ts`.
+  - Added deterministic init payload/status handling and starter-template guidance in `packages/core/src/types.ts` and `packages/core/src/rendering.ts`.
+  - Added core runtime coverage for init first-run/repeat-run in `packages/core/test/runtime.test.mjs`.
+  - Validation run: `pnpm test` (pass, 2026-03-22).
+
+### [x] T103 - Add adapter rendering for `/qt init` results
+
+- Status: [x]
+- Priority: P0
+- Goal: Ensure all hosts render init outcomes consistently and clearly.
+- Files: `packages/vscode-extension/*`, `packages/openclaw-plugin/*`, `.cursor/commands/qt.md`, adapter tests
+- Dependencies: T101, T102
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add result-code mapping for init outcomes in each adapter.
+  2. Render starter-template and next-command instructions with host-appropriate UX.
+  3. Add unknown-code-safe fallback coverage for init variants.
+- Acceptance criteria:
+  - VS Code, Cursor, and OpenClaw all render init paths without adapter-specific drift.
+  - Adapter tests cover success, idempotent repeat, and error outputs.
+- Validation evidence:
+  - Added init rendering support in shared renderer for `qt:init:*` codes in `packages/core/src/rendering.ts`.
+  - Added VS Code/OpenClaw adapter init coverage in `packages/vscode-extension/test/qt-adapter.test.mjs` and `packages/openclaw-plugin/test/qt-adapter.test.mjs`.
+  - Updated Cursor command guidance for init/persisted proposal lifecycle in `.cursor/commands/qt.md`.
+
+### [x] T104 - Add guided first-run host onboarding flow
+
+- Status: [x]
+- Priority: P1
+- Goal: Make first successful task creation/run/improve happen in under two minutes.
+- Files: `packages/vscode-extension/*`, `packages/openclaw-plugin/*`, `.cursor/commands/qt.md`, `README.md`
+- Dependencies: T102, T103
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add host-first-run messaging that guides create -> run -> improve lifecycle.
+  2. Include command snippets users can copy directly.
+  3. Add fallback guidance when host UX controls are limited.
+- Acceptance criteria:
+  - First-run flows include clear progressive guidance in each host.
+  - Help/onboarding content points users to one canonical happy path.
+- Validation evidence:
+  - Added first-run next-command guidance in `/qt init` payload and rendering (`packages/core/src/runtime.ts`, `packages/core/src/rendering.ts`).
+  - Updated command onboarding guidance in `.cursor/commands/qt.md` and user flow in `README.md`.
+
+### [x] T105 - Rewrite README with two-minute quickstart
+
+- Status: [x]
+- Priority: P0
+- Goal: Reduce install-to-value time by leading docs with a minimal guided path.
+- Files: `README.md`, `docs/release-assets-and-verification.md`
+- Dependencies: T101, T102
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add a top-of-file "2-minute quickstart" section.
+  2. Separate host install paths into concise, visual steps.
+  3. Link deeper policy docs after user-facing onboarding content.
+- Acceptance criteria:
+  - README starts with install + first-run commands before governance material.
+  - Users can complete first create/run/improve flow using quickstart only.
+- Validation evidence:
+  - Added top-level `2-Minute Quickstart` workflow in `README.md` with init/list/show/run/improve flow.
+  - Kept release/install guidance linked from the updated quickstart.
+
+### [x] T106 - Add bundled starter template set
+
+- Status: [x]
+- Priority: P1
+- Goal: Provide immediately useful templates for common workflows.
+- Files: `tasks/*.md` (starter set), `README.md`, docs as needed
+- Dependencies: T102
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define initial curated templates (standup, incident triage, release notes, PR review).
+  2. Ensure names normalize cleanly and avoid collisions.
+  3. Document expected customization guidance.
+- Acceptance criteria:
+  - Starter set ships with clear purpose and user-facing examples.
+  - Templates are high-signal and compatible with current command lifecycle.
+- Validation evidence:
+  - Added bundled starter template seeding (`standup`, `incident-triage`, `release-notes`, `pr-review`) in `packages/core/src/runtime.ts`.
+  - Added adapter/core test expectations for seeded template discovery.
+
+### [x] T109 - Persist improve proposals to disk-backed store
+
+- Status: [x]
+- Priority: P0
+- Goal: Keep proposal lifecycle stable across runtime/session resets.
+- Files: `packages/core/src/*`, `packages/core/test/*`, docs contracts
+- Dependencies: T101
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add proposal persistence model under a repo-local metadata directory.
+  2. Store proposal state transitions with integrity-safe writes.
+  3. Guard against sensitive data leakage in diagnostics/logging.
+- Acceptance criteria:
+  - Proposals survive runtime restart and remain actionable within TTL window.
+  - Persistence behavior is documented and tested.
+- Validation evidence:
+  - Added disk-backed proposal state read/write under runtime metadata directory in `packages/core/src/runtime.ts`.
+  - Added restart lifecycle coverage in `packages/core/test/runtime.test.mjs`.
+
+### [x] T110 - Implement proposal TTL cleanup and stale recovery
+
+- Status: [x]
+- Priority: P1
+- Goal: Bound proposal-state growth and handle stale states predictably.
+- Files: `packages/core/src/*`, `packages/core/test/*`, contract docs
+- Dependencies: T109
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add deterministic expiration and cleanup routines.
+  2. Define stale-state remediation semantics and messages.
+  3. Add tests for cleanup boundaries.
+- Acceptance criteria:
+  - Expired proposals are purged safely without breaking valid active proposals.
+  - Runtime returns clear action guidance when proposals expire.
+- Validation evidence:
+  - Added deterministic TTL + bounded-size cleanup behavior with persisted-state compaction in `packages/core/src/runtime.ts`.
+  - Added stale/expired behavior tests in `packages/core/test/runtime.test.mjs`.
+
+### [x] T111 - Restore proposal actions after runtime restart
+
+- Status: [x]
+- Priority: P1
+- Goal: Ensure accept/reject/abandon actions work for persisted active proposals.
+- Files: `packages/core/src/*`, adapters, tests
+- Dependencies: T109, T110
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Load active proposal index on runtime startup.
+  2. Wire action commands to hydrated proposal state.
+  3. Add adapter guidance for restored proposals.
+- Acceptance criteria:
+  - Post-restart proposal action commands succeed when proposal is valid.
+  - Tests cover restart boundaries and finalized/expired behavior.
+- Validation evidence:
+  - Added startup hydration of active proposals from persisted store in `packages/core/src/runtime.ts`.
+  - Added restart accept-action coverage in `packages/core/test/runtime.test.mjs`.
+  - Updated lifecycle contract wording in `docs/qt-command-result-contract.md`.
+
+### [p] T112 - Define template variable syntax and contract
+
+- Status: [p]
+- Priority: P1
+- Goal: Introduce reusable parameterized templates with deterministic syntax.
+- Files: `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, core types
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Specify variable token syntax and escaping rules.
+  2. Define runtime behavior for missing/defaulted variables.
+  3. Document backward compatibility with existing templates.
+- Acceptance criteria:
+  - Contract docs define syntax, defaults, and error modes.
+  - Existing non-parameterized templates remain valid.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T113 - Implement template variable interpolation in core runtime
+
+- Status: [p]
+- Priority: P1
+- Goal: Execute parameterized templates safely and predictably during run/improve.
+- Files: `packages/core/src/*`, `packages/core/test/*`
+- Dependencies: T112
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add variable extraction and interpolation engine.
+  2. Enforce validation for required variables.
+  3. Preserve deterministic rendering output for adapters.
+- Acceptance criteria:
+  - Runtime resolves variables correctly with clear failure signals when missing.
+  - Core tests cover defaults, required fields, and malformed variables.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T114 - Add adapter prompts for missing template variables
+
+- Status: [p]
+- Priority: P2
+- Goal: Make variable-enabled templates easy to run without memorizing syntax.
+- Files: adapters, `.cursor/commands/qt.md`, adapter tests
+- Dependencies: T112, T113
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Render missing-variable prompts with exact completion examples.
+  2. Keep host behavior aligned while respecting host UX limits.
+  3. Add tests for missing/default variable UX flows.
+- Acceptance criteria:
+  - Missing-variable failures include a clear re-run command with values.
+  - Host renderers preserve parity with contract docs.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T116 - Add task export command and runtime behavior
+
+- Status: [p]
+- Priority: P1
+- Goal: Enable portable sharing of task templates from one repository/host to another.
+- Files: core parser/runtime, contract docs, tests
+- Dependencies: T101
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define export command shape and payload.
+  2. Implement deterministic export format with metadata.
+  3. Add tests for single and batch export cases.
+- Acceptance criteria:
+  - Users can export template definitions without hand-copying markdown.
+  - Export output is documented and stable for import workflows.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T117 - Add task import command with conflict policies
+
+- Status: [p]
+- Priority: P1
+- Goal: Support controlled template ingestion with safe collision handling.
+- Files: core runtime/store, contract docs, tests
+- Dependencies: T116
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define import command and conflict strategy options.
+  2. Implement no-overwrite default with explicit override mode.
+  3. Add detailed error/recovery messaging for malformed imports.
+- Acceptance criteria:
+  - Import supports safe default behavior and explicit override path.
+  - Conflict outcomes are deterministic and tested.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T118 - Define template-pack manifest and local resolution rules
+
+- Status: [p]
+- Priority: P2
+- Goal: Provide an organized unit for distributing sets of templates.
+- Files: docs contracts, core support utilities, tests
+- Dependencies: T116, T117
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define pack manifest schema and validation rules.
+  2. Implement local pack discovery/resolution behavior.
+  3. Add compatibility/versioning strategy for manifest evolution.
+- Acceptance criteria:
+  - Manifest schema is documented with examples and validation checks.
+  - Runtime can resolve valid packs and reject invalid manifests safely.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T120 - Create template eval harness scaffolding
+
+- Status: [p]
+- Priority: P1
+- Goal: Introduce measurable quality checks for templates over time.
+- Files: `tools/*` or `scripts/*`, CI workflow files, docs
+- Dependencies: T106
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define eval dataset format and pass/fail thresholds.
+  2. Add baseline harness command integrated into CI optional checks.
+  3. Document how to add new eval cases.
+- Acceptance criteria:
+  - Repository includes runnable eval harness with deterministic output.
+  - Maintainers can add new template eval scenarios with documented steps.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T123 - Define low-risk fast-lane workflow policy
+
+- Status: [p]
+- Priority: P1
+- Goal: Reduce process overhead for small low-risk changes without weakening release gates.
+- Files: `docs/workflows/task-pr-delivery-workflow.md`, policy docs, contributor guide
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define eligibility criteria for fast-lane changes.
+  2. Specify reduced validation minimum and approval path.
+  3. Add guardrails preventing fast-lane use for release-critical paths.
+- Acceptance criteria:
+  - Policy clearly identifies what qualifies and what is excluded.
+  - Contributor docs include a deterministic decision table.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T124 - Add governance doc simplification and canonicalization pass
+
+- Status: [p]
+- Priority: P2
+- Goal: Lower contributor cognitive load by reducing policy duplication.
+- Files: `docs/governance-map.md`, policy docs, `CONTRIBUTORS.md`, `.cursor/rules/*.mdc`
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Audit duplicated guidance across policy sources.
+  2. Collapse repeated text into canonical docs plus concise references.
+  3. Add checks to prevent future policy drift.
+- Acceptance criteria:
+  - Governance docs are shorter and still auditable.
+  - Duplicate/conflicting guidance is reduced and linked to one source of truth.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T126 - Add privacy-safe product feedback loop for UX friction
+
+- Status: [p]
+- Priority: P2
+- Goal: Capture actionable UX pain without collecting sensitive user content.
+- Files: core diagnostics policy/implementation, docs, tests
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define telemetry-lite UX events consistent with privacy guardrails.
+  2. Add aggregate reporting path for onboarding/error friction signals.
+  3. Add tests proving no raw prompt/template body leakage.
+- Acceptance criteria:
+  - Product feedback signals exist for key UX drop-off points.
+  - Privacy constraints remain enforced and tested.
+- Validation evidence:
+  - <add after implementation>
+
+### [x] T128 - Add contributor onboarding quickstart and first-task path
+
+- Status: [x]
+- Priority: P1
+- Goal: Decrease time-to-first-contribution for new maintainers/contributors.
+- Files: `CONTRIBUTORS.md`, `README.md`, docs templates/checklists
+- Dependencies: T123, T124
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add a concise "first 30 minutes" contributor guide.
+  2. Provide first-task playbook with branch/PR/check expectations.
+  3. Add troubleshooting tips for common local setup failures.
+- Acceptance criteria:
+  - New contributors can complete first scoped task without policy scavenger hunt.
+  - Onboarding docs include direct links to canonical workflow references.
+- Validation evidence:
+  - Added `First 30 minutes` onboarding path and troubleshooting guidance in `CONTRIBUTORS.md`.
+  - Linked first-task branch/validation expectations in contributor quickstart flow.
+
+### [x] T129 - Run `v1.0.0` stabilization and release-candidate validation loop
+
+- Status: [x]
+- Priority: P0
+- Goal: Confirm release candidate quality on `main` after must-have product tasks land.
+- Files: `TASKS.md`, `docs/release-readiness-report.md`, GitHub Actions RC workflow evidence
+- Dependencies: T102, T103, T105, T104, T109, T110, T111
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run `pnpm release:prepare` and resolve any new medium/high findings for current release phase.
+  2. Run `Release Candidate Validation` workflow on `main`.
+  3. If release-significant changes merge after RC, re-run RC and update evidence.
+- Acceptance criteria:
+  - Readiness report is `READY` with no unresolved medium/high findings for current phase (or explicit accepted-risk records).
+  - Latest RC run for candidate commit set is successful and captured in task evidence.
+- Validation evidence:
+  - Readiness run: `pnpm release:prepare` -> `READY` (`docs/release-readiness-report.md`, 2026-03-22T19:22:21.624Z).
+  - RC workflow run succeeded on `main`: [run 23410616375](https://github.com/NJLaPrell/QuickTask/actions/runs/23410616375).
+
+### [x] T130 - Prepare `v1.0.0` release handoff inputs and docs-sync decisions
+
+- Status: [x]
+- Priority: P0
+- Goal: Produce a complete, auditable release handoff payload before final dispatch.
+- Files: `TASKS.md`, `README.md`, docs sync inputs/evidence in release handoff notes
+- Dependencies: T129
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Confirm docs-sync gate inputs: `readme_status`, `docs_status`, `docs_sync_notes`.
+  2. Confirm pending changesets match intended `v1.0.0` scope.
+  3. Capture final `rc_run_id` and release handoff command/inputs in evidence.
+- Acceptance criteria:
+  - Release handoff inputs are complete, valid, and recorded.
+  - Docs-sync decisions are explicit and justified when `no-change` is used.
+- Validation evidence:
+  - Handoff inputs prepared with explicit docs sync decisions: `readme_status=updated`, `docs_status=updated`, `docs_sync_notes="phase-10 init and lifecycle updates"`.
+  - Pending changesets confirmed (`Pending changesets: 1`) in readiness report.
+  - Captured final `rc_run_id=23410616375` and dispatch command via `pnpm release:handoff`.
+
+### [!] T131 - Dispatch and verify `v1.0.0` production release workflow
+
+- Status: [!]
+- Priority: P0
+- Goal: Execute the production release workflow and confirm `v1.0.0` publication outcomes.
+- Files: `TASKS.md`, release workflow run evidence, tag/release artifact evidence
+- Dependencies: T130
+- Blocked by: Release workflow run [23410634350](https://github.com/NJLaPrell/QuickTask/actions/runs/23410634350) failed at "Fail when no release changes were produced" because release-significant updates were not yet merged to `main`.
+- Unblock plan: Merge current release-significant changes to `main`, re-run `Release Candidate Validation` to capture fresh `rc_run_id`, then dispatch `Release` again with same docs-sync inputs.
+- Steps:
+  1. Dispatch `Release` workflow from `main` with validated inputs and `rc_run_id`.
+  2. Verify workflow succeeds through release gates, tag creation, and GitHub Release publication.
+  3. Record run URL/ID, created tag, and key artifact verification evidence in task notes.
+- Acceptance criteria:
+  - `v1.0.0` release workflow run succeeds and publishes release/tag outputs.
+  - Evidence in `TASKS.md` is sufficient for audit and post-release follow-up.
+- Validation evidence:
+  - Dispatch command executed: `pnpm release:handoff -- --readme-status updated --docs-status updated --docs-sync-notes "phase-10 init and lifecycle updates" --rc-run-id 23410616375`.
+  - Release workflow run URL: [run 23410634350](https://github.com/NJLaPrell/QuickTask/actions/runs/23410634350) (failed at no-release-diff gate; no tag/release published).
 
 ## Archive cadence
 

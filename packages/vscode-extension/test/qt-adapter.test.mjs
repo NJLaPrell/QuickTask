@@ -72,17 +72,18 @@ test("renders list/show/doctor command outputs", () => {
   const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-vscode-adapter-"));
   try {
     const runtime = createVsCodeQtRuntime({ tasksDir });
-    handleQtChatPrompt("/qt summarize write concise bullets", runtime);
-    handleQtChatPrompt("/qt triage rank bugs by impact", runtime);
+    const init = handleQtChatPrompt("/qt init", runtime);
+    assert.equal(init.result.code, "qt:init:initialized");
+    assert.match(init.markdown, /Next commands/i);
 
     const listed = handleQtChatPrompt("/qt list", runtime);
     assert.equal(listed.result.code, "qt:list:listed");
-    assert.match(listed.markdown, /Found 2 task templates/);
-    assert.match(listed.markdown, /`summarize`/);
+    assert.match(listed.markdown, /Found 4 task templates/);
+    assert.match(listed.markdown, /`standup`/);
 
-    const shown = handleQtChatPrompt("/qt show summarize", runtime);
+    const shown = handleQtChatPrompt("/qt show standup", runtime);
     assert.equal(shown.result.code, "qt:show:template");
-    assert.match(shown.markdown, /Template for `summarize`/);
+    assert.match(shown.markdown, /Template for `standup`/);
 
     const doctor = handleQtChatPrompt("/qt doctor", runtime);
     assert.equal(doctor.result.code, "qt:doctor:status");

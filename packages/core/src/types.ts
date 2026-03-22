@@ -32,6 +32,10 @@ export type QtHelpCommand = {
   topic?: string;
 };
 
+export type QtInitCommand = {
+  kind: "init";
+};
+
 export type QtImproveCommand = {
   kind: "improve";
   taskName: string;
@@ -64,6 +68,7 @@ export type QtCommand =
   | QtShowCommand
   | QtDoctorCommand
   | QtHelpCommand
+  | QtInitCommand
   | QtImproveCommand
   | QtImproveActionCommand
   | QtIncompleteCommand;
@@ -88,6 +93,8 @@ export type ImprovementProposalStatus =
   | "abandoned"
   | "expired";
 
+export type QtInitStatus = "initialized" | "already_initialized" | "partial";
+
 export type RuntimeDiagnosticEvent = {
   requestId: string;
   timestamp: string;
@@ -111,6 +118,16 @@ export type QtRuntimeResult =
       code: "qt:help";
       usage: string[];
       message?: string;
+    }
+  | {
+      kind: "init_status";
+      code: "qt:init:initialized" | "qt:init:already-initialized" | "qt:init:partial";
+      status: QtInitStatus;
+      createdAssets: string[];
+      skippedAssets: string[];
+      warnings?: string[];
+      nextCommands: string[];
+      message: string;
     }
   | {
       kind: "clarification";
@@ -188,8 +205,8 @@ export type QtRuntimeResult =
     }
   | {
       kind: "error";
-      code: "qt:storage:error" | "qt:parse:error";
-      diagnosticCode: "storage-io-failure" | "parse-invalid-input";
+      code: "qt:storage:error" | "qt:parse:error" | "qt:init:failed";
+      diagnosticCode: "storage-io-failure" | "parse-invalid-input" | "init-bootstrap-failure";
       requestId: string;
       message: string;
     }

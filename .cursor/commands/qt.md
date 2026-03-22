@@ -13,6 +13,7 @@ Approved command surface (current):
 
 - `/qt`
 - `/qt help [create|run|improve|actions|discover]`
+- `/qt init`
 - `/qt [task] [instructions]`
 - `/qt/[task] [input]`
 - `/qt improve [task] [input]`
@@ -34,5 +35,5 @@ Execution requirements:
 Cursor-specific limits (documented):
 
 - Cursor command files are prompt wrappers, not a native runtime host process.
-- Proposal/session state is runtime-session scoped; if session context resets, proposal actions can return `qt:improve:proposal-not-found`.
+- Proposal state persists on disk under QuickTask runtime metadata; expired/finalized IDs can still return `qt:improve:proposal-not-found`.
 - When host UX controls are unavailable, present clear next-command guidance (for example accept/reject/abandon forms) in plain text.
