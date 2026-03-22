@@ -13,8 +13,13 @@ When the user asks to complete a task, follow this loop by default:
 4. Review the PR and leave a findings-first comment.
 5. If review finds blockers, fix, commit, push, comment, and re-review.
 6. Merge only when required checks are green and no blockers remain.
-7. Update `TASKS.md` status/evidence and `Current execution state`, then summarize completion.
-8. Archive only during archive cadence by moving `[x]` records to `TASKS_ARCHIVED.md` as `[h]`.
+7. After merge, clean up task branches and local git state:
+   - delete merged remote branch (or enable merge-time branch deletion),
+   - delete local task branch if present,
+   - switch local checkout to `main`,
+   - fast-forward local `main` from `origin/main`.
+8. Update `TASKS.md` status/evidence and `Current execution state`, then summarize completion.
+9. Archive only during archive cadence by moving `[x]` records to `TASKS_ARCHIVED.md` as `[h]`.
 
 ## Review comment format
 
@@ -37,3 +42,4 @@ When the user asks to complete a task, follow this loop by default:
 - Use GitHub MCP tools first for PR operations; fall back to CLI only when MCP is unavailable.
 - If the user requests a different flow, follow user direction.
 - If task status is `[!]`, include explicit blocker + unblock plan before PR merge recommendation.
+- Post-merge branch cleanup and local `main` reset are default unless user overrides.

@@ -16,9 +16,14 @@ This workflow applies to all tasks unless the user explicitly overrides it.
 6. Merge to `main` only when:
    - required checks are green (tests, typecheck, lint/format),
    - no blocking findings remain.
-7. Update `TASKS.md` status/evidence and `Current execution state`, then provide a user summary.
-8. Archive completed records during archive cadence by moving them to `TASKS_ARCHIVED.md`.
-9. After task closure, review the implemented changes for scope impact; create follow-up tasks or update existing tasks in `TASKS.md` when gaps are discovered.
+7. After merge, perform branch cleanup and local repo reset:
+   - delete the merged remote branch (or use merge-time branch deletion),
+   - delete the local task branch if present,
+   - switch local repo back to `main`,
+   - fast-forward sync local `main` from `origin/main`.
+8. Update `TASKS.md` status/evidence and `Current execution state`, then provide a user summary.
+9. Archive completed records during archive cadence by moving them to `TASKS_ARCHIVED.md`.
+10. After task closure, review the implemented changes for scope impact; create follow-up tasks or update existing tasks in `TASKS.md` when gaps are discovered.
 
 ## Required automation behavior for AI
 
@@ -27,6 +32,7 @@ This workflow applies to all tasks unless the user explicitly overrides it.
 - Do not merge with unresolved blockers.
 - Use Conventional Commit messages and task-scoped branch names.
 - Use GitHub MCP tools first for PR actions and comments; use CLI only when MCP is unavailable.
+- Treat post-merge branch cleanup + local `main` reset as default completion behavior unless the user requests otherwise.
 
 ## PR comment expectations
 
