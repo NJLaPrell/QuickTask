@@ -19,6 +19,36 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
           style === "markdown" ? `- ${inlineCode(style, entry)}` : `- ${entry}`
         )
       ]);
+    case "qt:init:initialized":
+    case "qt:init:already-initialized":
+    case "qt:init:partial":
+      return joinLines([
+        result.message,
+        result.createdAssets.length
+          ? `Created assets: ${
+              style === "markdown"
+                ? result.createdAssets.map((asset) => inlineCode(style, asset)).join(", ")
+                : result.createdAssets.join(", ")
+            }`
+          : "Created assets: (none)",
+        result.skippedAssets.length
+          ? `Skipped assets: ${
+              style === "markdown"
+                ? result.skippedAssets.map((asset) => inlineCode(style, asset)).join(", ")
+                : result.skippedAssets.join(", ")
+            }`
+          : "Skipped assets: (none)",
+        "Next commands:",
+        ...result.nextCommands.map((command) =>
+          style === "markdown" ? `- ${inlineCode(style, command)}` : `- ${command}`
+        ),
+        result.code === "qt:init:partial" && result.warnings?.length
+          ? "Warnings:\n" +
+            result.warnings
+              .map((warning) => (style === "markdown" ? `- ${warning}` : `- ${warning}`))
+              .join("\n")
+          : ""
+      ]);
     case "qt:create:clarify":
     case "qt:create:already-exists":
     case "qt:incomplete":
@@ -113,6 +143,7 @@ export function formatQtRuntimeResult(result: QtRuntimeResult, style: QtRenderSt
       return result.message;
     case "qt:parse:error":
     case "qt:storage:error":
+    case "qt:init:failed":
       return style === "markdown"
         ? `${result.message}\n\nRequest ID: ${inlineCode(style, result.requestId)}`
         : `${result.message} (request: ${result.requestId})`;

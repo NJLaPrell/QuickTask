@@ -14,6 +14,7 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 
 - `/qt` - show command help.
 - `/qt help [topic]` - show contextual help (`create`, `run`, `improve`, `actions`, `discover`).
+- `/qt init` - initialize QuickTask first-run assets and guidance.
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task.
 - `/qt improve [task] [input]` - propose an improvement.
@@ -40,6 +41,7 @@ The approved `/qt` command surface is intentionally minimal:
 
 - help (`/qt`)
 - contextual help (`/qt help [topic]`)
+- init/bootstrap (`/qt init`)
 - create (`/qt [task] [instructions]`)
 - run (`/qt/[task] [input]`)
 - improve lifecycle (`/qt improve ...`, accept/reject/abandon)
@@ -52,6 +54,9 @@ Additional command expansions are deferred by default and require explicit re-ap
 `QtRuntimeResult` may return the following codes:
 
 - `qt:help`
+- `qt:init:initialized`
+- `qt:init:already-initialized`
+- `qt:init:partial`
 - `qt:create:clarify`
 - `qt:create:already-exists`
 - `qt:create:created`
@@ -69,16 +74,34 @@ Additional command expansions are deferred by default and require explicit re-ap
 - `qt:improve:abandon:recorded`
 - `qt:improve:proposal-expired`
 - `qt:improve:already-finalized`
+- `qt:init:failed`
 - `qt:parse:error`
 - `qt:storage:error`
 
+### `/qt init` result payload contract
+
+`/qt init` returns deterministic status codes so adapters can render first-run flows consistently:
+
+- `qt:init:initialized`
+  - Meaning: first-run bootstrap completed and required assets were created.
+  - Required fields: `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message`.
+- `qt:init:already-initialized`
+  - Meaning: idempotent repeat run; required assets were already present.
+  - Required fields: `status`, `createdAssets[]`, `skippedAssets[]`, `nextCommands[]`, `message`.
+- `qt:init:partial`
+  - Meaning: bootstrap completed with non-fatal skips or warnings that need user attention.
+  - Required fields: `status`, `createdAssets[]`, `skippedAssets[]`, `warnings[]`, `nextCommands[]`, `message`.
+- `qt:init:failed`
+  - Meaning: bootstrap could not complete due to storage/setup failure.
+  - Required fields: `diagnosticCode`, `requestId`, `message`.
+
 ## Proposal lifecycle storage policy
 
-- Improve proposals are session-scoped in runtime memory.
-- Proposals are not persisted across runtime restarts.
+- Improve proposals are persisted to `.quicktask/proposals.json`.
+- Active proposals are restored on runtime startup when not expired.
 - Proposal actions use a TTL window (default 30 minutes in runtime) and return `qt:improve:proposal-expired` when stale.
-- When no active proposal exists (including restart/lifecycle reset), runtime returns `qt:improve:proposal-not-found`.
-- Expired proposals and surplus finalized proposals are garbage-collected to keep in-memory proposal state bounded.
+- When no active proposal exists (expired/finalized/missing), runtime returns `qt:improve:proposal-not-found`.
+- Expired proposals and surplus finalized proposals are garbage-collected to keep persisted proposal state bounded.
 
 ## Diagnostics and privacy policy
 

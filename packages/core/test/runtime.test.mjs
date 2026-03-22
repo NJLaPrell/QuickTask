@@ -24,6 +24,7 @@ test("returns help for /qt", () => {
     assert.equal(result.code, "qt:help");
     assert.deepEqual(result.usage, [
       "/qt",
+      "/qt init",
       "/qt [task] [instructions]",
       "/qt/[task] [input]",
       "/qt improve [task] [input]",
@@ -31,6 +32,23 @@ test("returns help for /qt", () => {
       "/qt show [task]",
       "/qt doctor"
     ]);
+  } finally {
+    cleanup();
+  }
+});
+
+test("init command is idempotent and returns next-step guidance", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const first = runtime.handle("/qt init");
+    assert.equal(first.kind, "init_status");
+    assert.equal(first.code, "qt:init:initialized");
+    assert.ok(first.createdAssets.length > 0);
+    assert.ok(first.nextCommands.includes("/qt list"));
+
+    const second = runtime.handle("/qt init");
+    assert.equal(second.kind, "init_status");
+    assert.equal(second.code, "qt:init:already-initialized");
   } finally {
     cleanup();
   }
@@ -325,7 +343,7 @@ test("improve lifecycle handles proposal not found", () => {
   }
 });
 
-test("improve lifecycle proposal IDs are session-scoped across restart", () => {
+test("improve lifecycle proposals are restored across restart", () => {
   const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-runtime-session-"));
   try {
     const runtimeA = createQtRuntime(createFileTaskStore({ tasksDir }));
@@ -335,9 +353,8 @@ test("improve lifecycle proposal IDs are session-scoped across restart", () => {
 
     const runtimeB = createQtRuntime(createFileTaskStore({ tasksDir }));
     const result = runtimeB.handle(`/qt improve accept summarize ${proposal.proposalId}`);
-    assert.equal(result.kind, "not_found");
-    assert.equal(result.code, "qt:improve:proposal-not-found");
-    assert.match(result.message, /session-scoped/);
+    assert.equal(result.kind, "improve_action");
+    assert.equal(result.code, "qt:improve:accept:applied");
   } finally {
     rmSync(tasksDir, { recursive: true, force: true });
   }

@@ -13,28 +13,38 @@ QuickTask gives you a single `/qt` command family to create, run, and iterativel
 - **Host-agnostic core**: command parsing and runtime behavior live in one shared package.
 - **Deterministic contracts**: command and result shapes are documented for adapter implementations.
 
-## Quick Start (Repository)
+## 2-Minute Quickstart
 
-QuickTask is currently development-focused. Use these steps to run checks and explore behavior locally.
+Use this path to get first value quickly:
 
-### Prerequisites
-
-- Node.js current LTS
-- `pnpm` 10.x
-
-### Install and validate
+1. Install dependencies:
 
 ```bash
 pnpm install
-pnpm check
-pnpm test
 ```
 
-### Optional full build
+2. Initialize QuickTask starter templates:
 
 ```bash
 pnpm build
+node -e "import { createQtRuntime } from './packages/core/dist/runtime.js'; const rt=createQtRuntime(); console.log(rt.handle('/qt init'));"
 ```
+
+3. Run a first workflow:
+
+```text
+/qt list
+/qt show standup
+/qt/standup yesterday: fixed flaky test, today: release prep, blockers: none
+```
+
+4. Improve it:
+
+```text
+/qt improve standup include explicit risk callouts
+```
+
+For full validation before contributing, run `pnpm check && pnpm test`.
 
 ## Install QuickTask
 
@@ -72,6 +82,7 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 
 - `/qt` - show command help.
 - `/qt help [create|run|improve|actions|discover]` - show topic-specific help.
+- `/qt init` - create starter templates and first-run guidance.
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task with input.
 - `/qt improve [task] [input]` - propose an improvement for an existing task.
