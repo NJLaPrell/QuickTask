@@ -1,5 +1,33 @@
 # quicktask-vscode
 
+## 0.2.5
+
+### Patch Changes
+
+- 68a677c: ## New Features
+  - Add release-governance automation for task schema checks and workflow-contract drift detection.
+
+  ## Bug Fixes
+  - Fix readiness parsing so open-task detection uses active backlog statuses plus task detail status fields.
+
+  ## Internal Improvements
+  - Codify change-based release cadence, formal medium/high risk acceptance records, and diagnostics privacy guardrails across docs, rules, and CI workflows.
+
+  ## Breaking Changes
+  - None.
+
+- fd9c490: ## New Features
+  - Add approved `/qt` discovery and diagnostics commands (`list`, `show`, `doctor`) with end-to-end adapter rendering support.
+
+  ## Bug Fixes
+  - Fix command-surface drift risk by introducing contract checks that fail when runtime result codes diverge from docs or adapter coverage.
+
+  ## Internal Improvements
+  - Unify host rendering through shared core mapping, expand adapter lifecycle/parity smoke coverage, and tighten VS Code chat compatibility handling.
+
+  ## Breaking Changes
+  - None.
+
 ## 0.2.4
 
 ### Patch Changes
