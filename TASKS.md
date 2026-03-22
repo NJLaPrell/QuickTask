@@ -67,21 +67,22 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-22
-- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (`v1.0.0` hardening)
-- Current milestone target: Complete `v1.0.0` must-have scope, pass RC + release gates, and dispatch production release.
-- Phase objective now: close first-run UX gaps, lock restart-safe improve lifecycle behavior, and ship a stable `v1.0.0` baseline.
+- Current phase in execution: Phase 11 - Post-release expansion and workflow modernization
+- Current milestone target: Deliver accepted post-release scope moved from Phase 10 and keep release/CI workflows modernized.
+- Phase objective now: ship deferred product/governance improvements and remove action-runtime deprecation risk in GitHub workflows.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 10 tasks
+- Ready queue (`[p]`): 11 tasks
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
-  2. T116/T117/T118 - ship export/import + template-pack manifest flow.
-  3. T120 - add template eval harness scaffolding.
-  4. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
+  1. T132 - remove Node 20 GitHub Actions deprecation warnings (Node 24-ready workflow actions).
+  2. T112/T113/T114 - ship template-variable contract/runtime/adapter UX.
+  3. T116/T117/T118 - ship export/import + template-pack manifest flow.
+  4. T120 - add template eval harness scaffolding.
+  5. T123/T124/T126 - complete governance/feedback-loop follow-on scope.
 - Definition of "phase complete" for current phase:
-  - All `v1.0.0` execution plan tasks are `[x]` (task set listed below).
-  - Release dispatch task (`T131`) is complete with captured release workflow run evidence.
+  - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) are `[x]`.
+  - CI/release workflow validation remains green after action-version modernization changes.
 
 ## `v1.0.0` release execution plan
 
@@ -98,10 +99,10 @@ Use this as the active board for release planning and go/no-go decisions.
 - Should-have for `v1.0.0` (include only if must-have is complete and RC remains green):
   - T106
   - T128
-- Explicitly deferred to `1.1.0+` by default:
+- Explicitly deferred beyond `v0.4.0` and now scheduled in Phase 11:
   - T112, T113, T114
   - T116, T117, T118
-  - T120, T123, T124, T126
+  - T120, T123, T124, T126, T132
 
 ### Ordered delivery waves
 
@@ -110,7 +111,7 @@ Use this as the active board for release planning and go/no-go decisions.
 3. Wave C - improve proposal durability: T109 -> T110 -> T111
 4. Wave D (optional) - adoption polish: T106, T128
 5. Wave E - stabilization and RC/release: T129 -> T130 -> T131
-6. Post-`1.0.0` wave - deferred scope unless explicitly promoted: T112/T113/T114, T116/T117/T118, T120, T123, T124, T126
+6. Post-`v0.4.0` wave (Phase 11): T112/T113/T114, T116/T117/T118, T120, T123, T124, T126, T132
 
 ### Execution plan completion gate (`v1.0.0`)
 
@@ -184,9 +185,16 @@ Validation expectations are enforced within those tasks' acceptance criteria and
 ### Phase 10 - Operational polish and deferred enhancements
 
 - Delivery outcome: Deferred enhancements, lifecycle polish, and governance automation are delivered after core release and product milestones are stable.
-- Status: archived base scope complete; follow-on backlog active for `v1.0.0` completion.
+- Status: release hardening scope complete; remaining follow-on scope moved to Phase 11.
 - Planned task IDs (in order): T057, T058, T059, T063, T087, T088, T089, T090, T092, T067, T069, T072, T091, T094, T095, T097, T078, T079, T093, T096.
 - Archived task IDs: T057, T058, T059, T063, T087, T088, T089, T090, T092, T067, T069, T072, T091, T094, T095, T097, T078, T079, T093, T096.
+
+### Phase 11 - Post-release expansion and workflow modernization
+
+- Delivery outcome: Deferred feature/governance enhancements land after the `v0.4.0` release, and CI/release workflows are modernized for current GitHub Actions runtime policy.
+- Status: in progress.
+- Planned task IDs (in order): T132, T112, T113, T114, T116, T117, T118, T120, T123, T124, T126.
+- Archived task IDs: none.
 
 ## Active task backlog
 
@@ -204,6 +212,7 @@ Pending work below is triaged and ready for implementation.
 - [p] T123 - Define low-risk fast-lane workflow policy (P1)
 - [p] T124 - Add governance doc simplification and canonicalization pass (P2)
 - [p] T126 - Add privacy-safe product feedback loop for UX friction (P2)
+- [p] T132 - Upgrade GitHub Actions to Node 24-compatible versions (P1)
 
 ### Intake queue
 
@@ -593,6 +602,25 @@ Pending work below is triaged and ready for implementation.
 - Acceptance criteria:
   - Product feedback signals exist for key UX drop-off points.
   - Privacy constraints remain enforced and tested.
+- Validation evidence:
+  - <add after implementation>
+
+### [p] T132 - Upgrade GitHub Actions to Node 24-compatible versions
+
+- Status: [p]
+- Priority: P1
+- Goal: Remove GitHub-hosted workflow deprecation warnings by upgrading Node 20-based actions and validating RC/release workflows remain green.
+- Files: `.github/workflows/*.yml`, `.github/actions/*` (if needed), `CONTRIBUTORS.md`/release docs as needed
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Audit all workflow actions currently running on Node 20 (checkout/setup-node/upload-artifact/action-gh-release, etc.).
+  2. Upgrade to Node 24-compatible action versions and pin to supported releases.
+  3. Re-run CI + RC + Release candidate validation and confirm deprecation annotations are cleared.
+- Acceptance criteria:
+  - RC/release workflow runs no longer emit Node 20 deprecation warnings.
+  - Updated action versions are documented and verified in workflow validation.
 - Validation evidence:
   - <add after implementation>
 
