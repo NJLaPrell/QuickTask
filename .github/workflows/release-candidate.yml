@@ -29,22 +29,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup workspace
+        uses: ./.github/actions/setup-quicktask-workspace
         with:
-          version: 10.0.0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Package manager consistency
-        run: pnpm check:package-manager
+          pnpm_version: "10.0.0"
+          node_version: "22"
+          run_package_manager_check: "true"
 
       - name: Workspace checks
         run: pnpm check

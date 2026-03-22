@@ -2,8 +2,8 @@
 
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { create as createTar } from "tar";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
@@ -73,13 +73,18 @@ writeFileSync(
 const outputName = `quicktask-openclaw-v${openclawPkg.version}.tgz`;
 const outputPath = join(repoRoot, "artifacts", outputName);
 
-const tarResult = spawnSync("tar", ["-czf", outputPath, "-C", stagingRoot, "package"], {
-  encoding: "utf8"
-});
-
-if (tarResult.status !== 0) {
+try {
+  await createTar(
+    {
+      gzip: true,
+      file: outputPath,
+      cwd: stagingRoot
+    },
+    ["package"]
+  );
+} catch (error) {
   console.error(
-    `package-openclaw: tar failed\n${tarResult.stdout ?? ""}${tarResult.stderr ?? ""}`.trim()
+    `package-openclaw: archive creation failed: ${error instanceof Error ? error.message : "unknown error"}`
   );
   process.exit(1);
 }

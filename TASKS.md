@@ -66,18 +66,18 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 ## Current execution state
 
-- Last updated: 2026-03-21
-- Current phase in execution: Phase 9 - CI/release platform hardening (ready to start)
-- Current milestone target: Phase 9 CI hardening kickoff (`T060` then `T064`)
+- Last updated: 2026-03-22
+- Current phase in execution: Phase 9 - CI/release platform hardening (in progress)
+- Current milestone target: Phase 9 CI/release hardening baseline (`T060` + `T064` + `T068` complete; advance to security/artifact contract slices)
 - Phase objective now: improve CI/release reliability and observability while preserving strict release/security gates.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 32 tasks (phase 9-10 backlog)
+- Ready queue (`[p]`): 29 tasks (phase 9-10 backlog)
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T060 - Split CI into parallel jobs with clearer failure surfaces
-  2. T064 - Refactor duplicated release workflow steps into reusable automation
-  3. T068 - Make OpenClaw packaging cross-platform without system tar dependency
+  1. T073 - Harden dependency-review enforcement and fallback behavior
+  2. T080 - Validate release asset metadata contract in CI before publish
+  3. T082 - Add distributable package metadata and license compliance checks
 - Definition of "phase complete" for current phase:
   - Phase 9 planned tasks (`T060`, `T064`, `T068`, `T073`, `T074`, `T080`, `T082`, `T098`, `T099`, `T100`, `T075`, `T081`) are complete.
   - No unresolved medium/high CI/release platform blockers remain.
@@ -136,7 +136,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ### Phase 9 - CI/release platform hardening
 
 - Delivery outcome: Faster and more reliable release operations with reusable workflows, stronger security enforcement, cross-platform packaging/verification, and artifact contract checks.
-- Status: planned.
+- Status: in progress.
 - Planned task IDs (in order): T060, T064, T068, T073, T074, T080, T082, T098, T099, T100, T075, T081.
 
 ### Phase 10 - Operational polish and deferred enhancements
@@ -154,11 +154,8 @@ Pending work below is triaged and ready for implementation.
 - [p] T057 - Support quoted task names and richer parser input forms (P2)
 - [p] T058 - Add proposal lifecycle GC to bound in-memory growth (P2)
 - [p] T059 - Enforce session-only proposal lifecycle policy (P2)
-- [p] T060 - Split CI into parallel jobs with clearer failure surfaces (P1)
 - [p] T063 - Add docs/link integrity checker for workflow-critical references (P2)
-- [p] T064 - Refactor duplicated release workflow steps into reusable automation (P2)
 - [p] T067 - Add `/qt help [topic]` contextual help command (P3)
-- [p] T068 - Make OpenClaw packaging cross-platform without system tar dependency (P1)
 - [p] T069 - Add template quality lint for `tasks/*.md` content conventions (P3)
 - [p] T072 - Add release-note quality validation beyond section format (P3)
 - [p] T073 - Harden dependency-review enforcement and fallback behavior (P1)
@@ -371,15 +368,15 @@ Pending work below is triaged and ready for implementation.
   - Run core runtime tests for proposal lifecycle.
   - Verify contract docs and adapter messaging updates.
 
-### [p] T060 - Split CI into parallel jobs with clearer failure surfaces
+### [x] T060 - Split CI into parallel jobs with clearer failure surfaces
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve CI maintainability and feedback speed by separating typecheck/lint/test/build/package/smoke into parallel jobs with explicit dependencies.
 - Files: `.github/workflows/ci.yml`, docs as needed.
 - Dependencies: T015, T024.
-- Blocked by: T053, T065.
-- Unblock plan: complete release-gating correctness and release-script test coverage first, then parallelize CI.
+- Blocked by: none.
+- Unblock plan: n/a
 - Pros:
   - Better failure localization and potentially faster feedback.
   - Cleaner ownership boundaries for check categories.
@@ -388,7 +385,7 @@ Pending work below is triaged and ready for implementation.
   - Higher workflow orchestration complexity and required-check churn risk.
   - Can introduce flaky dependency ordering and noisy status transitions.
   - Limited immediate end-user value compared with governance fixes.
-- Weighted recommendation: defer until core release governance tasks are stable.
+- Weighted recommendation: completed after governance prerequisites were stabilized.
 - Steps:
   1. Break monolithic verify job into focused jobs with shared setup.
   2. Keep release-relevant checks as required while improving failure localization.
@@ -399,8 +396,10 @@ Pending work below is triaged and ready for implementation.
   - End-to-end required checks remain equivalent in strictness.
   - Workflow runtime improves or remains neutral with clearer observability.
 - Validation evidence:
-  - Validate workflow syntax and run on PR.
-  - Compare check outcomes before/after on representative changes.
+  - Refactored `.github/workflows/ci.yml` into parallel domain jobs (`typecheck`, `lint`, `format`, `test`, `build`, `changeset-format`, `tasks-schema`, `workflow-contracts`, `qt-contract-drift`, `package-vscode`, `package-manager`, `smoke`) with an aggregate `verify` gate.
+  - Preserved VSIX artifact upload and host smoke coverage in dedicated jobs.
+  - Ran `pnpm release:check-workflow-contracts`.
+  - Ran `pnpm check`, `pnpm test`, and `pnpm tasks:check`.
 
 ### [x] T061 - Add contract drift guard between runtime codes and adapters/docs
 
@@ -474,15 +473,15 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm docs:check-links`.
   - Add fixture coverage for missing-reference failures.
 
-### [p] T064 - Refactor duplicated release workflow steps into reusable automation
+### [x] T064 - Refactor duplicated release workflow steps into reusable automation
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Reduce CI/release maintenance overhead by extracting repeated setup/validation steps shared by release and RC workflows.
 - Files: `.github/workflows/release.yml`, `.github/workflows/release-candidate.yml`, reusable workflow/composite action files (new), docs.
 - Dependencies: T060.
-- Blocked by: T060, T071.
-- Unblock plan: establish stable workflow contracts and CI job boundaries before deduplicating.
+- Blocked by: none.
+- Unblock plan: n/a
 - Pros:
   - Reduces duplicate YAML and future maintenance burden.
   - Improves consistency between RC and release flows.
@@ -491,7 +490,7 @@ Pending work below is triaged and ready for implementation.
   - Refactor risk in the most critical release path.
   - Can obscure behavior if abstraction is too early or too broad.
   - Debuggability may worsen during transition.
-- Weighted recommendation: keep, but treat as late hardening after contract checks are in place.
+- Weighted recommendation: completed after workflow contracts and CI boundaries were stabilized.
 - Steps:
   1. Identify duplicated steps (setup/install/check/build/package/verify).
   2. Move shared logic to reusable workflow or composite action.
@@ -502,8 +501,11 @@ Pending work below is triaged and ready for implementation.
   - RC and release workflows remain functionally equivalent.
   - Contributor docs describe reusable workflow boundaries.
 - Validation evidence:
-  - Run workflow lint/validation.
-  - Validate both workflows on test dispatch runs.
+  - Added reusable composite action `.github/actions/setup-quicktask-workspace/action.yml` for pnpm/node setup, install, and package-manager checks.
+  - Updated both `.github/workflows/release.yml` and `.github/workflows/release-candidate.yml` to consume shared setup automation.
+  - Preserved release/RC-specific gating behavior and required input contracts.
+  - Ran `pnpm release:check-workflow-contracts`.
+  - Ran `pnpm check`, `pnpm format:check`, and `pnpm tasks:check`.
 
 ### [x] T065 - Add test coverage for release handoff and docs gate scripts
 
@@ -575,9 +577,9 @@ Pending work below is triaged and ready for implementation.
   - Run core parser/runtime tests.
   - Verify adapter rendering paths for topic help.
 
-### [p] T068 - Make OpenClaw packaging cross-platform without system tar dependency
+### [x] T068 - Make OpenClaw packaging cross-platform without system tar dependency
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve workspace portability by replacing shell `tar` dependency with a Node-based cross-platform archive path.
 - Files: `scripts/package-openclaw-artifact.mjs`, dependencies/config if needed, packaging docs/tests.
@@ -594,8 +596,10 @@ Pending work below is triaged and ready for implementation.
   - Artifact layout remains install-compatible.
   - Packaging errors remain clear and actionable.
 - Validation evidence:
-  - Run `pnpm package:openclaw`.
-  - Verify archive contents in `artifacts/`.
+  - Updated `scripts/package-openclaw-artifact.mjs` to use the Node `tar` package instead of shelling out to system `tar`.
+  - Added workspace dependency `tar` via package manager for cross-platform archive creation.
+  - Ran `pnpm package:openclaw`.
+  - Verified artifact contents with `tar` library inspection for required entries (`package/dist/*` and bundled `@quicktask/core/dist/*` files).
 
 ### [p] T069 - Add template quality lint for `tasks/*.md` content conventions
 
