@@ -15,7 +15,7 @@
     "check:support-matrix": "node scripts/check-support-matrix-consistency.mjs",
     "check:package-compliance": "node scripts/check-package-compliance.mjs",
     "clean": "pnpm -r clean",
-    "package:vscode": "pnpm --filter quicktask-vscode package:vsix",
+    "package:vscode": "pnpm --filter @quicktask/core build && pnpm --filter quicktask-vscode package:vsix",
     "package:openclaw": "pnpm --filter @quicktask/core build && pnpm --filter quicktask-openclaw package:artifact",
     "package:release": "pnpm package:vscode && pnpm package:openclaw && node scripts/generate-release-integrity.mjs",
     "release:notes": "node scripts/generate-curated-release-notes.mjs",
