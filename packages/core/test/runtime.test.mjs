@@ -26,7 +26,10 @@ test("returns help for /qt", () => {
       "/qt",
       "/qt [task] [instructions]",
       "/qt/[task] [input]",
-      "/qt improve [task] [input]"
+      "/qt improve [task] [input]",
+      "/qt list",
+      "/qt show [task]",
+      "/qt doctor"
     ]);
   } finally {
     cleanup();
@@ -122,6 +125,58 @@ test("run supports minimal input with empty user input", () => {
     assert.equal(result.kind, "run_executed");
     assert.equal(result.code, "qt:run:executed");
     assert.equal(result.userInput, "");
+  } finally {
+    cleanup();
+  }
+});
+
+test("list and show commands return template discovery results", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    runtime.handle("/qt summarize produce concise bullets");
+    runtime.handle("/qt triage rank bugs by impact");
+
+    const listed = runtime.handle("/qt list");
+    assert.equal(listed.kind, "list");
+    assert.equal(listed.code, "qt:list:listed");
+    assert.deepEqual(listed.tasks, ["summarize", "triage"]);
+
+    const shown = runtime.handle("/qt show summarize");
+    assert.equal(shown.kind, "show");
+    assert.equal(shown.code, "qt:show:template");
+    assert.equal(shown.taskName, "summarize");
+    assert.match(shown.templateBody, /produce concise bullets/);
+  } finally {
+    cleanup();
+  }
+});
+
+test("show command returns deterministic not found behavior", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const result = runtime.handle("/qt show does-not-exist");
+    assert.equal(result.kind, "not_found");
+    assert.equal(result.code, "qt:run:not-found");
+    assert.equal(result.taskName, "does-not-exist");
+  } finally {
+    cleanup();
+  }
+});
+
+test("doctor command reports safe diagnostics metadata", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    runtime.handle("/qt summarize baseline instructions");
+    runtime.handle("/qt list");
+    const doctor = runtime.handle("/qt doctor");
+
+    assert.equal(doctor.kind, "doctor");
+    assert.equal(doctor.code, "qt:doctor:status");
+    assert.equal(typeof doctor.diagnostics.tasksDir, "string");
+    assert.equal(typeof doctor.diagnostics.taskCount, "number");
+    assert.equal(typeof doctor.diagnostics.writable, "boolean");
+    assert.equal(typeof doctor.diagnostics.runtimeVersion, "string");
+    assert.ok(Array.isArray(doctor.diagnostics.recentRuntimeCodes));
   } finally {
     cleanup();
   }

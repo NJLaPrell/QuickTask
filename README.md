@@ -77,6 +77,9 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 - `/qt improve accept [task] [proposal-id]` - accept and apply a proposal.
 - `/qt improve reject [task] [proposal-id]` - reject a proposal.
 - `/qt improve abandon [task] [proposal-id]` - abandon a proposal.
+- `/qt list` - list available task templates.
+- `/qt show [task]` - show one task template body.
+- `/qt doctor` - show storage/runtime diagnostics.
 
 ### Common workflow example
 
@@ -92,6 +95,11 @@ Expected behavior:
 - Creating a task that already exists returns an explicit already-exists result.
 - Running a missing task returns a clear not-found result.
 - Improvement proposals are previewed before they can be accepted.
+
+Approved command-surface policy:
+
+- QuickTask intentionally keeps a minimal command surface centered on create/run/improve lifecycle and `list/show/doctor`.
+- Additional command expansions are deferred by default unless explicitly approved.
 
 ## Current Status
 

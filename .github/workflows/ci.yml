@@ -58,6 +58,9 @@ jobs:
       - name: Validate release workflow contracts
         run: pnpm release:check-workflow-contracts
 
+      - name: Validate qt command/docs/adapter drift
+        run: pnpm qt:check-contract-drift
+
       - name: Package VS Code extension (.vsix)
         run: pnpm package:vscode
 

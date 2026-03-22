@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync } from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import {
+  createVsCodeQtRuntime,
   handleQtChatPrompt,
   renderQtRuntimeResult,
   toQtCommandTextFromChatPrompt
@@ -62,4 +66,69 @@ test("unknown result rendering does not leak user content", () => {
   assert.match(markdown, /unsupported result code/i);
   assert.doesNotMatch(markdown, /secret user text/);
   assert.doesNotMatch(markdown, /secret template text/);
+});
+
+test("renders list/show/doctor command outputs", () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-vscode-adapter-"));
+  try {
+    const runtime = createVsCodeQtRuntime({ tasksDir });
+    handleQtChatPrompt("/qt summarize write concise bullets", runtime);
+    handleQtChatPrompt("/qt triage rank bugs by impact", runtime);
+
+    const listed = handleQtChatPrompt("/qt list", runtime);
+    assert.equal(listed.result.code, "qt:list:listed");
+    assert.match(listed.markdown, /Found 2 task templates/);
+    assert.match(listed.markdown, /`summarize`/);
+
+    const shown = handleQtChatPrompt("/qt show summarize", runtime);
+    assert.equal(shown.result.code, "qt:show:template");
+    assert.match(shown.markdown, /Template for `summarize`/);
+
+    const doctor = handleQtChatPrompt("/qt doctor", runtime);
+    assert.equal(doctor.result.code, "qt:doctor:status");
+    assert.match(doctor.markdown, /QuickTask diagnostics/);
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true });
+  }
+});
+
+test("covers improve action lifecycle through VS Code adapter boundary", () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-vscode-improve-"));
+  try {
+    const runtime = createVsCodeQtRuntime({ tasksDir });
+    handleQtChatPrompt("/qt summarize baseline template", runtime);
+
+    const proposal = handleQtChatPrompt("/qt improve summarize add owners", runtime).result;
+    assert.equal(proposal.code, "qt:improve:proposed");
+
+    const accepted = handleQtChatPrompt(
+      `/qt improve accept summarize ${proposal.proposalId}`,
+      runtime
+    ).result;
+    assert.equal(accepted.code, "qt:improve:accept:applied");
+
+    const alreadyFinalized = handleQtChatPrompt(
+      `/qt improve reject summarize ${proposal.proposalId}`,
+      runtime
+    ).result;
+    assert.equal(alreadyFinalized.code, "qt:improve:already-finalized");
+
+    const rejectProposal = handleQtChatPrompt("/qt improve summarize reject branch", runtime).result;
+    assert.equal(rejectProposal.code, "qt:improve:proposed");
+    const rejected = handleQtChatPrompt(
+      `/qt improve reject summarize ${rejectProposal.proposalId}`,
+      runtime
+    ).result;
+    assert.equal(rejected.code, "qt:improve:reject:recorded");
+
+    const abandonProposal = handleQtChatPrompt("/qt improve summarize abandon branch", runtime).result;
+    assert.equal(abandonProposal.code, "qt:improve:proposed");
+    const abandoned = handleQtChatPrompt(
+      `/qt improve abandon summarize ${abandonProposal.proposalId}`,
+      runtime
+    ).result;
+    assert.equal(abandoned.code, "qt:improve:abandon:recorded");
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true });
+  }
 });

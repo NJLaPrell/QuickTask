@@ -25,6 +25,9 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:incomplete`                 | `incomplete`       | `usage`, `message`                                                    |
 | `qt:run:not-found`              | `not_found`        | `taskName`, `message`                                                 |
 | `qt:run:executed`               | `run_executed`     | `taskName`, `templateBody`, `userInput`                               |
+| `qt:list:listed`                | `list`             | `tasks[]`, `message`                                                   |
+| `qt:show:template`              | `show`             | `taskName`, `templateBody`                                             |
+| `qt:doctor:status`              | `doctor`           | `diagnostics`                                                          |
 | `qt:improve:not-found`          | `not_found`        | `taskName`, `message`                                                 |
 | `qt:improve:proposal-not-found` | `not_found`        | `taskName`, `message`                                                 |
 | `qt:improve:proposed`           | `improve_proposed` | `taskName`, `proposalId`, `source`, `oldTemplate`, `proposedTemplate` |
@@ -47,6 +50,9 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:incomplete`                 | Show warning with `usage`.                                  | Show warning and let user retry with full command.                      | Show warning with required command shape.                    |
 | `qt:run:not-found`              | Show warning and suggest create command.                    | Show warning and suggest `/qt [task] [instructions]`.                   | Show warning and suggest create flow.                        |
 | `qt:run:executed`               | Render template plus user input in execution panel.         | Return rendered output payload to command client.                       | Render template and input in plugin output surface.          |
+| `qt:list:listed`                | Render ordered list of available task names.                | Return deterministic task name list with summary message.                | Render plain list of available task names.                   |
+| `qt:show:template`              | Render template markdown for one task body.                 | Return task template preview payload for one task.                       | Render plain template preview for one task.                  |
+| `qt:doctor:status`              | Render diagnostics block with tasks dir, writability, and recent runtime codes. | Return safe diagnostics payload (no user-content fields). | Render diagnostics text for support triage.                  |
 | `qt:improve:not-found`          | Show warning that task template is missing.                 | Show warning and suggest creating the task first.                       | Show warning and suggested create command.                   |
 | `qt:improve:proposal-not-found` | Show warning that proposal is unavailable/session-scoped.   | Show warning and suggest generating a new proposal.                     | Show warning with lifecycle guidance.                        |
 | `qt:improve:proposed`           | Show side-by-side old vs proposed template and proposal ID. | Return proposal object and emphasize proposal ID for follow-up actions. | Render comparison and copyable proposal ID.                  |
@@ -74,4 +80,5 @@ When adapters receive a code not listed above:
 - Keep unknown-code fallback path active and tested.
 - Ensure parse/storage errors display `requestId`.
 - Ensure improve proposal renderers expose `proposalId` for action commands.
+- Ensure `list`/`show`/`doctor` renderers remain available as approved core command-surface behavior.
 - Keep host docs linking to this matrix and `docs/qt-command-result-contract.md`.

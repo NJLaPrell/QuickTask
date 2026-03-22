@@ -2,19 +2,24 @@ export const QUICKTASK_CORE_API_VERSION = "1.0.0";
 
 export { parseQtCommand } from "./parser.js";
 export { createQtRuntime } from "./runtime.js";
+export { formatQtRuntimeResult, type QtRenderStyle } from "./rendering.js";
 export { createTaskTemplate, proposeTemplateImprovement } from "./templates.js";
 export {
+  checkTaskStoreHealth,
   createFileTaskStore,
   getTaskTemplate,
+  listTaskNames,
   saveTaskTemplate,
   taskNameToFilename,
   type CreateFileTaskStoreOptions,
-  type FileTaskStore
+  type FileTaskStore,
+  type TaskStoreHealth
 } from "./store.js";
 export type {
   ImprovementProposal,
   ImprovementProposalStatus,
   QtCommand,
+  QtDoctorStatus,
   QtImproveAction,
   QtImproveActionCommand,
   QtIncompleteCommand,

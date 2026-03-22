@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync } from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import {
+  createOpenClawQtRuntime,
   handleOpenClawQtInput,
   normalizeOpenClawQtInput,
   renderOpenClawQtResult
@@ -67,4 +71,63 @@ test("unknown result rendering keeps diagnostics local and redacted", () => {
   assert.match(text, /unsupported result code/i);
   assert.doesNotMatch(text, /sensitive input/);
   assert.doesNotMatch(text, /sensitive template/);
+});
+
+test("normalization parity for common command forms", () => {
+  const cases = [
+    { input: "", expected: "/qt" },
+    { input: "summarize create bullets", expected: "/qt summarize create bullets" },
+    { input: "/qt list", expected: "/qt list" },
+    { input: "/qt show summarize", expected: "/qt show summarize" },
+    { input: "/qt improve accept summarize p_1", expected: "/qt improve accept summarize p_1" }
+  ];
+
+  for (const testCase of cases) {
+    assert.equal(normalizeOpenClawQtInput(testCase.input), testCase.expected);
+  }
+});
+
+test("renders list/show/doctor command outputs", () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-openclaw-adapter-"));
+  try {
+    const runtime = createOpenClawQtRuntime(tasksDir);
+    handleOpenClawQtInput("summarize write concise bullets", runtime);
+    handleOpenClawQtInput("triage rank bugs by impact", runtime);
+
+    const listed = handleOpenClawQtInput("/qt list", runtime);
+    assert.equal(listed.result.code, "qt:list:listed");
+    assert.match(listed.text, /Found 2 task templates/);
+
+    const shown = handleOpenClawQtInput("/qt show summarize", runtime);
+    assert.equal(shown.result.code, "qt:show:template");
+    assert.match(shown.text, /Template for summarize:/);
+
+    const doctor = handleOpenClawQtInput("/qt doctor", runtime);
+    assert.equal(doctor.result.code, "qt:doctor:status");
+    assert.match(doctor.text, /QuickTask diagnostics/);
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true });
+  }
+});
+
+test("covers improve action lifecycle through OpenClaw adapter boundary", () => {
+  const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-openclaw-improve-"));
+  try {
+    const runtime = createOpenClawQtRuntime(tasksDir);
+    handleOpenClawQtInput("summarize baseline template", runtime);
+
+    const proposal = handleOpenClawQtInput("/qt improve summarize add owners", runtime).result;
+    assert.equal(proposal.code, "qt:improve:proposed");
+
+    const accepted = handleOpenClawQtInput(
+      `/qt improve accept summarize ${proposal.proposalId}`,
+      runtime
+    ).result;
+    assert.equal(accepted.code, "qt:improve:accept:applied");
+
+    const missing = handleOpenClawQtInput("/qt improve abandon summarize does-not-exist", runtime).result;
+    assert.equal(missing.code, "qt:improve:proposal-not-found");
+  } finally {
+    rmSync(tasksDir, { recursive: true, force: true });
+  }
 });

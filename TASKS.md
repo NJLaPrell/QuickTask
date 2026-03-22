@@ -67,20 +67,20 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-21
-- Current phase in execution: Phase 8 - Minimal `/qt` product maturity (ready to start)
-- Current milestone target: Phase 8 entry and first command-surface hardening slice
-- Phase objective now: deliver approved command-surface maturity (`list`, `show`, `doctor`) and adapter parity hardening without widening product scope.
+- Current phase in execution: Phase 9 - CI/release platform hardening (ready to start)
+- Current milestone target: Phase 9 CI hardening kickoff (`T060` then `T064`)
+- Phase objective now: improve CI/release reliability and observability while preserving strict release/security gates.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 41 tasks (phase 8-10 backlog)
+- Ready queue (`[p]`): 32 tasks (phase 9-10 backlog)
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
-  2. T062 - Add `/qt list` and `/qt show [task]` discovery commands
-  3. T056 - Improve VS Code `/qt` interaction UX and markdown output
+  1. T060 - Split CI into parallel jobs with clearer failure surfaces
+  2. T064 - Refactor duplicated release workflow steps into reusable automation
+  3. T068 - Make OpenClaw packaging cross-platform without system tar dependency
 - Definition of "phase complete" for current phase:
-  - Phase 8 planned tasks (`T086`, `T062`, `T056`, `T066`, `T077`, `T061`, `T055`, `T076`, `T070`) are complete.
-  - No unresolved medium/high command-surface maturity blockers remain.
+  - Phase 9 planned tasks (`T060`, `T064`, `T068`, `T073`, `T074`, `T080`, `T082`, `T098`, `T099`, `T100`, `T075`, `T081`) are complete.
+  - No unresolved medium/high CI/release platform blockers remain.
 
 ## Milestone execution order
 
@@ -130,7 +130,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ### Phase 8 - Minimal `/qt` product maturity
 
 - Delivery outcome: `/qt` remains intentionally minimal while delivering top user value first (`list`, `show`, `doctor`) and then hardening adapter parity/UX consistency.
-- Status: in progress.
+- Status: complete (awaiting archive cadence).
 - Planned task IDs (in order): T086, T062, T056, T066, T077, T061, T055, T076, T070.
 
 ### Phase 9 - CI/release platform hardening
@@ -151,33 +151,24 @@ Pending work below is triaged and ready for implementation.
 
 ### Proposed
 
-- [p] T055 - Unify adapter result rendering from shared core mapping (P2)
-- [p] T056 - Improve VS Code `/qt` interaction UX and markdown output (P1)
 - [p] T057 - Support quoted task names and richer parser input forms (P2)
 - [p] T058 - Add proposal lifecycle GC to bound in-memory growth (P2)
 - [p] T059 - Enforce session-only proposal lifecycle policy (P2)
 - [p] T060 - Split CI into parallel jobs with clearer failure surfaces (P1)
-- [p] T061 - Add contract drift guard between runtime codes and adapters/docs (P1)
-- [p] T062 - Add `/qt list` and `/qt show [task]` discovery commands (P1)
 - [p] T063 - Add docs/link integrity checker for workflow-critical references (P2)
 - [p] T064 - Refactor duplicated release workflow steps into reusable automation (P2)
-- [p] T066 - Remove unsafe VS Code chat API casts with compatibility wrapper (P1)
 - [p] T067 - Add `/qt help [topic]` contextual help command (P3)
 - [p] T068 - Make OpenClaw packaging cross-platform without system tar dependency (P1)
 - [p] T069 - Add template quality lint for `tasks/*.md` content conventions (P3)
-- [p] T070 - Add adapter E2E coverage for improve action lifecycle (P2)
 - [p] T072 - Add release-note quality validation beyond section format (P3)
 - [p] T073 - Harden dependency-review enforcement and fallback behavior (P1)
 - [p] T074 - Expand post-release verification across OS matrix (P2)
 - [p] T075 - Add test coverage for package-manager consistency checker script (P3)
-- [p] T076 - Add adapter normalization parity test suite in shared smoke harness (P2)
-- [p] T077 - Add `/qt doctor` diagnostics command for storage/runtime health (P1)
 - [p] T078 - Add local CLI sandbox for QuickTask runtime command simulation (P4)
 - [p] T079 - Add automated cleanup policy for quarantined corrupt templates (P4)
 - [p] T080 - Validate release asset metadata contract in CI before publish (P1)
 - [p] T081 - Add support-matrix consistency check against package/workflow floors (P3)
 - [p] T082 - Add distributable package metadata and license compliance checks (P2)
-- [p] T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth (P1)
 - [p] T087 - Add proposed-task promotion and aging policy in TASKS workflow (P2)
 - [p] T088 - Add phase exit checklist automation and report command (P2)
 - [p] T089 - Add backlog integrity check for duplicates and phase assignment drift (P2)
@@ -257,9 +248,9 @@ Pending work below is triaged and ready for implementation.
   - Wired `pnpm tasks:check` into `.github/workflows/ci.yml` and release readiness checks.
   - Ran `pnpm tasks:check`.
 
-### [p] T055 - Unify adapter result rendering from shared core mapping
+### [x] T055 - Unify adapter result rendering from shared core mapping
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Reduce duplication and rendering drift between VS Code and OpenClaw by centralizing code-to-message mapping.
 - Files: `packages/core/src/*` (new renderer helpers), `packages/vscode-extension/src/qtAdapter.ts`, `packages/openclaw-plugin/src/qtAdapter.ts`, adapter tests.
@@ -285,12 +276,14 @@ Pending work below is triaged and ready for implementation.
   - Unknown-code fallback behavior remains explicit and tested.
   - Duplicate switch logic in adapters is significantly reduced.
 - Validation evidence:
-  - Run adapter tests and smoke tests.
-  - Run `pnpm test:smoke`.
+  - Added shared core renderer (`packages/core/src/rendering.ts`) and updated VS Code/OpenClaw adapters to consume it.
+  - Added/updated adapter tests to validate shared semantic rendering paths (including unknown-code fallback safety).
+  - Ran `pnpm test`.
+  - Ran `pnpm test:smoke`.
 
-### [p] T056 - Improve VS Code `/qt` interaction UX and markdown output
+### [x] T056 - Improve VS Code `/qt` interaction UX and markdown output
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve end-user experience by replacing plain information popups with richer markdown/chat-friendly output handling.
 - Files: `packages/vscode-extension/src/extension.ts`, `packages/vscode-extension/src/qtAdapter.ts`, extension tests/docs.
@@ -307,8 +300,10 @@ Pending work below is triaged and ready for implementation.
   - User can run `/qt` flows without parsing truncated popup text.
   - Existing command and participant behavior remains backward compatible.
 - Validation evidence:
-  - Run `pnpm --filter quicktask-vscode test`.
-  - Manually exercise `quicktask.runQt` in local extension host.
+  - Updated VS Code command flow to write full markdown output to a dedicated `QuickTask` output channel instead of popup-only output.
+  - Added compatibility-focused prompt normalization and non-chat fallback behavior via `chatCompat` helper.
+  - Added test coverage for compatibility prompt handling and command output paths.
+  - Ran `pnpm --filter quicktask-vscode test`.
 
 ### [p] T057 - Support quoted task names and richer parser input forms
 
@@ -407,9 +402,9 @@ Pending work below is triaged and ready for implementation.
   - Validate workflow syntax and run on PR.
   - Compare check outcomes before/after on representative changes.
 
-### [p] T061 - Add contract drift guard between runtime codes and adapters/docs
+### [x] T061 - Add contract drift guard between runtime codes and adapters/docs
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent behavior/docs drift by enforcing that runtime result codes are represented in adapter renderers and canonical docs.
 - Files: `packages/core/src/types.ts`, adapter renderers, `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, new validation script/tests.
@@ -426,12 +421,15 @@ Pending work below is triaged and ready for implementation.
   - Adding a new runtime code requires explicit renderer/doc updates.
   - Guard output is actionable.
 - Validation evidence:
-  - Run guard test locally and in CI.
-  - Verify guard fails on intentional mismatch fixture.
+  - Added `scripts/check-qt-contract-drift.mjs` and `pnpm qt:check-contract-drift` to validate runtime code coverage across contract docs and shared renderer coverage.
+  - Added `scripts/test/check-qt-contract-drift.test.mjs` with intentional mismatch fixture assertions.
+  - Wired drift guard into `.github/workflows/ci.yml`.
+  - Ran `pnpm qt:check-contract-drift`.
+  - Ran `pnpm test`.
 
-### [p] T062 - Add `/qt list` and `/qt show [task]` discovery commands
+### [x] T062 - Add `/qt list` and `/qt show [task]` discovery commands
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve user experience by letting users discover existing templates without guessing names.
 - Files: `packages/core/src/parser.ts`, `packages/core/src/runtime.ts`, `packages/core/src/store.ts`, `packages/core/src/types.ts`, adapter renderers, docs/tests.
@@ -448,8 +446,11 @@ Pending work below is triaged and ready for implementation.
   - Not-found handling for `/qt show` is deterministic.
   - New commands are documented and adapter-rendered consistently.
 - Validation evidence:
-  - Run core and adapter tests.
-  - Verify command docs and rendering matrix updates.
+  - Added parser/runtime/store support for `/qt list` and `/qt show [task]` with deterministic not-found handling.
+  - Added adapter rendering coverage and smoke-path assertions for list/show flows.
+  - Updated canonical command/result and rendering-matrix docs for new commands.
+  - Ran `pnpm test`.
+  - Ran `pnpm test:smoke`.
 
 ### [p] T063 - Add docs/link integrity checker for workflow-critical references
 
@@ -528,9 +529,9 @@ Pending work below is triaged and ready for implementation.
   - Ran `node --test scripts/test/**/*.test.mjs`.
   - Ran `pnpm test`.
 
-### [p] T066 - Remove unsafe VS Code chat API casts with compatibility wrapper
+### [x] T066 - Remove unsafe VS Code chat API casts with compatibility wrapper
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve maintainability and type safety by removing `as unknown as` casting in VS Code adapter chat integration.
 - Files: `packages/vscode-extension/src/extension.ts`, extension types/helpers/tests.
@@ -547,8 +548,10 @@ Pending work below is triaged and ready for implementation.
   - Extension still works when chat API is unavailable.
   - Behavior remains backward compatible and test-covered.
 - Validation evidence:
-  - Run `pnpm --filter quicktask-vscode check`.
-  - Run `pnpm --filter quicktask-vscode test`.
+  - Replaced unsafe extension chat API casts with compatibility helper (`packages/vscode-extension/src/chatCompat.ts`) and guarded chat API resolution.
+  - Added tests for chat-API missing and chat-API present compatibility paths.
+  - Ran `pnpm --filter quicktask-vscode check`.
+  - Ran `pnpm --filter quicktask-vscode test`.
 
 ### [p] T067 - Add `/qt help [topic]` contextual help command
 
@@ -616,9 +619,9 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm tasks:check-templates`.
   - Verify fixture-based tests.
 
-### [p] T070 - Add adapter E2E coverage for improve action lifecycle
+### [x] T070 - Add adapter E2E coverage for improve action lifecycle
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Strengthen reliability by extending host smoke tests to cover accept/reject/abandon/expired improve actions end-to-end.
 - Files: `scripts/smoke-host-adapters.mjs`, adapter tests, optional test helpers.
@@ -635,8 +638,11 @@ Pending work below is triaged and ready for implementation.
   - Proposal expiry behavior is tested deterministically.
   - Tests remain stable and low-flake.
 - Validation evidence:
-  - Run `pnpm test:smoke`.
-  - Run adapter package tests.
+  - Extended `scripts/smoke-host-adapters.mjs` to cover accept/reject/abandon plus deterministic expiry lifecycle path.
+  - Added adapter-boundary lifecycle assertions in VS Code and OpenClaw adapter test suites.
+  - Ran `pnpm test:smoke`.
+  - Ran `pnpm --filter quicktask-vscode test`.
+  - Ran `pnpm --filter quicktask-openclaw test`.
 
 ### [x] T071 - Add workflow contract checks for release inputs and docs gates
 
@@ -768,9 +774,9 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm test`.
   - Run `pnpm check:package-manager`.
 
-### [p] T076 - Add adapter normalization parity test suite in shared smoke harness
+### [x] T076 - Add adapter normalization parity test suite in shared smoke harness
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Prevent host UX drift by asserting command normalization parity between VS Code and OpenClaw adapters.
 - Files: `scripts/smoke-host-adapters.mjs`, adapter tests, optional shared test fixtures.
@@ -787,12 +793,14 @@ Pending work below is triaged and ready for implementation.
   - Known/intentional host differences are explicit in test expectations.
   - Test coverage includes command and improve-action forms.
 - Validation evidence:
-  - Run `pnpm test:smoke`.
-  - Run adapter test suites.
+  - Added cross-adapter normalization parity assertions in shared smoke harness for empty input, implicit create, explicit command, show, and improve-action forms.
+  - Added adapter normalization parity test coverage in OpenClaw test suite.
+  - Ran `pnpm test:smoke`.
+  - Ran adapter test suites via `pnpm test`.
 
-### [p] T077 - Add `/qt doctor` diagnostics command for storage/runtime health
+### [x] T077 - Add `/qt doctor` diagnostics command for storage/runtime health
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Improve user supportability with a diagnostics command that reports storage path, writability, and recent runtime health signals.
 - Files: `packages/core/src/parser.ts`, `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, adapter renderers/docs/tests.
@@ -809,8 +817,10 @@ Pending work below is triaged and ready for implementation.
   - Common storage misconfiguration issues are detectable quickly.
   - Command behavior is documented and test-covered.
 - Validation evidence:
-  - Run core parser/runtime tests.
-  - Run adapter tests with doctor command cases.
+  - Added parser/runtime support for `/qt doctor` with safe diagnostics payload (tasks path, writability, task count, runtime version, recent runtime codes).
+  - Added store health probe helpers and adapter render/test coverage for doctor output.
+  - Updated command/result contract and adapter rendering matrix documentation.
+  - Ran core/parser/runtime and adapter tests via `pnpm test`.
 
 ### [p] T078 - Add local CLI sandbox for QuickTask runtime command simulation
 
@@ -1000,9 +1010,9 @@ Pending work below is triaged and ready for implementation.
   - Updated `PRE_RELEASE_READINESS_WORKFLOW.md`, `RELEASE_STRATEGY.md`, `PR_REVIEW_MERGE_STRATEGY.md`, `.cursor/rules/pre-release-readiness.mdc`, and `.cursor/rules/pr-review-merge-strategy.mdc` for consistent medium/high acceptance protocol.
   - Validated policy docs for consistency and exercised readiness flow with explicit accepted-risk record template guidance.
 
-### [p] T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
+### [x] T086 - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P1
 - Goal: Prevent command-surface churn by explicitly approving `list/show/doctor` additions while deferring non-core expansion unless re-approved.
 - Files: `docs/qt-command-result-contract.md`, `README.md`, `ARCHITECTURE.md`, `.cursor/commands/qt.md`, `TASK_DISCOVERY_WORKFLOW.md`.
@@ -1019,8 +1029,9 @@ Pending work below is triaged and ready for implementation.
   - Task discovery avoids proposing out-of-scope command expansions by default.
   - Contributors can quickly identify command-surface policy.
 - Validation evidence:
-  - Verify contract and README scope alignment.
-  - Run discovery and confirm proposed command tasks respect boundary.
+  - Updated approved command-surface policy across `docs/qt-command-result-contract.md`, `README.md`, `ARCHITECTURE.md`, `.cursor/commands/qt.md`, and `TASK_DISCOVERY_WORKFLOW.md`.
+  - Explicitly documented deferred-by-default policy for non-core command expansion.
+  - Verified contract/docs alignment and kept discovery workflow constrained to approved surface.
 
 ### [p] T087 - Add proposed-task promotion and aging policy in TASKS workflow
 

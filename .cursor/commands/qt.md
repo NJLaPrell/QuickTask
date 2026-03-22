@@ -9,6 +9,19 @@ Canonical docs:
 - `docs/qt-command-result-contract.md` for command forms and runtime result codes.
 - `docs/qt-adapter-rendering-matrix.md` for host rendering behavior and unknown-code fallback.
 
+Approved command surface (current):
+
+- `/qt`
+- `/qt [task] [instructions]`
+- `/qt/[task] [input]`
+- `/qt improve [task] [input]`
+- `/qt improve <accept|reject|abandon> [task] [proposal-id]`
+- `/qt list`
+- `/qt show [task]`
+- `/qt doctor`
+
+If a request asks for non-core command expansion, treat it as deferred unless explicitly approved.
+
 Execution requirements:
 
 1. Keep behavior aligned to `@quicktask/core` command parsing and runtime result codes.
