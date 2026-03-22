@@ -13,12 +13,20 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 ### Core commands
 
 - `/qt` - show command help.
+- `/qt help [topic]` - show contextual help (`create`, `run`, `improve`, `actions`, `discover`).
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task.
 - `/qt improve [task] [input]` - propose an improvement.
 - `/qt list` - list available task templates.
 - `/qt show [task]` - show one task template body.
 - `/qt doctor` - show runtime/storage diagnostics.
+
+Quoted task names are supported anywhere a `[task]` argument is accepted. Use double quotes for names with spaces:
+
+- `/qt "incident triage" [instructions]`
+- `/qt/"incident triage" [input]`
+- `/qt show "incident triage"`
+- `/qt improve "incident triage" [input]`
 
 ### Improvement action commands
 
@@ -31,6 +39,7 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 The approved `/qt` command surface is intentionally minimal:
 
 - help (`/qt`)
+- contextual help (`/qt help [topic]`)
 - create (`/qt [task] [instructions]`)
 - run (`/qt/[task] [input]`)
 - improve lifecycle (`/qt improve ...`, accept/reject/abandon)
@@ -69,6 +78,7 @@ Additional command expansions are deferred by default and require explicit re-ap
 - Proposals are not persisted across runtime restarts.
 - Proposal actions use a TTL window (default 30 minutes in runtime) and return `qt:improve:proposal-expired` when stale.
 - When no active proposal exists (including restart/lifecycle reset), runtime returns `qt:improve:proposal-not-found`.
+- Expired proposals and surplus finalized proposals are garbage-collected to keep in-memory proposal state bounded.
 
 ## Diagnostics and privacy policy
 

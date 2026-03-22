@@ -46,7 +46,14 @@ pnpm package:release
 pnpm release:verify-local-artifacts
 pnpm release:validate-changesets
 pnpm release:check-workflow-contracts
+pnpm release:check-notes-quality
 pnpm tasks:check
+pnpm tasks:check-templates
+pnpm docs:check-links
+pnpm check:generated-artifacts
+pnpm check:command-entrypoints
+pnpm phase:check -- --phase 10
+pnpm qt:sandbox -- /qt help
 pnpm check:package-manager
 pnpm clean
 ```
@@ -69,6 +76,7 @@ Use these documents as policy:
 - `COMMIT_STRATEGY.md`
 - `BRANCHING_TAGGING_STRATEGY.md`
 - `PR_REVIEW_MERGE_STRATEGY.md`
+- `docs/governance-map.md`
 
 Working defaults:
 
@@ -98,7 +106,7 @@ Working defaults:
 Task discovery:
 
 - Use `TASK_DISCOVERY_WORKFLOW.md` when asked to discover new development tasks.
-- Discovery runs manually on user request and can auto-add up to 10 `[p]` proposed tasks.
+- Discovery runs manually on user request and can auto-add up to 10 `[p]` ready-proposed tasks.
 
 ## Runtime and adapter contracts
 
@@ -225,6 +233,13 @@ Package manager policy:
 - Validate with `pnpm check:package-manager`.
 - Keep `README.md` support floors aligned with workflow/package policy via `pnpm check:support-matrix`.
 - Enforce distributable package metadata policy with `pnpm check:package-compliance`.
+- Enforce generated artifact policy with `pnpm check:generated-artifacts`.
+
+Generated artifact policy:
+
+- Generated declarations (`*.d.ts`) are build outputs only and must not be tracked in source directories.
+- Build/release artifacts under `artifacts/` are ephemeral local/CI outputs unless explicitly documented otherwise.
+- If artifact policy changes, update policy references in `docs/governance-map.md` in the same PR.
 
 Diagnostics and logging policy:
 
@@ -256,3 +271,8 @@ Rules:
 - Contributor workflow: `CONTRIBUTORS.md` (this file)
 - Release policy: `RELEASE_STRATEGY.md`
 - Pre-release readiness flow: `PRE_RELEASE_READINESS_WORKFLOW.md`
+- Governance source map: `docs/governance-map.md`
+- Cursor command entrypoints:
+  - `.cursor/commands/qt.md`
+  - `.cursor/commands/prepare-release.md`
+  - `.cursor/commands/discover-tasks.md`

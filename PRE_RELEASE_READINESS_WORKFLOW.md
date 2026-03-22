@@ -48,7 +48,11 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 - `pnpm build`
 - `pnpm release:docs-check` (with readiness defaults)
 - `pnpm tasks:check`
+- `pnpm tasks:check-templates`
 - `pnpm release:check-workflow-contracts`
+- `pnpm docs:check-links`
+- `pnpm check:command-entrypoints`
+- `pnpm check:generated-artifacts`
 - pending `.changeset/*.md` release inputs
 - Existing open `TASKS.md` tasks across all phases.
 

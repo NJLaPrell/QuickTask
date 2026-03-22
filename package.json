@@ -19,6 +19,7 @@
     "package:openclaw": "pnpm --filter @quicktask/core build && pnpm --filter quicktask-openclaw package:artifact",
     "package:release": "pnpm package:vscode && pnpm package:openclaw && node scripts/generate-release-integrity.mjs",
     "release:notes": "node scripts/generate-curated-release-notes.mjs",
+    "release:check-notes-quality": "node scripts/validate-release-notes-quality.mjs",
     "release:validate-changesets": "node scripts/validate-changeset-format.mjs",
     "release:verify-local-artifacts": "node scripts/verify-release-assets.mjs --assets-dir artifacts",
     "release:test-artifact-journeys": "node scripts/run-artifact-user-journeys.mjs --assets-dir artifacts",
@@ -31,6 +32,12 @@
     "release:docs-check": "node scripts/release-docs-check.mjs",
     "release:check-workflow-contracts": "node scripts/check-workflow-contracts.mjs",
     "tasks:check": "node scripts/tasks-check.mjs",
+    "tasks:check-templates": "node scripts/check-task-templates.mjs",
+    "docs:check-links": "node scripts/check-doc-links.mjs",
+    "phase:check": "node scripts/phase-exit-check.mjs",
+    "qt:sandbox": "node scripts/qt-sandbox.mjs",
+    "check:generated-artifacts": "node scripts/check-generated-artifacts-policy.mjs",
+    "check:command-entrypoints": "node scripts/check-command-entrypoints.mjs",
     "qt:check-contract-drift": "node scripts/check-qt-contract-drift.mjs"
   },
   "devDependencies": {

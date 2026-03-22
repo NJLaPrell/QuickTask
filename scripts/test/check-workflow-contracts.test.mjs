@@ -18,6 +18,14 @@ on:
 jobs:
   release:
     steps:
+      - name: Validate docs/command contracts
+        run: |
+          pnpm docs:check-links
+          pnpm check:command-entrypoints
+      - name: Validate generated artifact policy
+        run: pnpm check:generated-artifacts
+      - name: Validate release note quality
+        run: pnpm release:check-notes-quality
       - name: Verify built release assets
         run: pnpm release:verify-local-artifacts
       - name: Run clean-room artifact user journeys
@@ -35,6 +43,14 @@ const VALID_RC_WORKFLOW = `
 jobs:
   validate-rc:
     steps:
+      - name: Validate docs/command contracts
+        run: |
+          pnpm docs:check-links
+          pnpm check:command-entrypoints
+      - name: Validate generated artifact policy
+        run: pnpm check:generated-artifacts
+      - name: Validate release note quality
+        run: pnpm release:check-notes-quality
       - name: Verify candidate artifacts
         run: pnpm release:verify-local-artifacts
       - name: Run clean-room artifact user journeys

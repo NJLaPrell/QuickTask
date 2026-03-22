@@ -67,17 +67,17 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ## Current execution state
 
 - Last updated: 2026-03-22
-- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (planned start)
-- Current milestone target: Phase 9 release completed and shipped; transition to Phase 10 backlog promotion.
-- Phase objective now: preserve new CI/release hardening gates while executing deferred operational polish work.
+- Current phase in execution: Phase 10 - Operational polish and deferred enhancements (completion + release)
+- Current milestone target: Phase 10 tasks completed, release readiness prepared, and release dispatched.
+- Phase objective now: finalize deferred enhancements, enforce governance automation, and close the phase with a production release.
 - Active implementation (`[~]`): none
 - Scheduled this phase (`[ ]`): none
-- Ready queue (`[p]`): 20 tasks (phase 10 backlog)
+- Ready queue (`[p]`): 0 tasks
 - Blocked tasks (`[!]`): none
 - Next tasks in order:
-  1. T057 - Support quoted task names and richer parser input forms
-  2. T058 - Add proposal lifecycle GC to bound in-memory growth
-  3. T059 - Enforce session-only proposal lifecycle policy
+  1. Run post-release verification and marketplace follow-through.
+  2. Archive completed task records in next archive cadence.
+  3. Promote next milestone backlog from ready-proposed queue.
 - Definition of "phase complete" for current phase:
   - Phase 9 planned tasks (`T060`, `T064`, `T068`, `T073`, `T074`, `T080`, `T082`, `T098`, `T099`, `T100`, `T075`, `T081`) are complete.
   - No unresolved medium/high CI/release platform blockers remain.
@@ -142,7 +142,7 @@ Use this section only when medium/high findings are explicitly accepted instead 
 ### Phase 10 - Operational polish and deferred enhancements
 
 - Delivery outcome: Deferred enhancements, lifecycle polish, and governance automation are delivered after core release and product milestones are stable.
-- Status: planned.
+- Status: complete (awaiting archive cadence).
 - Planned task IDs (in order): T057, T058, T059, T063, T087, T088, T089, T090, T092, T067, T069, T072, T091, T094, T095, T097, T078, T079, T093, T096.
 
 ## Active task backlog
@@ -151,26 +151,7 @@ Pending work below is triaged and ready for implementation.
 
 ### Proposed
 
-- [p] T057 - Support quoted task names and richer parser input forms (P2)
-- [p] T058 - Add proposal lifecycle GC to bound in-memory growth (P2)
-- [p] T059 - Enforce session-only proposal lifecycle policy (P2)
-- [p] T063 - Add docs/link integrity checker for workflow-critical references (P2)
-- [p] T067 - Add `/qt help [topic]` contextual help command (P3)
-- [p] T069 - Add template quality lint for `tasks/*.md` content conventions (P3)
-- [p] T072 - Add release-note quality validation beyond section format (P3)
-- [p] T078 - Add local CLI sandbox for QuickTask runtime command simulation (P4)
-- [p] T079 - Add automated cleanup policy for quarantined corrupt templates (P4)
-- [p] T087 - Add proposed-task promotion and aging policy in TASKS workflow (P2)
-- [p] T088 - Add phase exit checklist automation and report command (P2)
-- [p] T089 - Add backlog integrity check for duplicates and phase assignment drift (P2)
-- [p] T090 - Remove generated declaration files from source tree (P2)
-- [p] T091 - Normalize task-state terminology across docs/commands/rules (P3)
-- [p] T092 - Consolidate duplicated policy docs and rule references (P2)
-- [p] T093 - Reorganize root documentation into a maintainable docs structure (P4)
-- [p] T094 - Define and enforce generated-artifact version-control policy (P3)
-- [p] T095 - Refactor duplicated test setup helpers for maintainability (P3)
-- [p] T096 - Remove or replace low-value placeholder package docs (P4)
-- [p] T097 - Audit and remove dead or unreferenced command/docs entrypoints (P3)
+- _Empty._
 
 ### Intake queue
 
@@ -293,9 +274,9 @@ Pending work below is triaged and ready for implementation.
   - Added test coverage for compatibility prompt handling and command output paths.
   - Ran `pnpm --filter quicktask-vscode test`.
 
-### [p] T057 - Support quoted task names and richer parser input forms
+### [x] T057 - Support quoted task names and richer parser input forms
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Expand command usability by supporting quoted task names and more robust token parsing.
 - Files: `packages/core/src/parser.ts`, `packages/core/src/types.ts`, parser/runtime tests, contract docs.
@@ -315,9 +296,9 @@ Pending work below is triaged and ready for implementation.
   - Run parser and runtime tests in `@quicktask/core`.
   - Add targeted parser fixtures for quoted paths.
 
-### [p] T058 - Add proposal lifecycle GC to bound in-memory growth
+### [x] T058 - Add proposal lifecycle GC to bound in-memory growth
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve runtime maintainability by ensuring expired/finalized proposals are pruned from in-memory state.
 - Files: `packages/core/src/runtime.ts`, runtime tests/docs.
@@ -337,9 +318,9 @@ Pending work below is triaged and ready for implementation.
   - Run core runtime tests.
   - Add a stress-like unit test for proposal map size over repeated operations.
 
-### [p] T059 - Enforce session-only proposal lifecycle policy
+### [x] T059 - Enforce session-only proposal lifecycle policy
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Remove persistence ambiguity by codifying and enforcing session-only proposal behavior across runtime, docs, and adapter messaging.
 - Files: `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, `docs/qt-command-result-contract.md`, adapter docs/tests.
@@ -442,9 +423,9 @@ Pending work below is triaged and ready for implementation.
   - Ran `pnpm test`.
   - Ran `pnpm test:smoke`.
 
-### [p] T063 - Add docs/link integrity checker for workflow-critical references
+### [x] T063 - Add docs/link integrity checker for workflow-critical references
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve maintainability by automatically validating that referenced policy/workflow documents and key intra-repo links exist and remain current.
 - Files: `scripts/check-doc-links.mjs` (new), `package.json`, docs and rule files as needed, optional workflow wiring.
@@ -546,9 +527,9 @@ Pending work below is triaged and ready for implementation.
   - Ran `pnpm --filter quicktask-vscode check`.
   - Ran `pnpm --filter quicktask-vscode test`.
 
-### [p] T067 - Add `/qt help [topic]` contextual help command
+### [x] T067 - Add `/qt help [topic]` contextual help command
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Improve discoverability by providing targeted help for command families (create/run/improve/actions) instead of one generic help block.
 - Files: `packages/core/src/parser.ts`, `packages/core/src/runtime.ts`, `packages/core/src/types.ts`, adapter renderers/docs/tests.
@@ -592,9 +573,9 @@ Pending work below is triaged and ready for implementation.
   - Ran `pnpm package:openclaw`.
   - Verified artifact contents with `tar` library inspection for required entries (`package/dist/*` and bundled `@quicktask/core/dist/*` files).
 
-### [p] T069 - Add template quality lint for `tasks/*.md` content conventions
+### [x] T069 - Add template quality lint for `tasks/*.md` content conventions
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Improve task/template output quality by validating conventions (title, goal line, concise directives) for task template markdown files.
 - Files: `scripts/check-task-templates.mjs` (new), `package.json`, `tasks/` samples/tests/docs.
@@ -663,9 +644,9 @@ Pending work below is triaged and ready for implementation.
   - Wired contract checks into `ci.yml`, `release.yml`, `release-candidate.yml`, and `release:prepare`.
   - Ran `pnpm release:check-workflow-contracts`.
 
-### [p] T072 - Add release-note quality validation beyond section format
+### [x] T072 - Add release-note quality validation beyond section format
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Improve user-facing release quality by enforcing practical checks on generated/curated notes (empty highlights, duplicate bullets, weak summaries).
 - Files: `scripts/validate-release-notes-quality.mjs` (new), `scripts/generate-curated-release-notes.mjs`, `package.json`, release workflow/docs.
@@ -820,9 +801,9 @@ Pending work below is triaged and ready for implementation.
   - Updated command/result contract and adapter rendering matrix documentation.
   - Ran core/parser/runtime and adapter tests via `pnpm test`.
 
-### [p] T078 - Add local CLI sandbox for QuickTask runtime command simulation
+### [x] T078 - Add local CLI sandbox for QuickTask runtime command simulation
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P4
 - Goal: Improve developer experience by adding a small local CLI harness to run and inspect runtime command responses without loading a host adapter.
 - Files: `scripts/qt-sandbox.mjs` (new), `package.json`, contributor docs.
@@ -842,9 +823,9 @@ Pending work below is triaged and ready for implementation.
   - Run CLI with help/create/run/improve scenarios.
   - Verify no unintended writes outside selected tasks dir.
 
-### [p] T079 - Add automated cleanup policy for quarantined corrupt templates
+### [x] T079 - Add automated cleanup policy for quarantined corrupt templates
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P4
 - Goal: Improve workspace hygiene by managing growth of `*.corrupt.*.bak` files created during corruption quarantine.
 - Files: `packages/core/src/store.ts`, maintenance script (new), docs/tests.
@@ -1036,9 +1017,9 @@ Pending work below is triaged and ready for implementation.
   - Explicitly documented deferred-by-default policy for non-core command expansion.
   - Verified contract/docs alignment and kept discovery workflow constrained to approved surface.
 
-### [p] T087 - Add proposed-task promotion and aging policy in TASKS workflow
+### [x] T087 - Add proposed-task promotion and aging policy in TASKS workflow
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Prevent backlog bloat by defining deterministic rules for promoting `[p]` tasks, aging stale proposals, and pruning low-value items.
 - Files: `TASKS.md`, `TASK_DISCOVERY_WORKFLOW.md`, `.cursor/rules/task-discovery-workflow.mdc`, contributor docs.
@@ -1058,9 +1039,9 @@ Pending work below is triaged and ready for implementation.
   - Review docs/rules consistency.
   - Simulate triage pass against current proposed backlog.
 
-### [p] T088 - Add phase exit checklist automation and report command
+### [x] T088 - Add phase exit checklist automation and report command
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve delivery predictability by adding a command that validates phase exit criteria and reports remaining blockers.
 - Files: `scripts/phase-exit-check.mjs` (new), `package.json`, `TASKS.md`, docs/rules.
@@ -1080,9 +1061,9 @@ Pending work below is triaged and ready for implementation.
   - Run phase check for at least Phase 7 and Phase 8.
   - Add tests for ready/not-ready fixtures.
 
-### [p] T089 - Add backlog integrity check for duplicates and phase assignment drift
+### [x] T089 - Add backlog integrity check for duplicates and phase assignment drift
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Prevent planning errors by detecting duplicate task references across phases/sections and mismatched phase assignment metadata.
 - Files: `scripts/tasks-check.mjs`, `TASKS.md`, optional test fixtures/docs.
@@ -1102,9 +1083,9 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm tasks:check` (or equivalent) with drift fixtures.
   - Confirm clean pass on current backlog after fixes.
 
-### [p] T090 - Remove generated declaration files from source tree
+### [x] T090 - Remove generated declaration files from source tree
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Reduce source-tree noise and dead file confusion by removing committed generated `.d.ts` files from `packages/core/src` and enforcing declaration output in build artifacts only.
 - Files: `packages/core/src/*.d.ts`, `packages/core/tsconfig.json`, build scripts/config, docs as needed.
@@ -1124,9 +1105,9 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm --filter @quicktask/core build`.
   - Verify `packages/core/src` declaration cleanup and `dist` declaration presence.
 
-### [p] T091 - Normalize task-state terminology across docs/commands/rules
+### [x] T091 - Normalize task-state terminology across docs/commands/rules
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Eliminate terminology drift by consistently using `ready-proposed` language for `[p]` status across contributor docs, command wrappers, and rules.
 - Files: `CONTRIBUTORS.md`, `TASK_DISCOVERY_WORKFLOW.md`, `.cursor/commands/*.md`, `.cursor/rules/*.mdc`, related docs.
@@ -1146,9 +1127,9 @@ Pending work below is triaged and ready for implementation.
   - Run a wording search for stale phrases.
   - Verify canonical status legend references match all task docs.
 
-### [p] T092 - Consolidate duplicated policy docs and rule references
+### [x] T092 - Consolidate duplicated policy docs and rule references
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P2
 - Goal: Improve maintainability by reducing duplicated governance text across root strategy docs, workflow docs, and `.cursor/rules` references.
 - Files: `COMMIT_STRATEGY.md`, `BRANCHING_TAGGING_STRATEGY.md`, `PR_REVIEW_MERGE_STRATEGY.md`, `.cursor/rules/*.mdc`, `CONTRIBUTORS.md`.
@@ -1168,9 +1149,9 @@ Pending work below is triaged and ready for implementation.
   - Run docs link/integrity checks.
   - Verify contributor and rule docs still cover required policy behavior.
 
-### [p] T093 - Reorganize root documentation into a maintainable docs structure
+### [x] T093 - Reorganize root documentation into a maintainable docs structure
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P4
 - Goal: Improve repo hygiene by organizing root-level markdown files into a clearer docs hierarchy without losing discoverability.
 - Files: root `*.md` policy files, `docs/` structure, `README.md`, internal links.
@@ -1190,9 +1171,9 @@ Pending work below is triaged and ready for implementation.
   - Run docs/link checks.
   - Verify contributor onboarding flow against new docs layout.
 
-### [p] T094 - Define and enforce generated-artifact version-control policy
+### [x] T094 - Define and enforce generated-artifact version-control policy
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Clarify what generated artifacts should be committed versus ephemeral to reduce repo churn and confusion.
 - Files: `artifacts/`, `docs/release-readiness-report.md`, `.gitignore`, release docs/workflows.
@@ -1212,9 +1193,9 @@ Pending work below is triaged and ready for implementation.
   - Run release/readiness workflows with updated artifact policy.
   - Verify git status remains clean after standard validation commands.
 
-### [p] T095 - Refactor duplicated test setup helpers for maintainability
+### [x] T095 - Refactor duplicated test setup helpers for maintainability
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Reduce test duplication by extracting shared tmp-dir/runtime setup helpers used across core runtime/store tests.
 - Files: `packages/core/test/*.test.mjs`, shared test helper module (new), optional adapter tests.
@@ -1234,12 +1215,12 @@ Pending work below is triaged and ready for implementation.
   - Run `pnpm test`.
   - Compare test output and timing before/after refactor.
 
-### [p] T096 - Remove or replace low-value placeholder package docs
+### [x] T096 - Remove or replace low-value placeholder package docs
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P4
 - Goal: Improve documentation quality by removing placeholder package docs or replacing them with meaningful package-level guidance.
-- Files: `packages/core/src/README.md`, package-level docs, root docs references.
+- Files: `packages/core/README.md`, package-level docs, root docs references.
 - Dependencies: T093.
 - Blocked by: none.
 - Unblock plan: n/a
@@ -1256,9 +1237,9 @@ Pending work below is triaged and ready for implementation.
   - Review package docs map for completeness.
   - Run docs/link checks.
 
-### [p] T097 - Audit and remove dead or unreferenced command/docs entrypoints
+### [x] T097 - Audit and remove dead or unreferenced command/docs entrypoints
 
-- Status: [p]
+- Status: [x] complete (not yet archived)
 - Priority: P3
 - Goal: Improve maintainability by pruning stale `.cursor/commands` and documentation entrypoints that are no longer referenced or used.
 - Files: `.cursor/commands/*.md`, root/docs index references, related rule links.

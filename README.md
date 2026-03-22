@@ -71,6 +71,7 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 ### Command forms
 
 - `/qt` - show command help.
+- `/qt help [create|run|improve|actions|discover]` - show topic-specific help.
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task with input.
 - `/qt improve [task] [input]` - propose an improvement for an existing task.
@@ -80,6 +81,13 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 - `/qt list` - list available task templates.
 - `/qt show [task]` - show one task template body.
 - `/qt doctor` - show storage/runtime diagnostics.
+
+Quoted task names are supported for create/run/show/improve flows when names include spaces:
+
+- `/qt "incident triage" capture timeline and owner`
+- `/qt/"incident triage" production outage timeline`
+- `/qt show "incident triage"`
+- `/qt improve "incident triage" include customer impact`
 
 ### Common workflow example
 
@@ -148,6 +156,7 @@ Release policy details live in `RELEASE_STRATEGY.md`. Contributor operational st
 - `packages/openclaw-plugin` - OpenClaw host adapter.
 - `.cursor/commands` - Cursor slash-command entrypoints.
 - `docs/` - contract docs and readiness artifacts.
+- `docs/governance-map.md` - source-of-truth policy map.
 
 ## Documentation
 
@@ -157,5 +166,10 @@ Release policy details live in `RELEASE_STRATEGY.md`. Contributor operational st
 - Pre-release readiness workflow: `PRE_RELEASE_READINESS_WORKFLOW.md`
 - Production release strategy: `RELEASE_STRATEGY.md`
 - Release assets and verification reference: `docs/release-assets-and-verification.md`
+- Governance document map: `docs/governance-map.md`
 - Task tracking source of truth: active board `TASKS.md` + history `TASKS_ARCHIVED.md`
 - Task discovery workflow: `TASK_DISCOVERY_WORKFLOW.md`
+- Cursor command entrypoints:
+  - `.cursor/commands/qt.md`
+  - `.cursor/commands/prepare-release.md`
+  - `.cursor/commands/discover-tasks.md`

@@ -176,6 +176,38 @@ function parseTaskDetails(content) {
   return { detailsById, errors };
 }
 
+function parsePhaseTaskReferences(content) {
+  const lines = content.split("\n");
+  const phaseHeaderRegex = /^### (Phase \d+) - /;
+  const taskIdRegex = /\bT\d+\b/g;
+  const references = [];
+  let currentPhase = null;
+
+  for (const line of lines) {
+    const phaseMatch = line.match(phaseHeaderRegex);
+    if (phaseMatch) {
+      currentPhase = phaseMatch[1];
+      continue;
+    }
+    if (!currentPhase) {
+      continue;
+    }
+    if (line.startsWith("### ") && !phaseHeaderRegex.test(line)) {
+      currentPhase = null;
+      continue;
+    }
+    if (!line.includes("Planned task IDs")) {
+      continue;
+    }
+    const ids = line.match(taskIdRegex) ?? [];
+    for (const taskId of ids) {
+      references.push({ taskId, phase: currentPhase });
+    }
+  }
+
+  return references;
+}
+
 export function validateTasksDocument(content) {
   const errors = [];
   const { entries, errors: backlogErrors } = parseBacklogEntries(content);
@@ -205,6 +237,21 @@ export function validateTasksDocument(content) {
   for (const [taskId, detail] of detailsById) {
     if (OPEN_STATUS_MARKERS.has(detail.headerStatus) && !seenIds.has(taskId)) {
       errors.push(`Open task ${taskId} appears in details but not in active backlog sections.`);
+    }
+  }
+
+  const phaseRefs = parsePhaseTaskReferences(content);
+  const phaseByTaskId = new Map();
+  for (const reference of phaseRefs) {
+    const phaseSet = phaseByTaskId.get(reference.taskId) ?? new Set();
+    phaseSet.add(reference.phase);
+    phaseByTaskId.set(reference.taskId, phaseSet);
+  }
+  for (const [taskId, phases] of phaseByTaskId) {
+    if (phases.size > 1) {
+      errors.push(
+        `Task ${taskId} appears in multiple phase plan lists (${[...phases].join(", ")}).`
+      );
     }
   }
 

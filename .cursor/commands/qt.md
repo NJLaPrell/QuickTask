@@ -12,6 +12,7 @@ Canonical docs:
 Approved command surface (current):
 
 - `/qt`
+- `/qt help [create|run|improve|actions|discover]`
 - `/qt [task] [instructions]`
 - `/qt/[task] [input]`
 - `/qt improve [task] [input]`
@@ -19,6 +20,8 @@ Approved command surface (current):
 - `/qt list`
 - `/qt show [task]`
 - `/qt doctor`
+
+Quoted task names are supported for commands that take `[task]`.
 
 If a request asks for non-core command expansion, treat it as deferred unless explicitly approved.
 

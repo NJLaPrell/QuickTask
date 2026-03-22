@@ -12,7 +12,12 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { createFileTaskStore, getTaskTemplate, saveTaskTemplate } from "../dist/store.js";
+import {
+  createFileTaskStore,
+  getTaskTemplate,
+  listTaskNames,
+  saveTaskTemplate
+} from "../dist/store.js";
 
 function withTempStoreDir() {
   const tasksDir = mkdtempSync(path.join(os.tmpdir(), "quicktask-store-"));
@@ -161,6 +166,28 @@ test("quarantines corrupted template files deterministically", () => {
       files.some((entry) => entry.startsWith("broken.md.corrupt.") && entry.endsWith(".bak"))
     );
     assert.ok(!files.includes("broken.md"));
+  } finally {
+    cleanup();
+  }
+});
+
+test("retains only recent corrupt backups to prevent unbounded growth", () => {
+  const { store, cleanup } = withTempStoreDir();
+  try {
+    for (let index = 0; index < 30; index += 1) {
+      const filePath = path.join(store.tasksDir, `broken-${index}.md`);
+      writeFileSync(filePath, "---\nquicktaskVersion: nope\n---\n# broken", "utf8");
+      assert.throws(
+        () => getTaskTemplate(store, `broken-${index}`),
+        /is corrupted and was moved to/
+      );
+    }
+
+    listTaskNames(store);
+    const corruptBackups = readdirSync(store.tasksDir).filter(
+      (entry) => entry.includes(".corrupt.") && entry.endsWith(".bak")
+    );
+    assert.ok(corruptBackups.length <= 25);
   } finally {
     cleanup();
   }

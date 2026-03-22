@@ -36,6 +36,23 @@ test("returns help for /qt", () => {
   }
 });
 
+test("returns contextual help for known topic and fallback for unknown topic", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const topicHelp = runtime.handle("/qt help improve");
+    assert.equal(topicHelp.kind, "help");
+    assert.equal(topicHelp.code, "qt:help");
+    assert.ok(topicHelp.usage.includes("/qt improve [task] [input]"));
+
+    const unknownHelp = runtime.handle("/qt help nonsense");
+    assert.equal(unknownHelp.kind, "help");
+    assert.equal(unknownHelp.code, "qt:help");
+    assert.match(unknownHelp.message ?? "", /Unknown help topic/);
+  } finally {
+    cleanup();
+  }
+});
+
 test("records safe runtime diagnostics events", () => {
   const { runtime, cleanup } = createRuntimeForTest();
   try {
@@ -111,6 +128,25 @@ test("create then run returns template and user input", () => {
     assert.equal(result.taskName, "summarize");
     assert.match(result.templateBody, /- Goal: produce concise bullets/);
     assert.equal(result.userInput, "Team sync notes");
+  } finally {
+    cleanup();
+  }
+});
+
+test("quoted task names are supported across create, run, and show", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const created = runtime.handle('/qt "incident triage" capture timeline and owner');
+    assert.equal(created.kind, "created");
+    assert.equal(created.taskName, "incident triage");
+
+    const run = runtime.handle('/qt/"incident triage" service degraded in us-east-1');
+    assert.equal(run.kind, "run_executed");
+    assert.equal(run.taskName, "incident triage");
+
+    const shown = runtime.handle('/qt show "incident triage"');
+    assert.equal(shown.kind, "show");
+    assert.equal(shown.taskName, "incident triage");
   } finally {
     cleanup();
   }
@@ -347,6 +383,31 @@ test("improve reject and abandon do not apply template changes", () => {
     assert.match(runResult.templateBody, /baseline instructions/);
     assert.doesNotMatch(runResult.templateBody, /add rejection change/);
     assert.doesNotMatch(runResult.templateBody, /add abandon change/);
+  } finally {
+    cleanup();
+  }
+});
+
+test("proposal cache stays bounded after repeated finalized actions", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    runtime.handle("/qt summarize baseline instructions");
+    const proposalIds = [];
+    for (let index = 0; index < 220; index += 1) {
+      const proposal = runtime.handle(`/qt improve summarize change ${index}`);
+      assert.equal(proposal.kind, "improve_proposed");
+      proposalIds.push(proposal.proposalId);
+      const rejected = runtime.handle(`/qt improve reject summarize ${proposal.proposalId}`);
+      assert.equal(rejected.kind, "improve_action");
+    }
+
+    const oldest = runtime.handle(`/qt improve reject summarize ${proposalIds[0]}`);
+    assert.equal(oldest.kind, "not_found");
+
+    const newest = runtime.handle(
+      `/qt improve reject summarize ${proposalIds[proposalIds.length - 1]}`
+    );
+    assert.equal(newest.kind, "improve_action");
   } finally {
     cleanup();
   }

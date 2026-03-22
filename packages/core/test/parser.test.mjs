@@ -19,11 +19,27 @@ test("parses create command", () => {
   });
 });
 
+test("parses quoted create task names", () => {
+  assert.deepEqual(parseQtCommand('/qt "incident triage" create runbook from issue details'), {
+    kind: "create",
+    taskName: "incident triage",
+    instructions: "create runbook from issue details"
+  });
+});
+
 test("parses run command", () => {
   assert.deepEqual(parseQtCommand("/qt/summarize meeting notes"), {
     kind: "run",
     taskName: "summarize",
     userInput: "meeting notes"
+  });
+});
+
+test("parses quoted run task names", () => {
+  assert.deepEqual(parseQtCommand('/qt/"incident triage" prod outage timeline'), {
+    kind: "run",
+    taskName: "incident triage",
+    userInput: "prod outage timeline"
   });
 });
 
@@ -35,6 +51,13 @@ test("parses show command", () => {
   assert.deepEqual(parseQtCommand("/qt show summarize"), {
     kind: "show",
     taskName: "summarize"
+  });
+});
+
+test("parses quoted show task names", () => {
+  assert.deepEqual(parseQtCommand('/qt show "incident triage"'), {
+    kind: "show",
+    taskName: "incident triage"
   });
 });
 
@@ -50,11 +73,26 @@ test("parses doctor command", () => {
   assert.deepEqual(parseQtCommand("/qt doctor"), { kind: "doctor" });
 });
 
+test("parses contextual help command", () => {
+  assert.deepEqual(parseQtCommand("/qt help improve"), {
+    kind: "help",
+    topic: "improve"
+  });
+});
+
 test("parses improve command with task and input", () => {
   assert.deepEqual(parseQtCommand("/qt improve summarize favor action items"), {
     kind: "improve",
     taskName: "summarize",
     userInput: "favor action items"
+  });
+});
+
+test("parses improve command with quoted task and input", () => {
+  assert.deepEqual(parseQtCommand('/qt improve "incident triage" include owner field'), {
+    kind: "improve",
+    taskName: "incident triage",
+    userInput: "include owner field"
   });
 });
 
@@ -72,6 +110,23 @@ test("parses improve action command", () => {
     action: "accept",
     taskName: "summarize",
     proposalId: "abc123"
+  });
+});
+
+test("parses improve action command with quoted task name", () => {
+  assert.deepEqual(parseQtCommand('/qt improve accept "incident triage" abc123'), {
+    kind: "improve_action",
+    action: "accept",
+    taskName: "incident triage",
+    proposalId: "abc123"
+  });
+});
+
+test("returns incomplete for unterminated quoted task name", () => {
+  assert.deepEqual(parseQtCommand('/qt show "incident triage'), {
+    kind: "incomplete",
+    reason: "missing-show-task",
+    usage: "/qt show [task]"
   });
 });
 

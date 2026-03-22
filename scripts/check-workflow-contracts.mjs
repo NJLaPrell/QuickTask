@@ -26,11 +26,19 @@ const REQUIRED_DOCS_CHECK_ENVS = [
   "RELEASE_DOCS_SYNC_NOTES"
 ];
 const REQUIRED_RELEASE_GATES = [
+  "pnpm docs:check-links",
+  "pnpm check:command-entrypoints",
+  "pnpm check:generated-artifacts",
+  "run: pnpm release:check-notes-quality",
   "run: pnpm release:verify-local-artifacts",
   "run: pnpm release:test-artifact-journeys",
   "run: pnpm release:validate-host-installs"
 ];
 const REQUIRED_RC_GATES = [
+  "pnpm docs:check-links",
+  "pnpm check:command-entrypoints",
+  "pnpm check:generated-artifacts",
+  "run: pnpm release:check-notes-quality",
   "run: pnpm release:verify-local-artifacts",
   "run: pnpm release:test-artifact-journeys",
   "run: pnpm release:validate-host-installs"
