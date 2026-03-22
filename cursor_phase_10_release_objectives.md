@@ -14,8 +14,6 @@ Great. Let's call it good for now. I'm going to try it for the first time. Yes, 
 
 Pulling the repo’s actual quickstart and Cursor-specific notes so the steps match what we shipped.
 
-
-
 Here’s the straight shot for **trying QuickTask in Cursor** with **this repo open** (no guilt trip—you’re about to poke the beast).
 
 ## 1. Open the repo in Cursor
@@ -89,16 +87,16 @@ Fair — skip the repo entirely. You’re just doing **VSIX + Cursor**.
    Go to the **QuickTask** GitHub repo → **Releases** → open **`v1.0.0`** (or latest).  
    Download **`quicktask-vscode-v1.0.0.vsix`** (name may match that pattern).
 
-2. **Install in Cursor**  
-   - Open Cursor → **Command Palette** (`Cmd+Shift+P` on Mac).  
-   - Run something like **Extensions: Install from VSIX…** (wording may be “Install from VSIX”).  
-   - Pick the `.vsix` file.  
+2. **Install in Cursor**
+   - Open Cursor → **Command Palette** (`Cmd+Shift+P` on Mac).
+   - Run something like **Extensions: Install from VSIX…** (wording may be “Install from VSIX”).
+   - Pick the `.vsix` file.
    - **Reload** the window if Cursor asks.
 
-3. **Use it**  
-   - Open **any folder** you want templates to live in (your project).  
-   - Use the extension’s QuickTask entry (chat / command — whatever the extension exposes; often a **QuickTask** or **`/qt`-style** flow in the VS Code-compatible chat if enabled).  
-   - First run: **`/qt init`** (or equivalent from the extension UI) so it creates **`tasks/`** and starter templates.  
+3. **Use it**
+   - Open **any folder** you want templates to live in (your project).
+   - Use the extension’s QuickTask entry (chat / command — whatever the extension exposes; often a **QuickTask** or **`/qt`-style** flow in the VS Code-compatible chat if enabled).
+   - First run: **`/qt init`** (or equivalent from the extension UI) so it creates **`tasks/`** and starter templates.
    - Then: **`/qt list`**, **`/qt show standup`**, **`/qt/standup …`**.
 
 4. **If it’s dead on arrival**  
@@ -116,16 +114,11 @@ I don't see my plugin on the VSCode market...
 
 **Cursor**
 
-
 Checking how the extension is named and published in the repo.
-
-
-
-
 
 You're not blind — it's easy to miss because it's basically invisible on Marketplace.
 
-**It *is* listed**, but with **0 installs** and no overview text, so search often buries it under unrelated "Quick Task" junk.
+**It _is_ listed**, but with **0 installs** and no overview text, so search often buries it under unrelated "Quick Task" junk.
 
 ### Find it reliably
 
@@ -133,7 +126,7 @@ You're not blind — it's easy to miss because it's basically invisible on Marke
    **https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode**
 
 2. **Exact names to search**
-   - **Display name:** `QuickTask Workflows`  
+   - **Display name:** `QuickTask Workflows`
    - **Publisher:** **Nick LaPrell** (Marketplace capitalizes it; your `package.json` has `"publisher": "nicklaprell"`).
 
 3. **Install by ID** (VS Code / some Cursor builds)  
@@ -158,20 +151,17 @@ So: **direct link first**, **VSIX if Cursor's marketplace is being weird**. That
 
 **Cursor**
 
-
 Running QuickTask init in your workspace.
-
-
-
-
 
 **`/qt init` — done.** QuickTask bootstrapped in this workspace.
 
 ### What happened
+
 - **Status:** `initialized` (`qt:init:initialized`)
 - **Created:** `tasks/` plus starter templates: **standup**, **incident-triage**, **release-notes**, **pr-review**
 
 ### Try next (in chat or the extension)
+
 ```text
 /qt list
 /qt show standup
@@ -179,7 +169,7 @@ Running QuickTask init in your workspace.
 /qt improve standup include risks and blockers
 ```
 
-**Heads-up:** In *this* repo, `pnpm qt:sandbox -- /qt init` blew up because `@quicktask/core` isn't linked at the monorepo root — the runtime still works via `packages/core/dist` (what I used). If you want sandbox fixed later, we can wire root deps or change the script import path.
+**Heads-up:** In _this_ repo, `pnpm qt:sandbox -- /qt init` blew up because `@quicktask/core` isn't linked at the monorepo root — the runtime still works via `packages/core/dist` (what I used). If you want sandbox fixed later, we can wire root deps or change the script import path.
 
 You're initialized; go poke **`/qt list`** and see your shiny new markdown zoo.
 
@@ -193,13 +183,13 @@ You're initialized; go poke **`/qt list`** and see your shiny new markdown zoo.
 
 **Cursor**
 
-
 **`/qt list`**
 
-- **Code:** `qt:list:listed`  
+- **Code:** `qt:list:listed`
 - **Message:** Found 4 task templates.
 
 **Tasks:**
+
 - `incident-triage`
 - `pr-review`
 - `release-notes`
@@ -217,24 +207,23 @@ Next fun move: `/qt show standup` or `/qt/standup your standup text here`.
 
 **Cursor**
 
-
 **`/qt help`** (`qt:help`)
 
 Use `/qt help [topic]` for focused help. General surface:
 
-| Command |
-|--------|
-| `/qt` |
-| `/qt init` |
-| `/qt [task] [instructions]` |
-| `/qt/[task] [input]` |
-| `/qt improve [task] [input]` |
-| `/qt export [task|--all]` |
-| `/qt import [--force] [payload-json]` |
-| `/qt import-pack [--force] [manifest-path]` |
-| `/qt list` |
-| `/qt show [task]` |
-| `/qt doctor` |
+| Command                                              |
+| ---------------------------------------------------- | ------- |
+| `/qt`                                                |
+| `/qt init`                                           |
+| `/qt [task] [instructions]`                          |
+| `/qt/[task] [input]`                                 |
+| `/qt improve [task] [input]`                         |
+| `/qt export [task                                    | --all]` |
+| `/qt import [--force] [payload-json]`                |
+| `/qt import-pack [--force] [manifest-path]`          |
+| `/qt list`                                           |
+| `/qt show [task]`                                    |
+| `/qt doctor`                                         |
 | `/qt help [create\|run\|improve\|actions\|discover]` |
 
 **Tip:** `/qt help improve` or `/qt help discover` for the cheat-sheet version.
@@ -249,10 +238,10 @@ Use `/qt help [topic]` for focused help. General surface:
 
 **Cursor**
 
-
 **`/qt list`** → `qt:list:listed`
 
 **Found 4 task templates:**
+
 - `incident-triage`
 - `pr-review`
 - `release-notes`
@@ -267,7 +256,6 @@ Use `/qt help [topic]` for focused help. General surface:
 ---
 
 **Cursor**
-
 
 **`/qt show standup`** → `qt:show:template`
 
@@ -293,12 +281,7 @@ Run it with something like: `/qt/standup yesterday: … today: … blockers: …
 
 **Cursor**
 
-
 Running what you typed — QuickTask treats `/qt standup …` as **create**, not **run**.
-
-
-
-
 
 **What you ran:** `/qt standup yesterday`  
 That's parsed as **create** (`/qt [task] [instructions]`), not **run**.
@@ -324,7 +307,6 @@ Tiny mnemonic: **`/qt/` = run**, **`/qt `** (space) = create.
 ---
 
 **Cursor**
-
 
 **Created** `qt:create:created`
 
@@ -360,7 +342,6 @@ If **`test` already exists** next time you'll get `already-exists` — pick anot
 
 **Cursor**
 
-
 **`/qt improve test`** → `qt:improve:proposed`
 
 - **Source:** `inferred` (you didn't add extra text, so it guessed a generic refinement)
@@ -391,8 +372,7 @@ Provide a brief and concise report that best responds to the user and provide it
 
 **Cursor**
 
-
-**QuickTask interpreted that as *create*, not "go research the internet".** You got a new template.
+**QuickTask interpreted that as _create_, not "go research the internet".** You got a new template.
 
 **Created:** `research` → `tasks/research.md` (`qt:create:created`)
 
@@ -408,14 +388,14 @@ Provide a brief and concise report that best responds to the user and provide it
 
 **To use it with the plugin:**
 
-- **Run it** (this is where you pass the *topic*):  
+- **Run it** (this is where you pass the _topic_):  
   `/qt/research <your topic or question here>`
 
 - **Inspect:** `/qt show research`
 
 ---
 
-If you meant **"actually do the research right now"** (not define a template), say the **topic** in plain English *without* the `/qt research …* create form, e.g. *"Research X and give 3 sources + summary"* — and I'll search and write the report.
+If you meant **"actually do the research right now"** (not define a template), say the **topic** in plain English _without_ the `/qt research …_ create form, e.g. _"Research X and give 3 sources + summary"\* — and I'll search and write the report.
 
 ---
 
@@ -427,12 +407,7 @@ If you meant **"actually do the research right now"** (not define a template), s
 
 **Cursor**
 
-
 Parsing: `/qt research …` is create, not run. Checking the runtime, then running `/qt/research` and fetching current info.
-
-
-
-
 
 ### QuickTask side (what just happened)
 
@@ -450,25 +425,26 @@ I ran that shape locally: **`qt:run:executed`** with your string as `userInput` 
 
 ### Brief report (for **Best indoor mosquito solution** — indoor-focused)
 
-**1. CDC — *Preventing mosquito bites***  
+**1. CDC — _Preventing mosquito bites_**  
 https://www.cdc.gov/mosquitoes/prevention/index.html  
 **Takeaway:** First-line defense is **keeping them out** (screens, closed windows/doors, AC when you can) and **eliminating indoor standing water** where some species can breed. When bites still happen, **EPA-registered repellents** (DEET, picaridin, IR3535, OLE/PMD, etc.) are the evidence-backed personal protection layer—**follow the label**.
 
-**2. EPA — *Insect repellents / bite prevention tips***  
+**2. EPA — _Insect repellents / bite prevention tips_**  
 https://www.epa.gov/insect-repellents  
 https://www.epa.gov/insect-repellents/tips-prevent-mosquito-bites  
 **Takeaway:** Use the **EPA repellent search** to pick a registered product for your scenario; **effectiveness and safety come from registered formulations used as directed**, not from random "natural" brands.
 
-**3. CDC — *Mosquito control at home***  
+**3. CDC — _Mosquito control at home_**  
 https://www.cdc.gov/mosquitoes/mosquito-control/mosquito-control-at-home.html  
 **Takeaway:** Treat indoors as **exclude + remove habitat + kill stragglers** (screens, dump/dry water sources, targeted indoor products **as labeled** if needed).
 
-**Practical "best indoor stack" (direction: actually solve indoor bites)**  
-1) **Fix entry** (screens, gaps, door habits).  
-2) **Remove indoor breeding sites** (saucers, vases, pet bowls, etc.).  
-3) **Personal protection**: **EPA-registered repellent** when you're getting bitten.  
-4) Optional: **UV/suction sticky indoor traps** can reduce some flying biters; treat them as **supplemental**, not a replacement for exclusion + source control.
+**Practical "best indoor stack" (direction: actually solve indoor bites)**
 
-*(If you're seeing "mosquitoes" indoors but no bites, also consider **fungus gnats**—different fix: dry out soil / address houseplants.)*
+1. **Fix entry** (screens, gaps, door habits).
+2. **Remove indoor breeding sites** (saucers, vases, pet bowls, etc.).
+3. **Personal protection**: **EPA-registered repellent** when you're getting bitten.
+4. Optional: **UV/suction sticky indoor traps** can reduce some flying biters; treat them as **supplemental**, not a replacement for exclusion + source control.
+
+_(If you're seeing "mosquitoes" indoors but no bites, also consider **fungus gnats**—different fix: dry out soil / address houseplants.)_
 
 **Mnemonic so you don't trip again:** **`/qt/research …` = run**, **`/qt research …` = create/edit template name `research`.**
