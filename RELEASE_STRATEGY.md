@@ -18,6 +18,25 @@ This document defines the production release process for QuickTask.
 - Release publication: auto-publish GitHub Release (no draft step).
 - Current release assets: VSIX, OpenClaw package, checksums, integrity metadata, SBOM.
 
+## Change-based release cadence policy
+
+QuickTask uses a change-driven release cadence, not a calendar schedule.
+
+Promote to release candidate (`Release Candidate Validation`) when all of the following are true:
+
+1. `main` has at least one pending `.changeset/*.md` entry.
+2. There are no unresolved release-governance blockers in `TASKS.md` for the active release phase, or those blockers have explicit accepted-risk records.
+3. At least one trigger condition is met:
+   - a merged `P0` or `P1` user-impacting task is waiting to ship, or
+   - pending changesets count is 3 or more, or
+   - a security/compliance fix is included.
+
+Promote from RC to release dispatch when all of the following are true:
+
+1. RC workflow run succeeded on `main`.
+2. RC run is still fresh for the current candidate (run again after additional release-significant merges).
+3. Pre-release readiness report is `READY`, or blocking findings are explicitly accepted per risk policy.
+
 ## Pre-merge release requirements
 
 Each release-relevant PR should include:
@@ -48,7 +67,7 @@ Before running the `Release` workflow, run pre-release readiness:
 3. Run a prerelease README audit:
    - update `README.md` to cover any missing user-facing documentation for shipped behavior,
    - follow `README_EDITING.md` while editing `README.md`.
-4. Treat only new medium/high findings for the current release phase as blocking.
+4. Treat only new medium/high findings for the current release phase as blocking unless explicitly accepted via the risk acceptance policy.
 5. Convert findings into `TASKS.md` updates:
    - update existing tasks when applicable,
    - add new tasks with manual phase/priority assignment when unmapped.
@@ -59,6 +78,7 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
 
 1. Confirm all intended PRs are merged into `main`.
 2. Confirm pre-release readiness gate is green (or explicitly accepted by the user).
+   - Confirm accepted risks (if any) include approver, rationale, scope, and sunset date in `TASKS.md`.
 3. Run `Release` workflow manually with docs sync inputs.
    - Include a successful `rc_run_id` from `Release Candidate Validation`.
 4. Workflow gates:
@@ -66,6 +86,7 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
    - run `pnpm test`
    - run `pnpm build`
    - run `pnpm release:validate-changesets`
+   - run `pnpm release:check-workflow-contracts`
    - run `pnpm release:docs-check`
 5. Workflow builds curated release notes and versions packages/changelogs with `pnpm release:notes` + `pnpm release:version`.
 6. Workflow builds and verifies release assets using:
@@ -88,6 +109,21 @@ The release workflow requires explicit docs status inputs:
 - `docs_sync_notes`: required whenever any status is `no-change`
 
 This provides hard gating: the release cannot proceed without explicit docs sync decisions.
+
+## Formal risk acceptance policy
+
+Medium/high findings are blocking by default. They can only be bypassed through an explicit accepted-risk record in `TASKS.md`.
+
+Each accepted-risk record must include:
+
+- Finding/task ID and severity.
+- Approver (human maintainer identity).
+- Decision date.
+- Scope of acceptance (what is allowed to ship).
+- Rationale and mitigation plan.
+- Sunset/revisit date.
+
+Accepted risk is temporary. If the sunset date passes, release handoff is blocked until the finding is re-reviewed.
 
 ## Release baseline policy
 

@@ -13,34 +13,87 @@ import {
 test("finds open milestone tasks with phase metadata", () => {
   const tasks = parseOpenReleaseReadinessTasks(`
 ## Milestone execution order
-### Phase 4 - CI and quality controls
-- [ ] T021 - Add linting and formatting quality gates (P1)
-- [x] T041 - Add pre-release readiness workflow and report pipeline (P1)
+### Phase 6 - Distribution and docs
+- Active/near-term IDs: T053, T054, T065, T071, T083, T084, T085.
+### Phase 7 - Release governance and risk gates
+- Planned task IDs (in order): T053, T054, T065, T071, T083, T084, T085.
 ## Completed tasks (not yet archived)
+
+## Active task backlog
+### Intake queue
+- [ ] T053 - Align release-readiness parser with active TASKS format (P0)
+- [~] T054 - Add task tracker schema validator command (P1)
+- [!] T065 - Add test coverage for release handoff and docs gate scripts (P1)
+- [x] T071 - Add workflow contract checks for release inputs and docs gates (P1)
+
+## Proposed task details
+
+### [ ] T053 - Align release-readiness parser with active TASKS format
+- Status: [ ]
+### [~] T054 - Add task tracker schema validator command
+- Status: [~]
+### [!] T065 - Add test coverage for release handoff and docs gate scripts
+- Status: [!]
+### [x] T071 - Add workflow contract checks for release inputs and docs gates
+- Status: [x]
 `);
 
-  assert.equal(tasks.length, 1);
+  assert.equal(tasks.length, 3);
   assert.deepEqual(tasks[0], {
-    taskId: "T021",
-    title: "Add linting and formatting quality gates",
-    priority: "P1",
-    phase: "Phase 4"
+    taskId: "T053",
+    title: "Align release-readiness parser with active TASKS format",
+    priority: "P0",
+    phase: "Phase 7"
   });
+  assert.equal(tasks[1].taskId, "T054");
+  assert.equal(tasks[2].taskId, "T065");
 });
 
 test("derives current release phase from highest complete phase", () => {
   const summary = parseMilestonePhaseSummary(`
 ## Milestone execution order
 ### Phase 1 - Core foundations
-- [h] T001 - Done thing (P0)
+- Planned task IDs (in order): T001
 ### Phase 2 - Core behavior and reliability
-- [x] T002 - Done thing (P0)
+- Planned task IDs (in order): T002
 ### Phase 3 - Host integrations
-- [ ] T010 - Not done thing (P0)
+- Planned task IDs (in order): T010
 ## Completed tasks (not yet archived)
+
+## Active task backlog
+### Intake queue
+- [ ] T010 - Not done thing (P0)
+## Proposed task details
+### [x] T001 - Done thing
+- Status: [x]
+### [h] T002 - Done thing
+- Status: [h]
+### [ ] T010 - Not done thing
+- Status: [ ]
 `);
 
   assert.equal(summary.currentReleasePhase, "Phase 2");
+});
+
+test("includes open tasks from detail status when backlog line is missing", () => {
+  const tasks = parseOpenReleaseReadinessTasks(`
+## Milestone execution order
+### Phase 7 - Release governance and risk gates
+- Planned task IDs (in order): T084
+## Completed tasks (not yet archived)
+
+## Active task backlog
+### Intake queue
+- _Empty._
+
+## Proposed task details
+### [!] T084 - Enforce local-only diagnostics and zero-PII logging policy
+- Status: [!]
+`);
+
+  assert.equal(tasks.length, 1);
+  assert.equal(tasks[0].taskId, "T084");
+  assert.equal(tasks[0].phase, "Phase 7");
 });
 
 test("recognizes pending changeset markdown files", () => {

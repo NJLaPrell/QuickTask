@@ -58,6 +58,9 @@ jobs:
       - name: Validate pending changeset structure
         run: pnpm release:validate-changesets
 
+      - name: Validate release workflow contracts
+        run: pnpm release:check-workflow-contracts
+
       - name: Generate release notes snapshot
         run: pnpm release:notes
 

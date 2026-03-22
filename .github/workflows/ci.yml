@@ -52,6 +52,12 @@ jobs:
       - name: Validate changeset note format
         run: pnpm release:validate-changesets
 
+      - name: Validate task tracker schema
+        run: pnpm tasks:check
+
+      - name: Validate release workflow contracts
+        run: pnpm release:check-workflow-contracts
+
       - name: Package VS Code extension (.vsix)
         run: pnpm package:vscode
 

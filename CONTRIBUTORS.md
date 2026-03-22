@@ -45,6 +45,8 @@ pnpm package:openclaw
 pnpm package:release
 pnpm release:verify-local-artifacts
 pnpm release:validate-changesets
+pnpm release:check-workflow-contracts
+pnpm tasks:check
 pnpm check:package-manager
 pnpm clean
 ```
@@ -150,6 +152,7 @@ Release-prep scope is full-product across all phases.
 This command:
 
 - runs full-hardening checks (`check`, `test`, `build`, docs gate),
+- validates task-tracker schema and workflow/script release contracts,
 - writes `docs/release-readiness-report.md`,
 - treats only new `medium`/`high` findings for the current release phase as blocking,
 - reports open `TASKS.md` tasks from all phases.
@@ -176,6 +179,13 @@ Once readiness is green (or explicitly accepted), hand off to the release strate
 4. Provide required docs sync and RC inputs (`readme_status`, `docs_status`, `docs_sync_notes`, `rc_run_id`).
 
 The release workflow then performs versioning/tagging/release publication as defined in `RELEASE_STRATEGY.md`.
+
+### Change-based cadence and timing rules
+
+- Do not release on a fixed calendar.
+- Promote to RC/release based on pending changesets, shipped change risk/volume, and readiness state.
+- If additional release-significant commits land after a successful RC, run RC again before release dispatch.
+- Any accepted medium/high risk must be documented in `TASKS.md` with approver, rationale, scope, and sunset date.
 
 ### Stage 3: Publish VS Code Marketplace listing (optional, post-release)
 
@@ -212,6 +222,12 @@ Package manager policy:
 - Source of truth is `package.json#packageManager`.
 - CI and release workflows must pin the same `pnpm` version.
 - Validate with `pnpm check:package-manager`.
+
+Diagnostics and logging policy:
+
+- Runtime diagnostics must stay local-only in process memory.
+- Never log raw user prompts, template bodies, or other potentially sensitive content.
+- Add privacy-focused tests when touching diagnostics, runtime errors, or adapter fallback rendering.
 
 ## Changelog and release-note writing standard
 

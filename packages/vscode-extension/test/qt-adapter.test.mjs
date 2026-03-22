@@ -50,3 +50,16 @@ test("delegates prompt handling to runtime boundary", () => {
   assert.equal(response.result.code, "qt:create:created");
   assert.match(response.markdown, /Created template `summarize`/);
 });
+
+test("unknown result rendering does not leak user content", () => {
+  const markdown = renderQtRuntimeResult({
+    code: "qt:unknown",
+    requestId: "qt-safe",
+    userInput: "secret user text",
+    templateBody: "secret template text"
+  });
+
+  assert.match(markdown, /unsupported result code/i);
+  assert.doesNotMatch(markdown, /secret user text/);
+  assert.doesNotMatch(markdown, /secret template text/);
+});

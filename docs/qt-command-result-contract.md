@@ -52,6 +52,13 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 - Proposal actions use a TTL window (default 30 minutes in runtime) and return `qt:improve:proposal-expired` when stale.
 - When no active proposal exists (including restart/lifecycle reset), runtime returns `qt:improve:proposal-not-found`.
 
+## Diagnostics and privacy policy
+
+- Runtime diagnostic events are local-only and in-memory.
+- Diagnostic events include operational metadata only (`requestId`, timestamp, lifecycle phase, command kind, result code).
+- Do not include raw user input, template bodies, or other user-content fields in diagnostics.
+- Adapter unknown-result fallbacks must avoid dumping full payloads to output surfaces.
+
 ## Lightweight drift-check checklist
 
 When command parsing or result types change:

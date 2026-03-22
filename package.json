@@ -24,7 +24,9 @@
     "changeset": "changeset",
     "release:prepare": "node scripts/release-prepare-readiness.mjs",
     "release:version": "changeset version",
-    "release:docs-check": "node scripts/release-docs-check.mjs"
+    "release:docs-check": "node scripts/release-docs-check.mjs",
+    "release:check-workflow-contracts": "node scripts/check-workflow-contracts.mjs",
+    "tasks:check": "node scripts/tasks-check.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",

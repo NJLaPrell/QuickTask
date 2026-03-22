@@ -39,6 +39,20 @@ const commandChecks = [
       RELEASE_DOCS_STATUS: "updated",
       RELEASE_DOCS_SYNC_NOTES: "validated during release readiness preparation"
     }
+  },
+  {
+    id: "tasks-schema",
+    label: "Task tracker schema check",
+    command: "pnpm",
+    args: ["tasks:check"],
+    failureSeverity: "medium"
+  },
+  {
+    id: "workflow-contracts",
+    label: "Release workflow contract check",
+    command: "pnpm",
+    args: ["release:check-workflow-contracts"],
+    failureSeverity: "medium"
   }
 ];
 
@@ -52,30 +66,176 @@ function getMilestoneSection(content) {
   return content.slice(milestoneStart, milestoneEnd);
 }
 
-export function parseOpenReleaseReadinessTasks(content) {
+function getActiveBacklogSection(content) {
+  const backlogStart = content.indexOf("## Active task backlog");
+  const backlogEnd = content.indexOf("## Proposed task details");
+  if (backlogStart === -1 || backlogEnd === -1) {
+    return "";
+  }
+
+  return content.slice(backlogStart, backlogEnd);
+}
+
+const OPEN_STATUS_MARKERS = new Set(["p", " ", "~", "!"]);
+
+function isOpenStatus(statusMarker) {
+  return OPEN_STATUS_MARKERS.has(statusMarker);
+}
+
+function parseTaskStatusEntries(content) {
+  const taskStatusById = new Map();
+  const statusLineRegex = /^- \[([ pxh~!])\] (T\d+) - /;
+  const taskHeaderRegex = /^### \[([ pxh~!])\] (T\d+) - /;
+  const detailStatusRegex = /^- Status: \[([ pxh~!])\]/;
+  const lines = content.split("\n");
+  let activeTaskId = null;
+
+  for (const line of lines) {
+    const statusLineMatch = line.match(statusLineRegex);
+    if (statusLineMatch) {
+      taskStatusById.set(statusLineMatch[2], statusLineMatch[1]);
+      continue;
+    }
+
+    const taskHeaderMatch = line.match(taskHeaderRegex);
+    if (taskHeaderMatch) {
+      activeTaskId = taskHeaderMatch[2];
+      taskStatusById.set(taskHeaderMatch[2], taskHeaderMatch[1]);
+      continue;
+    }
+
+    const detailStatusMatch = line.match(detailStatusRegex);
+    if (detailStatusMatch && activeTaskId) {
+      taskStatusById.set(activeTaskId, detailStatusMatch[1]);
+      continue;
+    }
+
+    if (line.startsWith("### ") && !taskHeaderRegex.test(line)) {
+      activeTaskId = null;
+    }
+  }
+
+  return taskStatusById;
+}
+
+function parsePhaseTaskIds(content) {
   const lines = getMilestoneSection(content).split("\n");
-  const openTasks = [];
-  let currentPhase = "";
+  const phases = [];
   const phaseRegex = /^### (Phase \d+) - /;
-  const openTaskRegex = /^- \[ \] (T\d+) - (.+) \((P\d)\)$/;
+  const taskIdRegex = /\bT\d+\b/g;
+  let currentPhase = null;
 
   for (const line of lines) {
     const phaseMatch = line.match(phaseRegex);
     if (phaseMatch) {
-      currentPhase = phaseMatch[1];
+      currentPhase = { name: phaseMatch[1], taskRefs: [] };
+      phases.push(currentPhase);
       continue;
     }
 
-    const taskMatch = line.match(openTaskRegex);
-    if (!taskMatch || !currentPhase) {
+    if (!currentPhase) {
       continue;
     }
+
+    const ids = line.match(taskIdRegex);
+    if (!ids) {
+      continue;
+    }
+
+    let source = "other";
+    if (line.includes("Planned task IDs")) {
+      source = "planned";
+    } else if (line.includes("Active/near-term IDs")) {
+      source = "active-near-term";
+    } else if (line.includes("Archived task IDs")) {
+      source = "archived";
+    }
+
+    for (const id of ids) {
+      currentPhase.taskRefs.push({ id, source });
+    }
+  }
+
+  return phases.map((phase) => ({
+    name: phase.name,
+    taskIds: [...new Set(phase.taskRefs.map((taskRef) => taskRef.id))],
+    taskRefs: phase.taskRefs
+  }));
+}
+
+function buildTaskPhaseMap(content) {
+  const phases = parsePhaseTaskIds(content);
+  const taskPhaseMap = new Map();
+  const sourceRank = {
+    planned: 3,
+    "active-near-term": 2,
+    archived: 1,
+    other: 0
+  };
+  const taskPhaseMeta = new Map();
+
+  for (const phase of phases) {
+    for (const taskRef of phase.taskRefs) {
+      const current = taskPhaseMeta.get(taskRef.id);
+      const nextRank = sourceRank[taskRef.source] ?? 0;
+      if (!current || nextRank > current.rank) {
+        taskPhaseMeta.set(taskRef.id, { phase: phase.name, rank: nextRank });
+      }
+    }
+  }
+
+  for (const [taskId, meta] of taskPhaseMeta) {
+    taskPhaseMap.set(taskId, meta.phase);
+  }
+
+  return taskPhaseMap;
+}
+
+export function parseOpenReleaseReadinessTasks(content) {
+  const lines = getActiveBacklogSection(content).split("\n");
+  const openTasks = [];
+  const taskPhaseMap = buildTaskPhaseMap(content);
+  const openTaskRegex = /^- \[([ p~!])\] (T\d+) - (.+) \((P\d)\)$/;
+  const seenTaskIds = new Set();
+
+  for (const line of lines) {
+    const taskMatch = line.match(openTaskRegex);
+    if (!taskMatch) {
+      continue;
+    }
+
+    const statusMarker = taskMatch[1];
+    if (!isOpenStatus(statusMarker)) {
+      continue;
+    }
+
+    const taskId = taskMatch[2];
+    if (seenTaskIds.has(taskId)) {
+      continue;
+    }
+    seenTaskIds.add(taskId);
 
     openTasks.push({
-      taskId: taskMatch[1],
-      title: taskMatch[2],
-      priority: taskMatch[3],
-      phase: currentPhase
+      taskId,
+      title: taskMatch[3],
+      priority: taskMatch[4],
+      phase: taskPhaseMap.get(taskId) ?? "Unassigned phase"
+    });
+  }
+
+  // Include any open task IDs captured from task detail status lines that were
+  // not listed in the active backlog for resilience against tracker drift.
+  const taskStatusById = parseTaskStatusEntries(content);
+  for (const [taskId, statusMarker] of taskStatusById) {
+    if (!isOpenStatus(statusMarker) || seenTaskIds.has(taskId)) {
+      continue;
+    }
+    seenTaskIds.add(taskId);
+    openTasks.push({
+      taskId,
+      title: "Title unavailable from backlog section",
+      priority: "P0",
+      phase: taskPhaseMap.get(taskId) ?? "Unassigned phase"
     });
   }
 
@@ -88,33 +248,19 @@ export function readOpenReleaseReadinessTasks() {
 }
 
 export function parseMilestonePhaseSummary(content) {
-  const lines = getMilestoneSection(content).split("\n");
-  const phases = [];
-  let currentPhase = null;
-  const phaseRegex = /^### (Phase \d+) - /;
-  const anyTaskRegex = /^- \[( |x|h)\] (T\d+) - (.+) \((P\d)\)$/;
-  const openTaskRegex = /^- \[ \] (T\d+) - (.+) \((P\d)\)$/;
-
-  for (const line of lines) {
-    const phaseMatch = line.match(phaseRegex);
-    if (phaseMatch) {
-      currentPhase = { name: phaseMatch[1], hasOpenTasks: false, taskCount: 0 };
-      phases.push(currentPhase);
-      continue;
-    }
-
-    if (!currentPhase) {
-      continue;
-    }
-
-    if (anyTaskRegex.test(line)) {
-      currentPhase.taskCount += 1;
-    }
-
-    if (openTaskRegex.test(line)) {
-      currentPhase.hasOpenTasks = true;
-    }
-  }
+  const phaseDefinitions = parsePhaseTaskIds(content);
+  const taskStatusById = parseTaskStatusEntries(content);
+  const phases = phaseDefinitions.map((phase) => {
+    const hasOpenTasks = phase.taskIds.some((taskId) => {
+      const status = taskStatusById.get(taskId);
+      return status ? isOpenStatus(status) : false;
+    });
+    return {
+      name: phase.name,
+      hasOpenTasks,
+      taskCount: phase.taskIds.length
+    };
+  });
 
   const releasablePhases = phases.filter((phase) => phase.taskCount > 0 && !phase.hasOpenTasks);
   const currentReleasePhase =
