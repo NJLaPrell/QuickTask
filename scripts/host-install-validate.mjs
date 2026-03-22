@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -51,6 +59,13 @@ function appendStage(stages, stage, status, message) {
   stages.push({ stage, status, message });
 }
 
+function normalizeExtractedCoreEntrypoints(corePackageJsonPath) {
+  const corePackageJson = JSON.parse(readFileSync(corePackageJsonPath, "utf8"));
+  corePackageJson.main = "dist/index.js";
+  corePackageJson.types = "dist/index.d.ts";
+  writeFileSync(corePackageJsonPath, `${JSON.stringify(corePackageJson, null, 2)}\n`, "utf8");
+}
+
 async function validateVsixHost(assetsDir, version, tempRoot) {
   const stages = [];
   try {
@@ -65,6 +80,9 @@ async function validateVsixHost(assetsDir, version, tempRoot) {
       readFileSync(join(extractDir, "extension", "package.json"), "utf8")
     );
     assert.equal(packageJson.name, "quicktask-vscode");
+    normalizeExtractedCoreEntrypoints(
+      join(extractDir, "extension", "node_modules", "@quicktask", "core", "package.json")
+    );
     appendStage(stages, "activation", "pass", "extension package metadata resolved");
 
     const adapterModulePath = join(extractDir, "extension", "dist", "qtAdapter.js");
@@ -103,6 +121,9 @@ async function validateOpenClawHost(assetsDir, version, tempRoot) {
       readFileSync(join(extractDir, "package", "package.json"), "utf8")
     );
     assert.equal(packageJson.name, "quicktask-openclaw");
+    normalizeExtractedCoreEntrypoints(
+      join(extractDir, "package", "node_modules", "@quicktask", "core", "package.json")
+    );
     appendStage(stages, "activation", "pass", "plugin package metadata resolved");
 
     const registrationPath = join(extractDir, "package", "dist", "index.js");

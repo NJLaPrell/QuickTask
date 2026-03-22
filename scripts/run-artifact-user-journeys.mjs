@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -65,6 +73,13 @@ function runJourneyAssertions(runtime) {
   assert.equal(doctorResult.code, "qt:doctor:status");
 }
 
+function normalizeExtractedCoreEntrypoints(corePackageJsonPath) {
+  const corePackageJson = JSON.parse(readFileSync(corePackageJsonPath, "utf8"));
+  corePackageJson.main = "dist/index.js";
+  corePackageJson.types = "dist/index.d.ts";
+  writeFileSync(corePackageJsonPath, `${JSON.stringify(corePackageJson, null, 2)}\n`, "utf8");
+}
+
 async function runVsixJourney(vsixPath, tempRoot) {
   const extractDir = join(tempRoot, "vsix");
   mkdirSync(extractDir, { recursive: true });
@@ -73,6 +88,9 @@ async function runVsixJourney(vsixPath, tempRoot) {
     readFileSync(join(extractDir, "extension", "package.json"), "utf8")
   );
   assert.equal(packageJson.name, "quicktask-vscode");
+  normalizeExtractedCoreEntrypoints(
+    join(extractDir, "extension", "node_modules", "@quicktask", "core", "package.json")
+  );
 
   const adapterModule = await import(
     pathToFileURL(join(extractDir, "extension", "dist", "qtAdapter.js")).href
@@ -88,6 +106,9 @@ async function runOpenClawJourney(openclawPath, tempRoot) {
   run("tar", ["-xzf", openclawPath, "-C", extractDir], process.cwd());
   const packageJson = JSON.parse(readFileSync(join(extractDir, "package", "package.json"), "utf8"));
   assert.equal(packageJson.name, "quicktask-openclaw");
+  normalizeExtractedCoreEntrypoints(
+    join(extractDir, "package", "node_modules", "@quicktask", "core", "package.json")
+  );
 
   const pluginModule = await import(
     pathToFileURL(join(extractDir, "package", "dist", "index.js")).href
