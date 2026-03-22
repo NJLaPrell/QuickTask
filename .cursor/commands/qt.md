@@ -12,11 +12,12 @@ Canonical docs:
 Approved command surface (current):
 
 - `/qt`
-- `/qt help [create|run|improve|actions|discover]`
+- `/qt help`, `/qt help all`, `/qt help [create|run|improve|actions|discover]`
 - `/qt init`
-- `/qt [task] [instructions]`
+- `/qt [task] [body or run input]` (create when new, run when exists)
+- `/qt create [task] [instructions]`
 - `/qt/[task] [input]`
-- `/qt improve [task] [input]`
+- `/qt improve [task] [input]` (substantive input required)
 - `/qt improve <accept|reject|abandon> [task] [proposal-id]`
 - `/qt export [task|--all]`
 - `/qt import [--force] [payload-json]`

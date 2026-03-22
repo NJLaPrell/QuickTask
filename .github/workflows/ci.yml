@@ -103,6 +103,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: qt:sandbox from repo root (T138)
+        run: |
+          pnpm --filter @quicktask/core build
+          pnpm qt:sandbox -- "/qt help all"
+
       - name: Workspace tests
         run: pnpm test
 

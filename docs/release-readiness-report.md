@@ -1,33 +1,35 @@
 # Release Readiness Report
 
-- Generated at: 2026-03-22T20:14:08.798Z
+- Generated at: 2026-03-22T22:25:47.624Z
 - Scope target: all phases (fixed)
-- Current release phase: Phase 11
+- Current release phase: Phase 12
 - Scope: pre-release readiness checks before `Release` workflow handoff
 - Blocking policy: only new medium/high findings for the current release phase block handoff
-- Pending changesets: 1
+- Pending changesets: 0
 
 ## Command checks
 
 | Check | Result | Severity on failure | Duration |
 | --- | --- | --- | --- |
-| Workspace typecheck | pass | high | 2085ms |
-| Workspace tests | pass | high | 2644ms |
-| Workspace build | pass | high | 1307ms |
-| Release docs sync gate | pass | medium | 200ms |
-| Task tracker schema check | pass | medium | 200ms |
-| Release workflow contract check | pass | medium | 205ms |
-| Docs link integrity check | pass | medium | 203ms |
-| Command entrypoint reference check | pass | medium | 198ms |
-| Generated artifact policy check | pass | medium | 215ms |
+| Workspace typecheck | pass | high | 2152ms |
+| Workspace tests | pass | high | 2429ms |
+| Workspace build | pass | high | 1496ms |
+| Release docs sync gate | pass | medium | 218ms |
+| Task tracker schema check | pass | medium | 203ms |
+| Release workflow contract check | pass | medium | 203ms |
+| Docs link integrity check | pass | medium | 206ms |
+| Command entrypoint reference check | pass | medium | 199ms |
+| Generated artifact policy check | pass | medium | 217ms |
 
 ## Findings
 
-- None.
+- [medium] No pending releaseable changeset entries were found
+  - Source: changeset-preflight
+  - Details: Add a .changeset/*.md file with user-visible release notes before handoff so release:version has explicit input.
 
 ## Handoff decision
 
-- READY: no medium/high findings; release workflow handoff is allowed.
+- BLOCKED: 1 medium/high finding(s) must be resolved or accepted before running the release workflow.
 
 ## Task maintenance action
 

@@ -154,6 +154,40 @@ export function parseQtCommand(input: string): QtCommand {
     return { kind: "init" };
   }
 
+  if (value === "/qt create") {
+    return {
+      kind: "incomplete",
+      reason: "missing-create-task",
+      usage: "/qt create [task] [instructions]"
+    };
+  }
+
+  if (value.startsWith("/qt create ")) {
+    const remainder = value.slice("/qt create ".length).trim();
+    if (!remainder) {
+      return {
+        kind: "incomplete",
+        reason: "missing-create-task",
+        usage: "/qt create [task] [instructions]"
+      };
+    }
+    const parsed = parseTaskAndInput(remainder);
+    if (!parsed) {
+      return {
+        kind: "create",
+        taskName: remainder.trim(),
+        instructions: "",
+        createMode: "explicit"
+      };
+    }
+    return {
+      kind: "create",
+      taskName: parsed.taskName,
+      instructions: parsed.rest,
+      createMode: "explicit"
+    };
+  }
+
   if (value.startsWith("/qt help ")) {
     const topic = value.slice("/qt help ".length).trim().toLowerCase();
     return {

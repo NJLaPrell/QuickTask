@@ -6,6 +6,8 @@ export type QtCreateCommand = {
   kind: "create";
   taskName: string;
   instructions: string;
+  /** `implicit` = `/qt name …` (run if template exists). `explicit` = `/qt create name …` (always create semantics). */
+  createMode?: "implicit" | "explicit";
 };
 
 export type QtRunCommand = {
@@ -75,12 +77,14 @@ export type QtIncompleteCommand = {
     | "missing-improve-task"
     | "missing-improve-action-details"
     | "missing-show-task"
-    | "missing-import-payload";
+    | "missing-import-payload"
+    | "missing-create-task";
   usage:
     | "/qt improve [task] [input]"
     | "/qt improve <accept|reject|abandon> [task] [proposal-id]"
     | "/qt show [task]"
-    | "/qt import [--force] [payload-json]";
+    | "/qt import [--force] [payload-json]"
+    | "/qt create [task] [instructions]";
 };
 
 export type QtCommand =
@@ -242,6 +246,8 @@ export type QtRuntimeResult =
       code: "qt:list:listed";
       tasks: string[];
       message: string;
+      /** Optional follow-up commands after a successful list (onboarding). */
+      suggestedNext?: string[];
     }
   | {
       kind: "show";

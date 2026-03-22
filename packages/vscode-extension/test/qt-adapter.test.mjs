@@ -111,7 +111,10 @@ test("covers improve action lifecycle through VS Code adapter boundary", () => {
     const runtime = createVsCodeQtRuntime({ tasksDir });
     handleQtChatPrompt("/qt summarize baseline template", runtime);
 
-    const proposal = handleQtChatPrompt("/qt improve summarize add owners", runtime).result;
+    const proposal = handleQtChatPrompt(
+      "/qt improve summarize add owners and accountability",
+      runtime
+    ).result;
     assert.equal(proposal.code, "qt:improve:proposed");
 
     const accepted = handleQtChatPrompt(

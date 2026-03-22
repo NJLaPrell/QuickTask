@@ -25,11 +25,13 @@ This guide is the contributor-facing source of truth for development workflow, v
 1. `pnpm install`
 2. `pnpm build`
 3. `pnpm test`
-4. `pnpm qt:sandbox -- /qt init`
-5. `pnpm qt:sandbox -- /qt list`
+4. `pnpm qt:sandbox -- "/qt init"`
+5. `pnpm qt:sandbox -- "/qt list"`
 6. Pick a single `P0`/`P1` task from `TASKS.md`, branch `t###-short-slug`, and ship one scoped PR.
 
-If setup fails, run `/qt doctor` through sandbox (`pnpm qt:sandbox -- /qt doctor`) and fix path/write errors before coding.
+If setup fails, run `/qt doctor` through sandbox (`pnpm qt:sandbox -- "/qt doctor"`) and fix path/write errors before coding.
+
+The repo root declares `@quicktask/core` as a workspace devDependency so `qt:sandbox` resolves the built core package from a clean clone after `pnpm install` and `pnpm --filter @quicktask/core build`.
 
 ### Prerequisites
 
@@ -65,7 +67,7 @@ pnpm check:generated-artifacts
 pnpm check:command-entrypoints
 pnpm phase:check -- --phase 11
 pnpm templates:eval
-pnpm qt:sandbox -- /qt help
+pnpm qt:sandbox -- "/qt help"
 pnpm check:package-manager
 pnpm clean
 ```

@@ -38,7 +38,7 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:pack:resolved`              | `pack_resolved`         | `manifestPath`, `importedCount`, `skippedCount`, `message`                                |
 | `qt:pack:invalid`               | `pack_resolved`         | `manifestPath`, `importedCount`, `skippedCount`, `message`                                |
 | `qt:pack:not-found`             | `not_found`             | `taskName`, `message`                                                                     |
-| `qt:list:listed`                | `list`                  | `tasks[]`, `message`                                                                      |
+| `qt:list:listed`                | `list`                  | `tasks[]`, `message`, optional `suggestedNext[]`                                          |
 | `qt:show:template`              | `show`                  | `taskName`, `templateBody`                                                                |
 | `qt:doctor:status`              | `doctor`                | `diagnostics`                                                                             |
 | `qt:improve:not-found`          | `not_found`             | `taskName`, `message`                                                                     |
@@ -64,8 +64,8 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:create:clarify`             | Show warning with exact usage hint.                                                           | Show warning and keep user in input loop.                                | Show guidance in response panel with suggested command form.   |
 | `qt:create:already-exists`      | Show non-fatal warning; do not overwrite.                                                     | Show warning and suggest `/qt improve`.                                  | Show warning and suggested next action.                        |
 | `qt:create:created`             | Show success with created filename and preview snippet.                                       | Show success with task and filename.                                     | Show success toast/panel message and include filename.         |
-| `qt:incomplete`                 | Show warning with `usage`.                                                                    | Show warning and let user retry with full command.                       | Show warning with required command shape.                      |
-| `qt:run:not-found`              | Show warning and suggest create command.                                                      | Show warning and suggest `/qt [task] [instructions]`.                    | Show warning and suggest create flow.                          |
+| `qt:incomplete`                 | Show warning with `usage` (includes thin `/qt improve` input).                                | Show warning and let user retry with full command.                       | Show warning with required command shape.                      |
+| `qt:run:not-found`              | Show warning; suggest `/qt create …` or `/qt init` per message.                               | Show warning and suggest explicit create or init.                        | Show warning and suggest create flow.                          |
 | `qt:run:missing-variables`      | Show warning listing missing variables and copyable re-run usage hint.                        | Return missing-variable guidance with exact `/qt/[task] key=value` form. | Show warning and exact variable completion command.            |
 | `qt:run:executed`               | Render template plus user input in execution panel.                                           | Return rendered output payload to command client.                        | Render template and input in plugin output surface.            |
 | `qt:export:task`                | Show success plus export payload JSON block for copy/export pipelines.                        | Return deterministic JSON payload object/string for portable sharing.    | Render export payload text and task count summary.             |
@@ -77,7 +77,7 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:pack:resolved`              | Show pack resolution summary with imported/skipped counts.                                    | Return deterministic pack import summary payload.                        | Show pack-import summary in response panel.                    |
 | `qt:pack:invalid`               | Show manifest validation errors and remediation hint.                                         | Return manifest validation errors safely.                                | Show manifest validation failure details.                      |
 | `qt:pack:not-found`             | Show missing-manifest warning with path.                                                      | Return missing-manifest warning.                                         | Show missing pack path warning.                                |
-| `qt:list:listed`                | Render ordered list of available task names.                                                  | Return deterministic task name list with summary message.                | Render plain list of available task names.                     |
+| `qt:list:listed`                | Render task list; if `suggestedNext` present, show as secondary “try next” bullets.           | Return list plus optional suggested next commands.                       | Render list and optional follow-up commands.                   |
 | `qt:show:template`              | Render template markdown for one task body.                                                   | Return task template preview payload for one task.                       | Render plain template preview for one task.                    |
 | `qt:doctor:status`              | Render diagnostics block with tasks dir, writability, and recent runtime codes.               | Return safe diagnostics payload (no user-content fields).                | Render diagnostics text for support triage.                    |
 | `qt:improve:not-found`          | Show warning that task template is missing.                                                   | Show warning and suggest creating the task first.                        | Show warning and suggested create command.                     |
@@ -91,6 +91,14 @@ Use this file together with `docs/qt-command-result-contract.md`:
 | `qt:init:failed`                | Show error with request ID and suggest rerunning `/qt init` after fixing storage permissions. | Return error payload with request ID and remediation hint.               | Show error with request ID and storage/setup retry guidance.   |
 | `qt:parse:error`                | Show error with safe message and request ID.                                                  | Return error payload with request ID surfaced.                           | Show error message with request ID.                            |
 | `qt:storage:error`              | Show error with safe message and request ID; suggest retry.                                   | Return error payload with request ID and retry suggestion.               | Show error message with request ID and retry guidance.         |
+
+## Verbose/debug (spec only, T137)
+
+When `quicktask.verbose` / `quicktask.debug` (or host-equivalent) are implemented:
+
+- Gate extra path/code detail behind those flags; default rendering stays unchanged.
+- VS Code: optional appended “Diagnostics” block in chat/output for allowed codes; never duplicate full template bodies in telemetry.
+- Cursor/OpenClaw: same policy — local-only elaboration, no silent exfiltration of user content.
 
 ## Unknown/new code fallback
 

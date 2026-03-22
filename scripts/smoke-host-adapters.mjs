@@ -159,7 +159,7 @@ function runExpirySmoke(tasksDir) {
     now: () => nowMs
   });
   runtime.handle("/qt summarize baseline template");
-  const proposal = runtime.handle("/qt improve summarize ttl path");
+  const proposal = runtime.handle("/qt improve summarize ttl path for proposal expiry check");
   assert.equal(proposal.code, "qt:improve:proposed");
   nowMs += 10_000;
   const expired = runtime.handle(`/qt improve accept summarize ${proposal.proposalId}`);

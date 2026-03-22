@@ -22,19 +22,25 @@ test("returns help for /qt", () => {
 
     assert.equal(result.kind, "help");
     assert.equal(result.code, "qt:help");
-    assert.deepEqual(result.usage, [
-      "/qt",
-      "/qt init",
-      "/qt [task] [instructions]",
-      "/qt/[task] [input]",
-      "/qt improve [task] [input]",
-      "/qt export [task|--all]",
-      "/qt import [--force] [payload-json]",
-      "/qt import-pack [--force] [manifest-path]",
-      "/qt list",
-      "/qt show [task]",
-      "/qt doctor"
-    ]);
+    assert.ok(Array.isArray(result.usage));
+    assert.ok(result.usage.some((line) => String(line).includes("help all")));
+    assert.ok(result.message?.includes("QuickTask"));
+  } finally {
+    cleanup();
+  }
+});
+
+test("/qt help without topic returns quickstart and /qt help all lists full surface", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const quick = runtime.handle("/qt help");
+    assert.equal(quick.kind, "help");
+    assert.ok(quick.usage?.some((line) => String(line).includes("QuickTask quickstart")));
+    assert.match(quick.message ?? "", /help all/i);
+
+    const full = runtime.handle("/qt help all");
+    assert.equal(full.kind, "help");
+    assert.ok(full.usage?.includes("/qt create [task] [instructions]"));
   } finally {
     cleanup();
   }
@@ -69,6 +75,7 @@ test("returns contextual help for known topic and fallback for unknown topic", (
     assert.equal(unknownHelp.kind, "help");
     assert.equal(unknownHelp.code, "qt:help");
     assert.match(unknownHelp.message ?? "", /Unknown help topic/);
+    assert.match(unknownHelp.message ?? "", /all/);
   } finally {
     cleanup();
   }
@@ -128,7 +135,7 @@ test("returns task-not-found when running an unknown task", () => {
     assert.equal(result.kind, "not_found");
     assert.equal(result.code, "qt:run:not-found");
     assert.equal(result.taskName, "does-not-exist");
-    assert.equal(result.message, "No template exists yet for does-not-exist.");
+    assert.match(result.message, /^No template exists yet for does-not-exist\./);
   } finally {
     cleanup();
   }
@@ -282,6 +289,8 @@ test("list and show commands return template discovery results", () => {
     assert.equal(listed.kind, "list");
     assert.equal(listed.code, "qt:list:listed");
     assert.deepEqual(listed.tasks, ["summarize", "triage"]);
+    assert.ok(Array.isArray(listed.suggestedNext));
+    assert.ok(listed.suggestedNext?.some((line) => line.includes("show")));
 
     const shown = runtime.handle("/qt show summarize");
     assert.equal(shown.kind, "show");
@@ -329,34 +338,49 @@ test("doctor command reports safe diagnostics metadata", () => {
   }
 });
 
-test("create returns clarification when instructions are missing", () => {
+test("create returns clarification when instructions are missing for a new name", () => {
   const { runtime, cleanup } = createRuntimeForTest();
   try {
     const result = runtime.handle("/qt summarize");
     assert.equal(result.kind, "clarification");
     assert.equal(result.code, "qt:create:clarify");
     assert.equal(result.taskName, "summarize");
-    assert.equal(result.usage, "/qt summarize [instructions]");
-    assert.equal(result.message, "Please provide instructions for summarize.");
+    assert.match(result.usage, /summarize/);
+    assert.match(result.message, /Please provide instructions/);
   } finally {
     cleanup();
   }
 });
 
-test("create does not overwrite an existing task", () => {
+test("implicit /qt name … runs when the template already exists", () => {
   const { runtime, cleanup } = createRuntimeForTest();
   try {
     runtime.handle("/qt summarize first version");
-    const secondCreate = runtime.handle("/qt summarize second version");
+    const second = runtime.handle("/qt summarize second version");
 
-    assert.equal(secondCreate.kind, "already_exists");
-    assert.equal(secondCreate.code, "qt:create:already-exists");
-    assert.equal(secondCreate.taskName, "summarize");
-    assert.match(secondCreate.message, /A template already exists for summarize\./);
+    assert.equal(second.kind, "run_executed");
+    assert.equal(second.code, "qt:run:executed");
+    assert.equal(second.userInput, "second version");
+
+    const explicit = runtime.handle("/qt create summarize third version");
+    assert.equal(explicit.kind, "already_exists");
+    assert.equal(explicit.code, "qt:create:already-exists");
 
     const runResult = runtime.handle("/qt/summarize sample input");
     assert.match(runResult.templateBody, /- Goal: first version/);
     assert.doesNotMatch(runResult.templateBody, /- Goal: second version/);
+  } finally {
+    cleanup();
+  }
+});
+
+test("create accepts a long body when the template name is new (UF-012)", () => {
+  const { runtime, cleanup } = createRuntimeForTest();
+  try {
+    const body = ["line a", "line b", "line c", "line d"].join("\n");
+    const created = runtime.handle(`/qt research ${body}`);
+    assert.equal(created.kind, "created");
+    assert.match(created.templateBody, /line d/);
   } finally {
     cleanup();
   }
@@ -380,18 +404,17 @@ test("improve returns old and proposed templates for existing task", () => {
   }
 });
 
-test("improve without user input uses inferred proposal source", () => {
+test("improve without substantive user input returns incomplete guidance", () => {
   const { runtime, cleanup } = createRuntimeForTest();
   try {
     runtime.handle("/qt summarize produce concise bullets");
-    const result = runtime.handle("/qt improve summarize");
+    const empty = runtime.handle("/qt improve summarize");
+    assert.equal(empty.kind, "incomplete");
+    assert.equal(empty.code, "qt:incomplete");
 
-    assert.equal(result.kind, "improve_proposed");
-    assert.equal(result.source, "inferred");
-    assert.match(
-      result.proposedTemplate,
-      /refine this template to better handle explicit user input\./
-    );
+    const short = runtime.handle("/qt improve summarize fix it");
+    assert.equal(short.kind, "incomplete");
+    assert.equal(short.code, "qt:incomplete");
   } finally {
     cleanup();
   }
@@ -463,7 +486,7 @@ test("improve lifecycle returns proposal-expired when ttl is exceeded", () => {
       now
     });
     runtime.handle("/qt summarize baseline instructions");
-    const proposal = runtime.handle("/qt improve summarize ttl change");
+    const proposal = runtime.handle("/qt improve summarize ttl change for expiry scenario");
     assert.equal(proposal.kind, "improve_proposed");
 
     currentTime += 2000;
@@ -504,7 +527,7 @@ test("proposal cache stays bounded after repeated finalized actions", () => {
     runtime.handle("/qt summarize baseline instructions");
     const proposalIds = [];
     for (let index = 0; index < 220; index += 1) {
-      const proposal = runtime.handle(`/qt improve summarize change ${index}`);
+      const proposal = runtime.handle(`/qt improve summarize proposal iteration ${index}`);
       assert.equal(proposal.kind, "improve_proposed");
       proposalIds.push(proposal.proposalId);
       const rejected = runtime.handle(`/qt improve reject summarize ${proposal.proposalId}`);

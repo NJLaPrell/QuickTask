@@ -6,6 +6,27 @@ Reusable slash-command task templates for AI chat workflows.
 
 QuickTask gives you a single `/qt` command family to create, run, and iteratively improve task templates. The project uses a shared core runtime so behavior stays consistent across host adapters.
 
+## First run (VS Code / Cursor extension)
+
+**Default path:** use **chat**, not the repo clone flow.
+
+1. Install the extension ([Marketplace](#vs-code-marketplace) or [VSIX](#vs-code-manual-vsix)).
+2. Open a **folder workspace** (QuickTask writes under `tasks/`).
+3. Open **chat**, pick the **QuickTask** participant (`quicktask`), and type **`/qt`** or **`/qt init`**.
+4. After install, confirm you have the right build: **Extensions** view → **QuickTask Workflows** → check **identifier** `nicklaprell.quicktask-vscode` and version.
+5. Optional: **`/qt doctor`** for tasks-dir path, writability, and template count. On first open of a workspace, the extension shows a one-time summary (path, writable, template count) aligned with doctor.
+
+**Secondary:** Command Palette → **QuickTask: Run /qt Command** (same commands, useful when chat is unavailable).
+
+## Post-install checklist (trust)
+
+- [ ] Marketplace listing or VSIX matches **QuickTask Workflows** / `nicklaprell.quicktask-vscode`.
+- [ ] Extension loads in the Extensions view with the expected publisher (**nicklaprell**).
+- [ ] Chat shows the **QuickTask** participant; `/qt help` returns the short quickstart, `/qt help all` lists every form.
+- [ ] `/qt doctor` reports a writable `tasks/` path (or run `/qt init` once).
+
+Screenshots and rich listing copy live on the [Visual Studio Marketplace listing](https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode); this README stays in sync on **identity strings** and install paths.
+
 ## Why QuickTask
 
 - **Reusable workflows**: define a task once and run it repeatedly with new input.
@@ -13,11 +34,11 @@ QuickTask gives you a single `/qt` command family to create, run, and iterativel
 - **Host-agnostic core**: command parsing and runtime behavior live in one shared package.
 - **Deterministic contracts**: command and result shapes are documented for adapter implementations.
 
-## 2-Minute Quickstart
+## Contributing: quickstart from source
 
-**Trying the VS Code / Cursor extension?** Skip this repo build path and go to **[Install QuickTask](#install-quicktask)** (Marketplace or VSIX). The steps below are for **cloning this repo** and exercising core from source (contributors and advanced users).
+**If you only want to use QuickTask in the editor**, follow **[First run](#first-run-vs-code--cursor-extension)** above — **do not** start from `pnpm install` in this repo.
 
-Use this path to get first value quickly:
+The steps below are for **contributors** cloning the repository (see `CONTRIBUTORS.md` for the full guide).
 
 1. Install dependencies:
 
@@ -56,13 +77,13 @@ QuickTask ships installable artifacts through GitHub Releases.
 
 Use these strings everywhere (search, support, docs) so people install the right thing:
 
-| What | Value |
-| --- | --- |
-| **Display name** | QuickTask Workflows |
-| **Extension id** | `nicklaprell.quicktask-vscode` |
-| **Marketplace** | [Open listing](https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode) |
-| **Run /qt from palette** | Command **QuickTask: Run /qt Command** |
-| **Chat participant** | **QuickTask** (invokable as `quicktask`); in chat, type **`/qt`** for QuickTask commands—the same surface as the palette command |
+| What                     | Value                                                                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Display name**         | QuickTask Workflows                                                                                                              |
+| **Extension id**         | `nicklaprell.quicktask-vscode`                                                                                                   |
+| **Marketplace**          | [Open listing](https://marketplace.visualstudio.com/items?itemName=nicklaprell.quicktask-vscode)                                 |
+| **Run /qt from palette** | Command **QuickTask: Run /qt Command**                                                                                           |
+| **Chat participant**     | **QuickTask** (invokable as `quicktask`); in chat, type **`/qt`** for QuickTask commands—the same surface as the palette command |
 
 ### VS Code (Marketplace)
 
@@ -74,7 +95,7 @@ Use these strings everywhere (search, support, docs) so people install the right
 
 1. Download `quicktask-vscode-vX.Y.Z.vsix` from the matching GitHub release.
 2. Open the Command Palette (**View → Command Palette…** or the usual shortcut).
-3. Run exactly **`Extensions: Install from VSIX...`** and choose the downloaded file.  
+3. Run exactly **`Extensions: Install from VSIX...`** and choose the downloaded file.
    - If it doesn’t appear, type `vsix` in the palette filter—some builds hide rarely used commands until you search.
 
 ### Cursor (VSIX)
@@ -95,12 +116,14 @@ For asset names and verification details, see `docs/release-assets-and-verificat
 
 ### Command forms
 
-- `/qt` - show command help.
-- `/qt help [create|run|improve|actions|discover]` - show topic-specific help.
+- `/qt` - compact index (points at help).
+- `/qt help` - short quickstart; **`/qt help all`** - full command list.
+- `/qt help [create|run|improve|actions|discover|all]` - topic help.
 - `/qt init` - create starter templates and first-run guidance.
-- `/qt [task] [instructions]` - create a new task template.
+- `/qt [task] [text]` - **new name:** remainder is the **template body** (long pastes OK). **Existing name:** remainder is **run input** (same idea as `/qt/[task]`).
+- `/qt create [task] [instructions]` - explicit create; **fails with already-exists** if the name is taken.
 - `/qt/[task] [input]` - run an existing task with input.
-- `/qt improve [task] [input]` - propose an improvement for an existing task.
+- `/qt improve [task] [input]` - propose an improvement (needs a substantive note; short blurbs return guidance instead of a mystery proposal).
 - `/qt improve accept [task] [proposal-id]` - accept and apply a proposal.
 - `/qt improve reject [task] [proposal-id]` - reject a proposal.
 - `/qt improve abandon [task] [proposal-id]` - abandon a proposal.
@@ -123,13 +146,14 @@ Quoted task names are supported for create/run/show/improve flows when names inc
 ```text
 /qt summarize summarize meeting notes into concise bullet points
 /qt/summarize Notes from today's planning session...
+/qt summarize follow-up: focus on decisions only
 /qt improve summarize prioritize action items and owners
 /qt improve accept summarize p_abc123
 ```
 
 Expected behavior:
 
-- Creating a task that already exists returns an explicit already-exists result.
+- **`/qt summarize …` when `summarize` already exists** runs the template with your text as input (it does not overwrite the template). Use **`/qt create summarize …`** only for an explicit create attempt on a **new** name; duplicates get `already-exists`.
 - Running a missing task returns a clear not-found result.
 - Improvement proposals are previewed before they can be accepted.
 - Templates can include `{{variable}}` and `{{variable|default}}` tokens for key/value runtime interpolation.
