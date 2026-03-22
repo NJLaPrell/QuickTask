@@ -27,6 +27,29 @@ test("parses run command", () => {
   });
 });
 
+test("parses list command", () => {
+  assert.deepEqual(parseQtCommand("/qt list"), { kind: "list" });
+});
+
+test("parses show command", () => {
+  assert.deepEqual(parseQtCommand("/qt show summarize"), {
+    kind: "show",
+    taskName: "summarize"
+  });
+});
+
+test("returns incomplete for /qt show without task", () => {
+  assert.deepEqual(parseQtCommand("/qt show"), {
+    kind: "incomplete",
+    reason: "missing-show-task",
+    usage: "/qt show [task]"
+  });
+});
+
+test("parses doctor command", () => {
+  assert.deepEqual(parseQtCommand("/qt doctor"), { kind: "doctor" });
+});
+
 test("parses improve command with task and input", () => {
   assert.deepEqual(parseQtCommand("/qt improve summarize favor action items"), {
     kind: "improve",

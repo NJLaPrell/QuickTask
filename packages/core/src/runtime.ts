@@ -1,7 +1,9 @@
 import { parseQtCommand } from "./parser.js";
 import {
+  checkTaskStoreHealth,
   createFileTaskStore,
   getTaskTemplate,
+  listTaskNames,
   saveTaskTemplate,
   type FileTaskStore
 } from "./store.js";
@@ -19,6 +21,8 @@ type PendingProposal = {
   status: ImprovementProposalStatus;
   createdAtMs: number;
 };
+
+const QT_RUNTIME_VERSION = "1.1.0";
 
 export type CreateQtRuntimeOptions = {
   proposalTtlMs?: number;
@@ -92,8 +96,65 @@ export function createQtRuntime(
               "/qt",
               "/qt [task] [instructions]",
               "/qt/[task] [input]",
-              "/qt improve [task] [input]"
+              "/qt improve [task] [input]",
+              "/qt list",
+              "/qt show [task]",
+              "/qt doctor"
             ]
+          });
+        }
+
+        if (command.kind === "list") {
+          const tasks = listTaskNames(store);
+          const message =
+            tasks.length === 0
+              ? "No task templates found yet."
+              : `Found ${tasks.length} task template${tasks.length === 1 ? "" : "s"}.`;
+          return finalizeResult(requestId, command.kind, {
+            kind: "list",
+            code: "qt:list:listed",
+            tasks,
+            message
+          });
+        }
+
+        if (command.kind === "show") {
+          const template = getTaskTemplate(store, command.taskName);
+          if (!template) {
+            return finalizeResult(requestId, command.kind, {
+              kind: "not_found",
+              code: "qt:run:not-found",
+              taskName: command.taskName,
+              message: `No template exists yet for ${command.taskName}.`
+            });
+          }
+
+          return finalizeResult(requestId, command.kind, {
+            kind: "show",
+            code: "qt:show:template",
+            taskName: template.taskName,
+            templateBody: template.body
+          });
+        }
+
+        if (command.kind === "doctor") {
+          const storeHealth = checkTaskStoreHealth(store);
+          const recentRuntimeCodes = diagnostics
+            .map((event) => event.code)
+            .filter((code): code is string => typeof code === "string")
+            .slice(-5);
+
+          return finalizeResult(requestId, command.kind, {
+            kind: "doctor",
+            code: "qt:doctor:status",
+            diagnostics: {
+              tasksDir: storeHealth.tasksDir,
+              writable: storeHealth.writable,
+              taskCount: storeHealth.taskCount,
+              storageError: storeHealth.storageError,
+              recentRuntimeCodes,
+              runtimeVersion: QT_RUNTIME_VERSION
+            }
           });
         }
 

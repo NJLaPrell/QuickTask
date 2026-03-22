@@ -16,12 +16,27 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 - `/qt [task] [instructions]` - create a new task template.
 - `/qt/[task] [input]` - run an existing task.
 - `/qt improve [task] [input]` - propose an improvement.
+- `/qt list` - list available task templates.
+- `/qt show [task]` - show one task template body.
+- `/qt doctor` - show runtime/storage diagnostics.
 
 ### Improvement action commands
 
 - `/qt improve accept [task] [proposal-id]` - accept and apply a proposed template.
 - `/qt improve reject [task] [proposal-id]` - reject a proposed template.
 - `/qt improve abandon [task] [proposal-id]` - abandon a proposed template.
+
+## Approved command-surface policy
+
+The approved `/qt` command surface is intentionally minimal:
+
+- help (`/qt`)
+- create (`/qt [task] [instructions]`)
+- run (`/qt/[task] [input]`)
+- improve lifecycle (`/qt improve ...`, accept/reject/abandon)
+- discovery and diagnostics (`/qt list`, `/qt show [task]`, `/qt doctor`)
+
+Additional command expansions are deferred by default and require explicit re-approval.
 
 ## Runtime result codes
 
@@ -34,6 +49,9 @@ Adapter rendering behavior by host is defined in `docs/qt-adapter-rendering-matr
 - `qt:incomplete`
 - `qt:run:not-found`
 - `qt:run:executed`
+- `qt:list:listed`
+- `qt:show:template`
+- `qt:doctor:status`
 - `qt:improve:not-found`
 - `qt:improve:proposal-not-found`
 - `qt:improve:proposed`

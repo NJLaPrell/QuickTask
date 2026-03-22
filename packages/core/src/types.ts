@@ -14,6 +14,19 @@ export type QtRunCommand = {
   userInput: string;
 };
 
+export type QtListCommand = {
+  kind: "list";
+};
+
+export type QtShowCommand = {
+  kind: "show";
+  taskName: string;
+};
+
+export type QtDoctorCommand = {
+  kind: "doctor";
+};
+
 export type QtImproveCommand = {
   kind: "improve";
   taskName: string;
@@ -31,14 +44,20 @@ export type QtImproveActionCommand = {
 
 export type QtIncompleteCommand = {
   kind: "incomplete";
-  reason: "missing-improve-task" | "missing-improve-action-details";
-  usage: "/qt improve [task] [input]" | "/qt improve <accept|reject|abandon> [task] [proposal-id]";
+  reason: "missing-improve-task" | "missing-improve-action-details" | "missing-show-task";
+  usage:
+    | "/qt improve [task] [input]"
+    | "/qt improve <accept|reject|abandon> [task] [proposal-id]"
+    | "/qt show [task]";
 };
 
 export type QtCommand =
   | QtMenuCommand
   | QtCreateCommand
   | QtRunCommand
+  | QtListCommand
+  | QtShowCommand
+  | QtDoctorCommand
   | QtImproveCommand
   | QtImproveActionCommand
   | QtIncompleteCommand;
@@ -69,6 +88,15 @@ export type RuntimeDiagnosticEvent = {
   phase: "command.received" | "command.completed" | "command.failed";
   commandKind: QtCommand["kind"] | "invalid_input";
   code?: string;
+};
+
+export type QtDoctorStatus = {
+  tasksDir: string;
+  writable: boolean;
+  taskCount: number;
+  recentRuntimeCodes: string[];
+  runtimeVersion: string;
+  storageError?: string;
 };
 
 export type QtRuntimeResult =
@@ -117,6 +145,18 @@ export type QtRuntimeResult =
       userInput: string;
     }
   | {
+      kind: "list";
+      code: "qt:list:listed";
+      tasks: string[];
+      message: string;
+    }
+  | {
+      kind: "show";
+      code: "qt:show:template";
+      taskName: string;
+      templateBody: string;
+    }
+  | {
       kind: "improve_proposed";
       code: "qt:improve:proposed";
       taskName: string;
@@ -145,4 +185,9 @@ export type QtRuntimeResult =
       diagnosticCode: "storage-io-failure" | "parse-invalid-input";
       requestId: string;
       message: string;
+    }
+  | {
+      kind: "doctor";
+      code: "qt:doctor:status";
+      diagnostics: QtDoctorStatus;
     };

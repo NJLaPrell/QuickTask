@@ -1,34 +1,25 @@
 # Release Readiness Report
 
-- Generated at: 2026-03-21T16:02:50.891Z
+- Generated at: 2026-03-22T04:48:52.536Z
 - Scope target: all phases (fixed)
-- Current release phase: Phase 5
+- Current release phase: Phase 8
 - Scope: pre-release readiness checks before `Release` workflow handoff
 - Blocking policy: only new medium/high findings for the current release phase block handoff
-- Pending changesets: 0
+- Pending changesets: 1
 
 ## Command checks
 
 | Check | Result | Severity on failure | Duration |
 | --- | --- | --- | --- |
-| Workspace typecheck | pass | high | 1387ms |
-| Workspace tests | pass | high | 1965ms |
-| Workspace build | pass | high | 1321ms |
-| Release docs sync gate | pass | medium | 203ms |
-| Task tracker schema check | pass | medium | 204ms |
-| Release workflow contract check | pass | medium | 202ms |
+| Workspace typecheck | pass | high | 1576ms |
+| Workspace tests | pass | high | 2276ms |
+| Workspace build | pass | high | 1507ms |
+| Release docs sync gate | pass | medium | 223ms |
+| Task tracker schema check | pass | medium | 222ms |
+| Release workflow contract check | pass | medium | 227ms |
 
 ## Findings
 
-- [medium] No pending releaseable changeset entries were found
-  - Source: changeset-preflight
-  - Details: Add a .changeset/*.md file with user-visible release notes before handoff so release:version has explicit input.
-- [medium] Open release-readiness task remains: T055 (existing task: T055)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T055 (P2) - Unify adapter result rendering from shared core mapping
-- [medium] Open release-readiness task remains: T056 (existing task: T056)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T056 (P1) - Improve VS Code `/qt` interaction UX and markdown output
 - [medium] Open release-readiness task remains: T057 (existing task: T057)
   - Source: tasks-backlog
   - Details: Phase 10 | T057 (P2) - Support quoted task names and richer parser input forms
@@ -41,21 +32,12 @@
 - [medium] Open release-readiness task remains: T060 (existing task: T060)
   - Source: tasks-backlog
   - Details: Phase 9 | T060 (P1) - Split CI into parallel jobs with clearer failure surfaces
-- [medium] Open release-readiness task remains: T061 (existing task: T061)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T061 (P1) - Add contract drift guard between runtime codes and adapters/docs
-- [medium] Open release-readiness task remains: T062 (existing task: T062)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T062 (P1) - Add `/qt list` and `/qt show [task]` discovery commands
 - [medium] Open release-readiness task remains: T063 (existing task: T063)
   - Source: tasks-backlog
   - Details: Phase 10 | T063 (P2) - Add docs/link integrity checker for workflow-critical references
 - [medium] Open release-readiness task remains: T064 (existing task: T064)
   - Source: tasks-backlog
   - Details: Phase 9 | T064 (P2) - Refactor duplicated release workflow steps into reusable automation
-- [medium] Open release-readiness task remains: T066 (existing task: T066)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T066 (P1) - Remove unsafe VS Code chat API casts with compatibility wrapper
 - [medium] Open release-readiness task remains: T067 (existing task: T067)
   - Source: tasks-backlog
   - Details: Phase 10 | T067 (P3) - Add `/qt help [topic]` contextual help command
@@ -65,9 +47,6 @@
 - [medium] Open release-readiness task remains: T069 (existing task: T069)
   - Source: tasks-backlog
   - Details: Phase 10 | T069 (P3) - Add template quality lint for `tasks/*.md` content conventions
-- [medium] Open release-readiness task remains: T070 (existing task: T070)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T070 (P2) - Add adapter E2E coverage for improve action lifecycle
 - [medium] Open release-readiness task remains: T072 (existing task: T072)
   - Source: tasks-backlog
   - Details: Phase 10 | T072 (P3) - Add release-note quality validation beyond section format
@@ -80,12 +59,6 @@
 - [medium] Open release-readiness task remains: T075 (existing task: T075)
   - Source: tasks-backlog
   - Details: Phase 9 | T075 (P3) - Add test coverage for package-manager consistency checker script
-- [medium] Open release-readiness task remains: T076 (existing task: T076)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T076 (P2) - Add adapter normalization parity test suite in shared smoke harness
-- [medium] Open release-readiness task remains: T077 (existing task: T077)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T077 (P1) - Add `/qt doctor` diagnostics command for storage/runtime health
 - [medium] Open release-readiness task remains: T078 (existing task: T078)
   - Source: tasks-backlog
   - Details: Phase 10 | T078 (P4) - Add local CLI sandbox for QuickTask runtime command simulation
@@ -101,9 +74,6 @@
 - [medium] Open release-readiness task remains: T082 (existing task: T082)
   - Source: tasks-backlog
   - Details: Phase 9 | T082 (P2) - Add distributable package metadata and license compliance checks
-- [medium] Open release-readiness task remains: T086 (existing task: T086)
-  - Source: tasks-backlog
-  - Details: Phase 8 | T086 (P1) - Codify approved `/qt` command surface (list/show/doctor) and defer non-core growth
 - [medium] Open release-readiness task remains: T087 (existing task: T087)
   - Source: tasks-backlog
   - Details: Phase 10 | T087 (P2) - Add proposed-task promotion and aging policy in TASKS workflow
@@ -146,31 +116,10 @@
 - [medium] Open release-readiness task remains: T100 (existing task: T100)
   - Source: tasks-backlog
   - Details: Phase 9 | T100 (P1) - Build host-specific artifact install validation harness (VSIX/OpenClaw/Cursor)
-- [medium] Open release-readiness task remains: T053 (existing task: T053)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T053 (P0) - Align release-readiness parser with active TASKS format
-- [medium] Open release-readiness task remains: T054 (existing task: T054)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T054 (P1) - Add task tracker schema validator command
-- [medium] Open release-readiness task remains: T065 (existing task: T065)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T065 (P1) - Add test coverage for release handoff and docs gate scripts
-- [medium] Open release-readiness task remains: T071 (existing task: T071)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T071 (P1) - Add workflow contract checks for release inputs and docs gates
-- [medium] Open release-readiness task remains: T083 (existing task: T083)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T083 (P0) - Codify change-based release cadence and trigger timing policy
-- [medium] Open release-readiness task remains: T084 (existing task: T084)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T084 (P0) - Enforce local-only diagnostics and zero-PII logging policy
-- [medium] Open release-readiness task remains: T085 (existing task: T085)
-  - Source: tasks-backlog
-  - Details: Phase 7 | T085 (P0) - Add formal risk acceptance policy for medium/high findings
 
 ## Handoff decision
 
-- BLOCKED: 1 medium/high finding(s) must be resolved or accepted before running the release workflow.
+- READY: no medium/high findings; release workflow handoff is allowed.
 
 ## Task maintenance action
 

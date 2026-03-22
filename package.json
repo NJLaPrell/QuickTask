@@ -26,7 +26,8 @@
     "release:version": "changeset version",
     "release:docs-check": "node scripts/release-docs-check.mjs",
     "release:check-workflow-contracts": "node scripts/check-workflow-contracts.mjs",
-    "tasks:check": "node scripts/tasks-check.mjs"
+    "tasks:check": "node scripts/tasks-check.mjs",
+    "qt:check-contract-drift": "node scripts/check-qt-contract-drift.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",

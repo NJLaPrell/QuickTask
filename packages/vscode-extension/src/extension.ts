@@ -1,28 +1,34 @@
 import * as vscode from "vscode";
 
 import { handleQtChatPrompt, type QtRuntimeLike, createVsCodeQtRuntime } from "./qtAdapter.js";
+import { getQtPromptFromRequest, resolveChatParticipantFactory } from "./chatCompat.js";
 
-type ChatRequestLike = {
-  command?: string | { name?: string };
-  prompt?: string;
-};
+function renderCommandResult(
+  response: ReturnType<typeof handleQtChatPrompt>,
+  outputChannel: vscode.OutputChannel
+): void {
+  outputChannel.clear();
+  outputChannel.appendLine("QuickTask /qt result");
+  outputChannel.appendLine("");
+  outputChannel.appendLine(response.markdown);
+  outputChannel.show(true);
 
-type ChatStreamLike = {
-  markdown?: (value: string) => void;
-};
-
-function getQtPromptFromRequest(request: ChatRequestLike): string {
-  const commandName = typeof request.command === "string" ? request.command : request.command?.name;
-  const prompt = typeof request.prompt === "string" ? request.prompt : "";
-
-  if (commandName === "qt") {
-    return prompt;
+  if (response.result.kind === "error") {
+    void vscode.window.showErrorMessage(
+      `QuickTask failed (${response.result.code}). Request ID: ${response.result.requestId}`
+    );
+    return;
   }
 
-  return prompt;
+  void vscode.window.showInformationMessage(
+    "QuickTask result written to the QuickTask output channel."
+  );
 }
 
 function registerCommand(context: vscode.ExtensionContext, runtime: QtRuntimeLike): void {
+  const outputChannel = vscode.window.createOutputChannel("QuickTask");
+  context.subscriptions.push(outputChannel);
+
   const disposable = vscode.commands.registerCommand("quicktask.runQt", async () => {
     const prompt = await vscode.window.showInputBox({
       prompt: "Enter a /qt command or command arguments",
@@ -34,37 +40,22 @@ function registerCommand(context: vscode.ExtensionContext, runtime: QtRuntimeLik
     }
 
     const response = handleQtChatPrompt(prompt, runtime);
-    void vscode.window.showInformationMessage(response.markdown);
+    renderCommandResult(response, outputChannel);
   });
 
   context.subscriptions.push(disposable);
 }
 
 function registerChatParticipant(context: vscode.ExtensionContext, runtime: QtRuntimeLike): void {
-  const chatApi = (vscode as unknown as { chat?: unknown }).chat as
-    | {
-        createChatParticipant?: (
-          id: string,
-          handler: (
-            request: ChatRequestLike,
-            chatContext: unknown,
-            stream: ChatStreamLike
-          ) => unknown
-        ) => vscode.Disposable;
-      }
-    | undefined;
-
-  if (!chatApi?.createChatParticipant) {
+  const createChatParticipant = resolveChatParticipantFactory(vscode);
+  if (!createChatParticipant) {
     return;
   }
 
-  const participant = chatApi.createChatParticipant(
-    "quicktask.chat",
-    async (request, _, stream) => {
-      const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime);
-      stream.markdown?.(response.markdown);
-    }
-  );
+  const participant = createChatParticipant("quicktask.chat", async (request, _, stream) => {
+    const response = handleQtChatPrompt(getQtPromptFromRequest(request), runtime);
+    stream.markdown?.(response.markdown);
+  });
 
   context.subscriptions.push(participant);
 }

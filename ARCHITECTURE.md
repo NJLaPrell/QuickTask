@@ -46,7 +46,7 @@ This keeps behavior consistent across VS Code, Cursor, and OpenClaw while allowi
 ## Runtime flow
 
 1. Parse the `/qt` command.
-2. Decide whether the request is help, create, run, improve, or improve-action.
+2. Decide whether the request is help, create, run, list, show, doctor, improve, or improve-action.
 3. Resolve the task template.
 4. Return a host-specific response.
 
@@ -67,6 +67,16 @@ The single source of truth for supported command forms and runtime result codes 
 - `docs/qt-adapter-rendering-matrix.md` for host rendering behavior by result code.
 
 Host adapters and user-facing docs should reference this contract to avoid drift.
+
+## Approved command-surface scope
+
+QuickTask keeps an intentionally minimal `/qt` surface:
+
+- `/qt` help
+- create/run/improve lifecycle
+- discovery and diagnostics commands: `/qt list`, `/qt show [task]`, `/qt doctor`
+
+Additional command expansion is deferred by default and requires explicit re-approval.
 
 ## Concurrent template write policy
 

@@ -18,6 +18,12 @@ This workflow codifies how the agent discovers and proposes new development task
 - Severity field: optional for discovered tasks.
 - Rejected ideas list: not required.
 
+Command-surface boundary default:
+
+- Treat the approved `/qt` command surface as fixed unless user explicitly requests expansion.
+- Approved commands: help, create/run/improve lifecycle, `list`, `show`, `doctor`.
+- Default discovery should prioritize reliability, UX quality, and parity for approved commands over introducing new command verbs.
+
 ## Required review inputs
 
 Before proposing tasks, review at minimum:

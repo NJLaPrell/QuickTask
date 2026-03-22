@@ -23,6 +23,37 @@ export function parseQtCommand(input: string): QtCommand {
     };
   }
 
+  if (value === "/qt list") {
+    return { kind: "list" };
+  }
+
+  if (value === "/qt doctor") {
+    return { kind: "doctor" };
+  }
+
+  if (value === "/qt show") {
+    return {
+      kind: "incomplete",
+      reason: "missing-show-task",
+      usage: "/qt show [task]"
+    };
+  }
+
+  if (value.startsWith("/qt show ")) {
+    const taskName = value.slice("/qt show ".length).trim();
+    if (!taskName) {
+      return {
+        kind: "incomplete",
+        reason: "missing-show-task",
+        usage: "/qt show [task]"
+      };
+    }
+    return {
+      kind: "show",
+      taskName
+    };
+  }
+
   if (value.startsWith("/qt improve ")) {
     const remainder = value.slice("/qt improve ".length).trim();
     const improveActionMatch = remainder.match(/^(accept|reject|abandon)\s+/);

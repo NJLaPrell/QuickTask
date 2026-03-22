@@ -3,10 +3,12 @@ import {
   existsSync,
   mkdirSync,
   openSync,
+  readdirSync,
   readFileSync,
   renameSync,
   rmSync,
   statSync,
+  unlinkSync,
   writeFileSync
 } from "node:fs";
 import path from "node:path";
@@ -19,6 +21,13 @@ const STALE_TEMPLATE_LOCK_AGE_MS = 5 * 60 * 1000;
 
 export type FileTaskStore = {
   tasksDir: string;
+};
+
+export type TaskStoreHealth = {
+  tasksDir: string;
+  writable: boolean;
+  taskCount: number;
+  storageError?: string;
 };
 
 export type CreateFileTaskStoreOptions = {
@@ -243,4 +252,41 @@ export function saveTaskTemplate(store: FileTaskStore, template: TaskTemplate): 
     taskName: cleanTaskName,
     filename
   };
+}
+
+export function listTaskNames(store: FileTaskStore): string[] {
+  if (!existsSync(store.tasksDir)) {
+    return [];
+  }
+
+  const entries = readdirSync(store.tasksDir, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+    .map((entry) => entry.name.slice(0, -3))
+    .sort((a, b) => a.localeCompare(b));
+}
+
+export function checkTaskStoreHealth(store: FileTaskStore): TaskStoreHealth {
+  const health: TaskStoreHealth = {
+    tasksDir: store.tasksDir,
+    writable: false,
+    taskCount: 0
+  };
+
+  try {
+    mkdirSync(store.tasksDir, { recursive: true });
+    health.taskCount = listTaskNames(store).length;
+
+    const probePath = path.join(
+      store.tasksDir,
+      `.qt-doctor-write-check-${process.pid}-${Date.now()}`
+    );
+    writeFileSync(probePath, "ok", "utf8");
+    unlinkSync(probePath);
+    health.writable = true;
+  } catch (error) {
+    health.storageError = error instanceof Error ? error.message : "unknown storage error";
+  }
+
+  return health;
 }

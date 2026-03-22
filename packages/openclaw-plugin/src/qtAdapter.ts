@@ -1,4 +1,9 @@
-import { createFileTaskStore, createQtRuntime, type QtRuntimeResult } from "@quicktask/core";
+import {
+  createFileTaskStore,
+  createQtRuntime,
+  formatQtRuntimeResult,
+  type QtRuntimeResult
+} from "@quicktask/core/dist/index.js";
 
 export type QtRuntimeLike = {
   handle(input: string): QtRuntimeResult;
@@ -28,39 +33,7 @@ export function normalizeOpenClawQtInput(input: string): string {
 }
 
 export function renderOpenClawQtResult(result: QtRuntimeResult): string {
-  switch (result.code) {
-    case "qt:help":
-      return ["QuickTask command help:", ...result.usage.map((entry) => `- ${entry}`)].join("\n");
-    case "qt:create:clarify":
-    case "qt:create:already-exists":
-    case "qt:incomplete":
-    case "qt:run:not-found":
-    case "qt:improve:not-found":
-    case "qt:improve:proposal-not-found":
-      return result.message;
-    case "qt:create:created":
-      return `Created ${result.taskName} (${result.filename}).`;
-    case "qt:run:executed":
-      return `Run ${result.taskName} with input: ${result.userInput || "(empty input)"}`;
-    case "qt:improve:proposed":
-      return `Proposed update for ${result.taskName}. Proposal ID: ${result.proposalId}`;
-    case "qt:improve:accept:applied":
-    case "qt:improve:reject:recorded":
-    case "qt:improve:abandon:recorded":
-    case "qt:improve:proposal-expired":
-    case "qt:improve:already-finalized":
-      return result.message;
-    case "qt:parse:error":
-    case "qt:storage:error":
-      return `${result.message} (request: ${result.requestId})`;
-    default: {
-      const unknownCode = (result as { code?: string }).code ?? "unknown";
-      const maybeRequestId = (result as { requestId?: string }).requestId;
-      return maybeRequestId
-        ? `QuickTask returned an unsupported result code: ${unknownCode} (request: ${maybeRequestId})`
-        : `QuickTask returned an unsupported result code: ${unknownCode}`;
-    }
-  }
+  return formatQtRuntimeResult(result, "plain");
 }
 
 export function handleOpenClawQtInput(input: string, runtime: QtRuntimeLike): OpenClawQtResponse {
