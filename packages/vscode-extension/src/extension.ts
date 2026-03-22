@@ -3,9 +3,7 @@ import * as vscode from "vscode";
 import { handleQtChatPrompt, type QtRuntimeLike, createVsCodeQtRuntime } from "./qtAdapter.js";
 import {
   getQtPromptFromRequest,
-  resolveChatParticipantFactory,
-  type ChatRequestLike,
-  type ChatStreamLike
+  resolveChatParticipantFactory
 } from "./chatCompat.js";
 
 function renderCommandResult(
