@@ -337,6 +337,7 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 ### Session exit (agent — do not skip)
 
 - Update **`workspace-kit-status.yaml`**: `last_updated`, `last_session_summary` (2–5 bullets), `next_agent_actions` (clear completed items), `pending_decisions` (sync with [Open decisions](#open-decisions)).  
+- Evaluate metrics update triggers and, when any trigger is met, update `metrics.updated_at` plus changed metric values in **`docs/maintainers/workspace-kit-status.yaml`**.  
 - Update **`TASKS.md`** for any completed or newly discovered work.  
 - If a roadmap **open decision** was resolved, add a row under [Recorded decisions](#recorded-decisions) and remove it from **`pending_decisions`** in the YAML (and optionally from Open decisions list in this file).
 
@@ -461,6 +462,22 @@ Track these per kit release cycle (manual or scripted). Record values in **`docs
 - Upgrade success rate (% upgrades with no manual rollback).  
 - Number of recurring friction themes across sessions.
 
+**Expected values format**
+
+- `metrics.updated_at`: ISO date string (`YYYY-MM-DD`).  
+- `metrics.source`: short string (`manual` or named script/source).  
+- `metrics.time_to_doctor_minutes`: number or `null` when not yet measured.  
+- `metrics.cold_start_success_rate_pct`: number in `0-100` or `null`.  
+- `metrics.upgrade_success_rate_pct`: number in `0-100` or `null`.  
+- `metrics.recurring_friction_themes_count`: integer or `null`.
+
+**Session-exit trigger conditions for metrics updates**
+
+- A kit phase promotion is completed or rejected after evidence review.  
+- A cold-start fixture run produces a new measured outcome.  
+- An upgrade rehearsal (`upgrade` or `upgrade --dry-run`) produces a new measured outcome.  
+- A friction-review pass changes the recurring friction theme count.
+
 ---
 
 ## Suggested next actions (immediate)
@@ -488,6 +505,40 @@ Complete these once to reduce agent ambiguity and handoff friction:
 
 ---
 
+## Phase 0 inventory baseline (maintainer-internal)
+
+This inventory captures the split required by Phase 0 exit criteria. It is intentionally maintainer-facing and should not be promoted into product front-door docs.
+
+### QuickTask-product-specific artifacts (not for generic kit defaults)
+
+| Area | Artifact(s) | Why product-specific |
+|------|-------------|----------------------|
+| Product command/runtime contracts | `docs/qt-command-result-contract.md`, `docs/qt-adapter-rendering-matrix.md`, `packages/core/src/*` | Defines `/qt` behavior and adapter rendering semantics tied to QuickTask runtime. |
+| Product host adapters and UX | `packages/vscode-extension/*`, `packages/openclaw-plugin/*`, `.cursor/commands/qt.md` | Host integration implementation and command UX are QuickTask product surface. |
+| Product feedback and release history | `USER_FEEDBACK.md`, GitHub release issue mappings, extension release artifacts | User-facing product adoption and release outcomes are outside reusable process-kit scope. |
+| Product-facing docs | `README.md` (product sections), Marketplace-facing content | Entrypoint docs for extension users are intentionally separate from kit strategy. |
+
+### Process-universal artifacts (candidate workspace-kit scope)
+
+| Area | Artifact(s) | Why reusable |
+|------|-------------|--------------|
+| Task governance and execution discipline | `TASKS.md`, `TASKS_ARCHIVED.md`, task status/priority conventions, branch naming conventions | General workflow for scoped delivery and auditability in any repository. |
+| Release/process policies | `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, workflow rule files under `.cursor/rules/` | Reusable release/check policies independent of QuickTask runtime features. |
+| Contract and guardrail scripts | `scripts/check-workflow-contracts.mjs`, `pnpm tasks:check`, `pnpm release:check-workflow-contracts` | Generic process-contract verification suitable for kit-owned automation. |
+| Workspace-kit canonical contracts | `workspace-kit.profile.json`, `schemas/workspace-kit-profile.schema.json`, `.workspace-kit/manifest.json`, `.workspace-kit/owned-paths.json` | Stable data contracts that enable profile-driven init/check/upgrade behavior. |
+| Maintainer handoff state | `docs/maintainers/workspace-kit-status.yaml` | Agent-session continuity and phase-state tracking reusable across adopters. |
+
+### Phase 0 task-to-criteria mapping
+
+| Phase 0 criterion | Task(s) |
+|-------------------|---------|
+| Maintainer-side inventory exists | `T143` |
+| Minimal profile schema v0 draft exists | `T144` |
+| Metrics cadence + update protocol documented and actionable | `T145` |
+| Promotion evidence (`pnpm check && pnpm test`) and phase transition recorded | `T146` |
+
+---
+
 ## Document maintenance
 
 - Update this file when phases complete or gates change.  
@@ -496,4 +547,4 @@ Complete these once to reduce agent ambiguity and handoff friction:
 
 ---
 
-*Last updated: 2026-03-23 — bootstrap checklist, seeded task scaffolding, canonical stub files*
+*Last updated: 2026-03-23 — Phase 0 inventory baseline and metrics protocol updates*

@@ -7,25 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 0
+current_kit_phase: 1
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 0 — execute T143 -> T144 -> T145 sequence"
+active_focus: "Phase 1 — dual track bootstrap (template starter + local package skeleton)"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Complete T143 inventory and map evidence to Phase 0 criteria"
-  - "Complete T144 canonical schema/manifest stub implementation"
-  - "Complete T145 metrics structure + protocol update"
+  - "Create Phase 1 [workspace-kit] tasks for template starter and package skeleton deliverables"
+  - "Scaffold packages/workspace-kit with init/doctor CLI command placeholders"
+  - "Define cold-start fixture path and run local doctor validation plan"
 
 # Optional: 2-5 bullets for the following session
-last_session_summary: null
+last_session_summary:
+  - "Completed Phase 0 inventory baseline in ROADMAP maintainer section."
+  - "Confirmed canonical profile/schema/manifest/owned-paths stubs exist and remain valid JSON."
+  - "Documented metrics value format and session-exit update trigger conditions in ROADMAP."
+  - "Recorded passing 0 -> 1 promotion checks and advanced current_kit_phase to 1."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -35,8 +39,9 @@ pending_decisions:
 
 # Metrics baseline (ROADMAP: update at least once per kit semver minor or phase promotion)
 metrics:
-  updated_at: null
+  updated_at: "2026-03-23"
   source: "manual"
+  notes: "Phase 0 promotion baseline captured; values remain null until cold-start and upgrade rehearsals produce measurements."
   time_to_doctor_minutes: null
   cold_start_success_rate_pct: null
   upgrade_success_rate_pct: null

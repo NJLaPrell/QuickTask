@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 0 bootstrap (maintainer/internal track)._
+- Current phase in execution: _Workspace kit roadmap Phase 1 dual-track bootstrap (template + package skeleton)._
 - Phase kickoff assessment: Phase 12 kickoff was complete; close-out validation: `pnpm test`, `pnpm test:smoke`, `pnpm check`, `pnpm qt:check-contract-drift`, `pnpm tasks:check`.
-- Active implementation (`[~]`): `T143`
-- Scheduled (`[ ]`): `T144`, `T145`
-- Ready queue (`[p]`): `T146`
+- Active implementation (`[~]`): _none_
+- Scheduled (`[ ]`): _none_
+- Ready queue (`[p]`): `T147`, `T148`, `T149`
 - Blocked tasks (`[!]`): none
-- Next tasks: Complete `[workspace-kit]` Phase 0 tasks in order `T143` -> `T144` -> `T145`, then run `T146` to confirm phase-promotion evidence and update status YAML.
+- Next tasks: Execute Phase 1 bootstrap in order `T147` -> `T148` -> `T149` and record cold-start `doctor` evidence for 1 -> 2 readiness.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,10 +226,9 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[~] T143 [workspace-kit] Seed Phase 0 inventory and backlog mapping`
-- `[ ] T144 [workspace-kit] Define and commit profile/manifest schema stubs`
-- `[ ] T145 [workspace-kit] Add agent status metrics structure and update protocol`
-- `[p] T146 [workspace-kit] Run Phase 0 promotion evidence pass and status update`
+- `[p] T147 [workspace-kit] Scaffold package skeleton for Phase 1 local CLI`
+- `[p] T148 [workspace-kit] Create template starter path and consumer README stub`
+- `[p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness`
 
 ### Scheduled (`[ ]`)
 
@@ -249,9 +248,9 @@ Work below is triaged for implementation.
 
 ## Proposed task details
 
-### [~] T143 [workspace-kit] Seed Phase 0 inventory and backlog mapping
+### [x] T143 [workspace-kit] Seed Phase 0 inventory and backlog mapping
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Convert roadmap Phase 0 scope into concrete executable inventory and linked tasks.
 - Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -266,11 +265,13 @@ Work below is triaged for implementation.
   - Inventory exists in maintainer path and is referenced by a `[workspace-kit]` task.
   - Active `[workspace-kit]` task sequence is visible in `TASKS.md`.
 - Validation evidence:
-  - In progress.
+  - Added maintainer-only Phase 0 inventory baseline in `ROADMAP.md` under `## Phase 0 inventory baseline (maintainer-internal)` with QuickTask-specific vs process-universal artifact split.
+  - Added explicit Phase 0 task-to-criteria mapping table in `ROADMAP.md` linking `T143`/`T144`/`T145`/`T146` to promotion requirements.
+  - Confirmed active `[workspace-kit]` task sequence in `TASKS.md` and aligned status handoff focus in `docs/maintainers/workspace-kit-status.yaml`.
 
-### [ ] T144 [workspace-kit] Define and commit profile/manifest schema stubs
+### [x] T144 [workspace-kit] Define and commit profile/manifest schema stubs
 
-- Status: [ ]
+- Status: [x]
 - Priority: P1
 - Goal: Create canonical contract stubs so agents scaffold against stable paths, not ad-hoc files.
 - Files: `workspace-kit.profile.json`, `schemas/workspace-kit-profile.schema.json`, `.workspace-kit/manifest.json`, `.workspace-kit/owned-paths.json`
@@ -285,11 +286,18 @@ Work below is triaged for implementation.
   - All canonical file-contract paths exist in repo.
   - Stubs are valid JSON and ready for validator implementation.
 - Validation evidence:
-  - Pending.
+  - Confirmed canonical contract files exist at roadmap paths:
+    - `workspace-kit.profile.json`
+    - `schemas/workspace-kit-profile.schema.json`
+    - `.workspace-kit/manifest.json`
+    - `.workspace-kit/owned-paths.json`
+  - Verified stubs include v0 baseline fields (`project.name`, `packageManager`, `commands.*`, `github.defaultBranch`) and schema alignment with Phase 0 profile draft requirements.
+  - JSON parse validation command succeeded:
+    - `node -e "const fs=require('fs'); ['workspace-kit.profile.json','schemas/workspace-kit-profile.schema.json','.workspace-kit/manifest.json','.workspace-kit/owned-paths.json'].forEach((p)=>JSON.parse(fs.readFileSync(p,'utf8')));"`
 
-### [ ] T145 [workspace-kit] Add agent status metrics structure and update protocol
+### [x] T145 [workspace-kit] Add agent status metrics structure and update protocol
 
-- Status: [ ]
+- Status: [x]
 - Priority: P2
 - Goal: Make roadmap metrics cadence actionable by adding a durable metrics structure to status handoff.
 - Files: `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
@@ -304,11 +312,17 @@ Work below is triaged for implementation.
   - Status YAML includes a `metrics` section aligned to roadmap baseline.
   - Agent session protocol has explicit metrics update timing.
 - Validation evidence:
-  - Pending.
+  - `docs/maintainers/workspace-kit-status.yaml` now has an explicit `metrics` structure with baseline keys, `updated_at`, and maintainer note for null measurement placeholders.
+  - Added metrics value format contract in `ROADMAP.md` under `### Metrics baseline (Phase 5 minimum)` (`updated_at`, numeric/null semantics, source field).
+  - Added session-end metrics update trigger conditions in `ROADMAP.md`:
+    - phase promotion outcome,
+    - cold-start fixture run result,
+    - upgrade rehearsal result,
+    - friction-review count change.
 
-### [p] T146 [workspace-kit] Run Phase 0 promotion evidence pass and status update
+### [x] T146 [workspace-kit] Run Phase 0 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 0 with objective evidence and advance kit phase state cleanly.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -322,6 +336,72 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Evidence for 0 -> 1 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
+- Validation evidence:
+  - Ran required promotion checks for `0 -> 1`: `pnpm check && pnpm test` (pass, 2026-03-23).
+  - Confirmed non-command evidence requirements for `0 -> 1`:
+    - inventory doc exists at maintainer path (`ROADMAP.md` Phase 0 inventory baseline section),
+    - profile schema v0 draft committed (`schemas/workspace-kit-profile.schema.json` + `workspace-kit.profile.json`).
+  - Updated `docs/maintainers/workspace-kit-status.yaml` to:
+    - `current_kit_phase: 1`,
+    - Phase 1 `active_focus`,
+    - refreshed `next_agent_actions`,
+    - populated `last_session_summary`,
+    - metrics baseline timestamp update (`metrics.updated_at`).
+
+### [p] T147 [workspace-kit] Scaffold package skeleton for Phase 1 local CLI
+
+- Status: [p]
+- Priority: P1
+- Goal: Create `packages/workspace-kit` CLI skeleton with `init` and `doctor` command placeholders aligned to roadmap CLI contract.
+- Files: `packages/workspace-kit/*`, `package.json`, `pnpm-workspace.yaml`, tests/docs as needed
+- Dependencies: T146
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Scaffold package layout and CLI entrypoint.
+  2. Implement deterministic placeholder handlers for `init` and `doctor` with contract-stable exit codes.
+  3. Add basic test harness or smoke checks for command invocation.
+- Acceptance criteria:
+  - `packages/workspace-kit` exists with runnable CLI entry and documented command placeholders.
+  - CLI returns stable exit codes per roadmap minimal contract.
+- Validation evidence:
+  - Pending.
+
+### [p] T148 [workspace-kit] Create template starter path and consumer README stub
+
+- Status: [p]
+- Priority: P1
+- Goal: Stand up Phase 1 template starter location with profile stub and kit-consumer onboarding README.
+- Files: `templates/workspace-starter/**`, `templates/workspace-starter/README.md`
+- Dependencies: T147
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Create template starter tree with profile stub and minimal required files.
+  2. Add template consumer README for 5-minute init flow.
+  3. Ensure template docs stay kit-focused and do not blend into product README.
+- Acceptance criteria:
+  - Starter template path exists and includes profile stub plus consumer-facing README.
+  - README guides local CLI/bootstrap path for Phase 1.
+- Validation evidence:
+  - Pending.
+
+### [p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
+
+- Status: [p]
+- Priority: P1
+- Goal: Establish repeatable Phase 1 cold-start validation proving template + local CLI `doctor` success.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, fixture path/docs/scripts as needed
+- Dependencies: T147, T148
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define canonical cold-start fixture path/process.
+  2. Run `doctor` validation against fixture and capture evidence.
+  3. Record baseline metrics updates from fixture outcomes.
+- Acceptance criteria:
+  - Fixture path and invocation steps are documented and repeatable.
+  - `doctor` pass evidence is captured for Phase 1 progression.
 - Validation evidence:
   - Pending.
 
