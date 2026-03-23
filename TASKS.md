@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 1 dual-track bootstrap (template + package skeleton)._
-- Phase kickoff assessment: Phase 1 kickoff complete (2026-03-23). Reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and kit roadmap/status docs; confirmed scope alignment with Phase 1 deliverables and set `T147` as active implementation.
+- Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
+- Phase kickoff assessment: Phase 2 kickoff pending (seeded by T150 phase-promotion closeout); start by defining profile-driven parameterization and pilot-repo validation plan.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T150`
+- Ready queue (`[p]`): `T151`
 - Blocked tasks (`[!]`): none
-- Next tasks: Run `T150` to record formal 1 -> 2 promotion evidence and update kit phase state.
+- Next tasks: Execute `T151` to run Phase 2 kickoff and create concrete profile-driven migration implementation tasks.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T150 [workspace-kit] Run Phase 1 promotion evidence pass and status update`
+- `[p] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan`
 
 ### Scheduled (`[ ]`)
 
@@ -425,9 +425,9 @@ Work below is triaged for implementation.
       - `All canonical workspace-kit contract files are present and parseable JSON.`
   - Updated status metrics baseline with first measured values from fixture run.
 
-### [p] T150 [workspace-kit] Run Phase 1 promotion evidence pass and status update
+### [x] T150 [workspace-kit] Run Phase 1 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 1 with objective evidence and advance kit phase state cleanly from 1 -> 2.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -441,6 +441,33 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Evidence for 1 -> 2 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
+- Validation evidence:
+  - Ran required promotion checks for `1 -> 2` (pass, 2026-03-23):
+    - `pnpm check && pnpm test`
+  - Confirmed fixture/doctor evidence requirement for `1 -> 2`:
+    - `pnpm workspace-kit:phase1:cold-start-check`
+    - Output included `workspace-kit doctor passed.` for fixture path `artifacts/workspace-kit-fixtures/phase1-cold-start`.
+  - Updated `docs/maintainers/workspace-kit-status.yaml` to:
+    - `current_kit_phase: 2`,
+    - refreshed `active_focus` and `next_agent_actions` for Phase 2 planning,
+    - updated `last_session_summary` with promotion closure details.
+
+### [p] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan
+
+- Status: [p]
+- Priority: P1
+- Goal: Convert Phase 2 roadmap deliverables into concrete executable tasks and dependency order.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
+- Dependencies: T150
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run a Phase 2 kickoff assessment against roadmap deliverables and exit criteria.
+  2. Define implementation tasks for profile validation, rule parameterization, and pilot-repo adoption evidence.
+  3. Update execution state and status YAML with ordered next actions.
+- Acceptance criteria:
+  - Phase 2 kickoff summary and concrete task sequence are recorded in active tracker/state files.
+  - Follow-on tasks are actionable and aligned to 2 -> 3 promotion requirements.
 - Validation evidence:
   - Pending.
 
