@@ -1227,9 +1227,9 @@ Work below is triaged for implementation.
 - Dependencies: T176
 - Blocked by: human-only gates for repository/org permissions and registry credentials
 - Unblock plan:
-  1. Human creates/authorizes `workflow-cannon` repository access and required org permissions.
-  2. Human confirms registry scope ownership for `@workflow-cannon/workspace-kit` and publish credentials path.
-  3. Agent pushes `workflow-cannon-split` to new remote and wires release automation bootstrap.
+  1. Human confirms registry scope ownership for `@workflow-cannon/workspace-kit`.
+  2. Human adds `NPM_TOKEN` publish credential secret in `NJLaPrell/workflow-cannon`.
+  3. Agent runs first publish dispatch once token is present (or supports dry-run verification on request).
 - Steps:
   1. Add new repository remote for Workflow Cannon.
   2. Push `workflow-cannon-split` branch and set default branch strategy in new repo.
@@ -1238,7 +1238,12 @@ Work below is triaged for implementation.
   - New repository receives split history and is ready for package lifecycle automation.
   - QuickTask extraction handoff notes are updated with remote URL and bootstrap evidence.
 - Validation evidence:
-  - Pending human gate completion.
+  - Workflow Cannon repository bootstrap complete:
+    - Subtree split pushed to `https://github.com/NJLaPrell/workflow-cannon` main branch.
+    - Extracted package renamed/configured for npm publish target `@workflow-cannon/workspace-kit`.
+    - Added standalone CI workflow and manual npm publish workflow in `workflow-cannon`.
+  - Remaining human gate:
+    - `npm whoami` from this environment returns unauthorized; publish credential must be provided via repo/org secret `NPM_TOKEN`.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

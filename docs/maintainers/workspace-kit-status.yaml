@@ -17,21 +17,20 @@ active_focus: "Extraction follow-through in progress — automatable split compl
 
 # Human-required stops; agent must not "resolve" these without user
 blockers:
-  - "Workflow Cannon repository/org permissions must be created or delegated by a human before push/bootstrap"
-  - "Registry scope and publish credential path for @workflow-cannon/workspace-kit must be confirmed by a human"
+  - "npm publish token secret (`NPM_TOKEN`) must be added in NJLaPrell/workflow-cannon before first publish dispatch"
+  - "Scope ownership for `@workflow-cannon/workspace-kit` must be confirmed by a human npm account"
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "After human gate clearance, push `workflow-cannon-split` (sha `5a1f7038255a2c83e0e51ace07ea0d95a327574c`) into Workflow Cannon repository"
-  - "Complete T177 repository bootstrap and release automation handoff in external repo scope"
+  - "After human gate clearance, run first npm publish workflow dispatch in NJLaPrell/workflow-cannon"
+  - "Capture first publish evidence and close T177 blocker record"
   - "Keep packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) enforced while extraction cutover finalizes"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Started extraction follow-through execution after roadmap closeout by seeding T175-T177 task chain."
-  - "Captured pre-split freeze SHA (`65797d888629d017f3538bd793c5e7cd781edf7d`) and generated `workflow-cannon-split` branch (`5a1f7038255a2c83e0e51ace07ea0d95a327574c`)."
-  - "Created fallback split bundle artifact at `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle`."
-  - "Marked T177 blocked pending human-only repository/org/registry gates."
+  - "Verified Workflow Cannon repository access and pushed subtree split history to main (`5a1f7038255a2c83e0e51ace07ea0d95a327574c`)."
+  - "Bootstrapped `workflow-cannon` package/repo for npm (`@workflow-cannon/workspace-kit`) with CI + manual publish workflow."
+  - "Confirmed npm auth is not available in this environment (`npm whoami` unauthorized); publish remains blocked on human token/scope setup."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions: []
@@ -40,7 +39,7 @@ pending_decisions: []
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Extraction follow-through execution started: split artifacts prepared and handoff now blocked only by human repository/registry gates."
+  notes: "Extraction follow-through advanced to external repo bootstrap complete; remaining blocker is npm scope/token readiness for first publish dispatch."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
