@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "reviewCadence": "per-kit-minor-release",
+    "severityLevels": ["low", "medium", "high"],
+    "categoryTaxonomy": ["process", "tooling", "release", "docs", "adoption", "ci", "other"],
+    "requiredFieldsBySeverity": {
+      "low": ["id", "title", "promptIntent", "frictionObserved", "proposedChange"],
+      "medium": [
+        "id",
+        "title",
+        "promptIntent",
+        "frictionObserved",
+        "proposedChange",
+        "followUpTaskId"
+      ],
+      "high": [
+        "id",
+        "title",
+        "promptIntent",
+        "frictionObserved",
+        "proposedChange",
+        "followUpTaskId",
+        "disposition"
+      ]
+    },
+    "archivePolicy": {
+      "archiveClosedAfterDays": 30,
+      "retentionDays": 365
+    }
+  },
+  "records": [
+    {
+      "id": "F001",
+      "title": "Phase 5 baseline had no machine-readable friction source",
+      "status": "in_progress",
+      "severity": "medium",
+      "category": "process",
+      "source": {
+        "kind": "session_retro",
+        "reference": "T168 phase-kickoff assessment"
+      },
+      "detectedAt": "2026-03-23",
+      "lastUpdated": "2026-03-23",
+      "promptIntent": "Design a flexible and scalable continuous improvement engine for workspace-kit.",
+      "frictionObserved": "Friction insights and metrics were maintained mostly in markdown prose and manual YAML notes.",
+      "proposedChange": "Adopt schema-backed improvement log plus deterministic generated summary and CI enforcement.",
+      "affectedAreas": ["release", "tasks", "docs"],
+      "followUpTaskId": "T168",
+      "releaseImpact": "requires_change",
+      "disposition": {
+        "kind": "planned_fix",
+        "notes": "Implement in Phase 5 before Phase 6 extraction gate."
+      }
+    }
+  ]
+}

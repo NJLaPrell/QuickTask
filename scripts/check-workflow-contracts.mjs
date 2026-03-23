@@ -3,6 +3,8 @@
 import { readFileSync } from "node:fs";
 import { renderWorkflowContractSnippets } from "./generate-workflow-contract-snippets.mjs";
 import { validateWorkflowContract } from "./validate-workflow-contract.mjs";
+import { buildWorkspaceKitImprovementSummary } from "./generate-workspace-kit-improvement-summary.mjs";
+import { validateWorkspaceKitImprovementLog } from "./validate-workspace-kit-improvement-log.mjs";
 
 const REQUIRED_RELEASE_INPUTS = ["readme_status", "docs_status", "docs_sync_notes", "rc_run_id"];
 const REQUIRED_DOCS_GATE_ENVS = [
@@ -70,7 +72,9 @@ export function checkWorkflowContracts(sources) {
     workflowContract,
     workflowProfile,
     generatedWorkflowSummary,
-    generatedWorkflowRule
+    generatedWorkflowRule,
+    workspaceKitImprovementLog,
+    generatedImprovementSummary
   } = sources;
 
   for (const inputName of REQUIRED_RELEASE_INPUTS) {
@@ -146,6 +150,24 @@ export function checkWorkflowContracts(sources) {
     }
   }
 
+  const improvementValidation = validateWorkspaceKitImprovementLog(workspaceKitImprovementLog);
+  if (!improvementValidation.ok) {
+    for (const finding of improvementValidation.findings) {
+      findings.push(`workspace-kit improvement-log validation: ${finding}`);
+    }
+  } else {
+    const expectedImprovementSummary = `${JSON.stringify(
+      buildWorkspaceKitImprovementSummary(workspaceKitImprovementLog),
+      null,
+      2
+    )}\n`;
+    if (!jsonContentMatches(generatedImprovementSummary, expectedImprovementSummary)) {
+      findings.push(
+        "generated workspace-kit improvement summary drift detected: run `pnpm workspace-kit:improvement-log:generate`."
+      );
+    }
+  }
+
   return {
     ok: findings.length === 0,
     findings
@@ -170,6 +192,13 @@ export function main() {
     ".cursor/rules/workspace-kit-workflow-contract.mdc",
     "utf8"
   );
+  const workspaceKitImprovementLog = JSON.parse(
+    readFileSync(".workspace-kit/improvement-log.json", "utf8")
+  );
+  const generatedImprovementSummary = readFileSync(
+    ".workspace-kit/generated/improvement-summary.json",
+    "utf8"
+  );
   const result = checkWorkflowContracts({
     releaseWorkflow,
     rcWorkflow,
@@ -179,7 +208,9 @@ export function main() {
     workflowContract,
     workflowProfile,
     generatedWorkflowSummary,
-    generatedWorkflowRule
+    generatedWorkflowRule,
+    workspaceKitImprovementLog,
+    generatedImprovementSummary
   });
 
   if (!result.ok) {

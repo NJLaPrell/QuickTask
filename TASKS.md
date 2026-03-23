@@ -69,12 +69,12 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 5 improvement loop._
-- Phase kickoff assessment: Phase 5 kickoff pending; establish friction-log baseline, release-retro cadence, and promotion evidence tasks.
+- Phase kickoff assessment: Phase 5 kickoff complete; machine-readable improvement log baseline and automation gates are in place, pending first release-cycle evidence pass.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T168`
+- Ready queue (`[p]`): `T169`
 - Blocked tasks (`[!]`): none
-- Next tasks: Kick off Phase 5 via `T168`, then implement improvement-loop tasks and close with a dedicated 5 -> 6 promotion evidence task.
+- Next tasks: Execute `T169` to capture first release-cycle evidence for the improvement engine, then close with a dedicated 5 -> 6 promotion evidence task.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T168 [workspace-kit] Kick off Phase 5 improvement-loop plan and task mapping`
+- `[p] T169 [workspace-kit] Run first release-cycle evidence pass for machine-readable improvement engine`
 
 ### Scheduled (`[ ]`)
 
@@ -963,9 +963,9 @@ Work below is triaged for implementation.
     - `current_kit_phase` advanced from `4` to `5` in `docs/maintainers/workspace-kit-status.yaml`.
     - Phase 5 kickoff task `T168` seeded in active backlog.
 
-### [p] T168 [workspace-kit] Kick off Phase 5 improvement-loop plan and task mapping
+### [x] T168 [workspace-kit] Kick off Phase 5 improvement-loop plan and task mapping
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Run Phase 5 kickoff assessment and translate improvement-loop deliverables into executable tasks and evidence gates.
 - Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`, Phase 5 docs/scripts as needed
@@ -979,6 +979,50 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Phase 5 kickoff outputs a clear, ordered task chain with acceptance criteria and validation plans.
   - Status handoff files reflect Phase 5 active focus and next actions.
+- Validation evidence:
+  - Added machine-readable improvement contract artifacts:
+    - `schemas/workspace-kit-improvement-log.schema.json`
+    - `.workspace-kit/improvement-log.json`
+    - `.workspace-kit/generated/improvement-summary.json`
+  - Added deterministic improvement tooling and tests:
+    - `scripts/validate-workspace-kit-improvement-log.mjs`
+    - `scripts/generate-workspace-kit-improvement-summary.mjs`
+    - `scripts/test/validate-workspace-kit-improvement-log.test.mjs`
+    - `scripts/test/generate-workspace-kit-improvement-summary.test.mjs`
+  - Wired improvement checks into workflow/readiness/CI:
+    - `package.json` scripts:
+      - `workspace-kit:improvement-log:validate`
+      - `workspace-kit:improvement-log:generate`
+    - `scripts/check-workflow-contracts.mjs`
+    - `scripts/release-prepare-readiness.mjs`
+    - `.github/workflows/ci.yml`
+  - Updated Phase 5/6 docs and extraction gating:
+    - `ROADMAP.md`
+    - `PRE_RELEASE_READINESS_WORKFLOW.md`
+    - `docs/maintainers/workspace-kit-friction.md`
+  - Validation run (pass, 2026-03-23):
+    - `pnpm workspace-kit:improvement-log:validate`
+    - `pnpm workspace-kit:improvement-log:generate`
+    - `pnpm release:check-workflow-contracts`
+    - `node --test scripts/test/check-workflow-contracts.test.mjs scripts/test/release-prepare-readiness.test.mjs`
+    - `node --test scripts/test/validate-workspace-kit-improvement-log.test.mjs scripts/test/generate-workspace-kit-improvement-summary.test.mjs`
+
+### [p] T169 [workspace-kit] Run first release-cycle evidence pass for machine-readable improvement engine
+
+- Status: [p]
+- Priority: P1
+- Goal: Demonstrate one full release-readiness cycle using the new machine-readable improvement log and deterministic summary workflow.
+- Files: `.workspace-kit/improvement-log.json`, `.workspace-kit/generated/improvement-summary.json`, `docs/release-readiness-report.md`, `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T168
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Update improvement log records for current release cycle and regenerate summary output.
+  2. Run `pnpm release:prepare` and capture findings/evidence tied to the machine-readable improvement checks.
+  3. Record cycle evidence in `TASKS.md` and status YAML to satisfy Phase 5 pre-extraction gate requirements.
+- Acceptance criteria:
+  - At least one release-readiness cycle has auditable evidence that the improvement engine is actively used.
+  - Evidence explicitly links to machine-readable log data and generated summary outputs.
 - Validation evidence:
   - Pending.
 
