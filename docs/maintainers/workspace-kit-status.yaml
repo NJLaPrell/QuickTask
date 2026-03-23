@@ -7,29 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 5
+current_kit_phase: 6
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T169 complete — execute T170 Phase 5 promotion evidence and state update"
+active_focus: "Phase 5 promoted to 6 — execute T171 Phase 6 kickoff and extraction task mapping"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T170 promotion closeout using Phase 5 matrix checks (including improvement log validation and release-readiness evidence)"
-  - "If T170 evidence passes, advance `current_kit_phase` to 6 and set extraction execution as active focus"
-  - "Prepare Phase 6 extraction execution task chain for single-package split path"
+  - "Run T171 Phase 6 kickoff assessment and seed extraction execution task chain"
+  - "Implement single-package extraction cutover tasks with consumer-regression validation requirements"
+  - "Prepare Phase 6 closeout evidence plan for extraction execution completion"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T169 first release-cycle evidence pass using machine-readable improvement log and deterministic summary generation."
-  - "Resolved baseline friction record and captured release-cycle evidence record in `.workspace-kit/improvement-log.json`."
-  - "Validated improvement engine in release-readiness flow (`release:prepare`) with zero new findings and READY handoff state."
-  - "Set next execution focus to T170 for 5 -> 6 promotion closeout evidence."
+  - "Completed T170 and recorded full Phase 5 promotion evidence with all required checks passing."
+  - "Validated machine-readable improvement log + deterministic summary loop in release-readiness context as Phase 5 gate evidence."
+  - "Promoted workspace-kit phase state from 5 to 6 after confirming improvement-engine automation criteria."
+  - "Seeded T171 as the next execution task for Phase 6 extraction kickoff planning."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "T169 complete: first release-cycle evidence pass recorded for machine-readable improvement engine; Phase 5 promotion closeout pending."
+  notes: "Phase 5 promotion complete: improvement-engine automation and first release-cycle evidence are validated; Phase 6 extraction kickoff pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
