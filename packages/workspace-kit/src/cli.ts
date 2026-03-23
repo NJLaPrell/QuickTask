@@ -108,8 +108,7 @@ async function main(): Promise<void> {
 }
 
 const isDirectExecution =
-  typeof process.argv[1] === "string" &&
-  import.meta.url === pathToFileURL(process.argv[1]).href;
+  typeof process.argv[1] === "string" && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isDirectExecution) {
   void main();
