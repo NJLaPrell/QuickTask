@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
-- Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): `T167`
+- Current phase in execution: _Workspace kit roadmap Phase 5 improvement loop._
+- Phase kickoff assessment: Phase 5 kickoff pending; establish friction-log baseline, release-retro cadence, and promotion evidence tasks.
+- Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): _none_
+- Ready queue (`[p]`): `T168`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
+- Next tasks: Kick off Phase 5 via `T168`, then implement improvement-loop tasks and close with a dedicated 5 -> 6 promotion evidence task.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update`
+- `[p] T168 [workspace-kit] Kick off Phase 5 improvement-loop plan and task mapping`
 
 ### Scheduled (`[ ]`)
 
@@ -931,9 +931,9 @@ Work below is triaged for implementation.
     - `pnpm release:check-workflow-contracts`
     - `pnpm tasks:check`
 
-### [~] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
+### [x] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 4 with objective evidence and advance kit phase state cleanly from 4 -> 5.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -948,7 +948,39 @@ Work below is triaged for implementation.
   - Evidence for 4 -> 5 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - In progress.
+  - Promotion evidence suite (pass, 2026-03-23):
+    - `pnpm workspace-kit:generate-workflow-contract-snippets`
+    - `pnpm workspace-kit:validate-workflow-contract`
+    - `pnpm release:check-workflow-contracts`
+    - `pnpm tasks:check`
+    - `pnpm docs:check-links`
+    - `pnpm format:check`
+    - `pnpm release:validate-changesets`
+    - `pnpm test`
+    - `pnpm check`
+  - Promotion result:
+    - Phase 4 deliverables `T163` through `T166` complete and validated.
+    - `current_kit_phase` advanced from `4` to `5` in `docs/maintainers/workspace-kit-status.yaml`.
+    - Phase 5 kickoff task `T168` seeded in active backlog.
+
+### [p] T168 [workspace-kit] Kick off Phase 5 improvement-loop plan and task mapping
+
+- Status: [p]
+- Priority: P1
+- Goal: Run Phase 5 kickoff assessment and translate improvement-loop deliverables into executable tasks and evidence gates.
+- Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`, Phase 5 docs/scripts as needed
+- Dependencies: T167
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Review Phase 5 roadmap objective, required tier deliverables, and exit criteria.
+  2. Seed concrete `[workspace-kit]` tasks for friction log, release-retro rhythm, and optional improvement automation.
+  3. Update `Current execution state` and status YAML next actions for Phase 5 execution ordering.
+- Acceptance criteria:
+  - Phase 5 kickoff outputs a clear, ordered task chain with acceptance criteria and validation plans.
+  - Status handoff files reflect Phase 5 active focus and next actions.
+- Validation evidence:
+  - Pending.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

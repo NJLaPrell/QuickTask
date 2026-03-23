@@ -7,29 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 4
+current_kit_phase: 5
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T166 complete — execute T167 Phase 4 promotion evidence and state update"
+active_focus: "Phase 4 promoted to 5 — execute T168 Phase 5 kickoff and task mapping"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T167 Phase 4 promotion evidence pass and update phase state to 5 when criteria pass"
-  - "Seed Phase 5 kickoff actions after promotion evidence closes"
-  - "Capture Phase 4 completion summary and Phase 5 active focus in this status file"
+  - "Run T168 Phase 5 kickoff assessment and seed improvement-loop task chain"
+  - "Implement Phase 5 Tier 1 deliverables (friction log format + release retro cadence)"
+  - "Add optional Tier 2 aggregation script tasks if kickoff scope confirms value"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T166 by publishing canonical workflow-contract source doc with single-source mermaid diagram."
-  - "Aligned maintainer/workflow/architecture docs to point to contract-driven schema/data/generator artifacts."
-  - "Validated docs and workflow-contract gates after docs alignment updates."
-  - "Advanced active Phase 4 execution from T166 to T167."
+  - "Completed T167 and recorded full Phase 4 promotion evidence suite with all checks passing."
+  - "Promoted workspace-kit phase state from 4 to 5 after confirming T163-T166 deliverables are complete."
+  - "Seeded Phase 5 kickoff task T168 in active backlog to map improvement-loop execution."
+  - "Set active focus to Phase 5 kickoff and next-action planning."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 3 promotion complete: upgrade + drift-check + publish-readiness + package-primary cold-start evidence recorded. Contract-in-data phase kickoff pending."
+  notes: "Phase 4 promotion complete: contract schema/data, generator, tooling drift checks, and canonical contract docs delivered; Phase 5 kickoff pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
