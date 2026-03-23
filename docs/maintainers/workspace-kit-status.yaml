@@ -13,23 +13,23 @@ current_kit_phase: 4
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T165 complete — execute T166 docs + diagram alignment"
+active_focus: "T166 complete — execute T167 Phase 4 promotion evidence and state update"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Complete T166 docs/diagram alignment to contract-driven generated artifacts"
   - "Run T167 Phase 4 promotion evidence pass and update phase state to 5 when criteria pass"
   - "Seed Phase 5 kickoff actions after promotion evidence closes"
+  - "Capture Phase 4 completion summary and Phase 5 active focus in this status file"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T165 by wiring workflow-contract validation and generated-output drift detection into `release:check-workflow-contracts`."
-  - "Extended workflow-contract tooling tests for malformed contract and generated artifact drift scenarios."
-  - "Kept validation output actionable with remediation guidance to rerun snippet generation command."
-  - "Advanced active Phase 4 execution from T165 to T166."
+  - "Completed T166 by publishing canonical workflow-contract source doc with single-source mermaid diagram."
+  - "Aligned maintainer/workflow/architecture docs to point to contract-driven schema/data/generator artifacts."
+  - "Validated docs and workflow-contract gates after docs alignment updates."
+  - "Advanced active Phase 4 execution from T166 to T167."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
