@@ -70,11 +70,11 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
 - Phase kickoff assessment: Phase 2 kickoff completed via `T151`; execution is now in deliverable implementation and promotion evidence capture.
-- Active implementation (`[~]`): `T154`
+- Active implementation (`[~]`): `T155`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T155`
+- Ready queue (`[p]`): _none_
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute Phase 2 in order `T152` -> `T153` -> `T154`, then run `T155` for 2 -> 3 promotion evidence and phase-state update.
+- Next tasks: Execute `T155` and, if 2 -> 3 criteria pass, advance to Phase 3 upgrade/distribution implementation planning.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
 - `[p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
@@ -239,7 +238,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
+- `[~] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
 
 ### Blocked
 
@@ -535,9 +534,9 @@ Work below is triaged for implementation.
     - `pnpm check && pnpm tasks:check && pnpm docs:check-links && pnpm release:check-workflow-contracts`
     - `pnpm workspace-kit:phase1:cold-start-check`
 
-### [~] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
+### [x] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Document migration from hand-maintained guidance to profile-driven outputs and capture non-QuickTask pilot adoption evidence.
 - Files: `docs/maintainers/*`, `scripts/*`, `package.json`, `TASKS.md`, status YAML as needed
@@ -552,11 +551,21 @@ Work below is triaged for implementation.
   - Migration guide exists and documents profile-driven transition steps.
   - Pilot harness demonstrates successful init/check flow for non-QuickTask fixture.
 - Validation evidence:
-  - In progress.
+  - Added migration guide: `docs/maintainers/workspace-kit-phase2-migration-guide.md`.
+  - Added pilot harness script and root command:
+    - `scripts/workspace-kit-phase2-pilot-adoption-check.mjs`
+    - `pnpm workspace-kit:phase2:pilot-adoption-check`
+  - Pilot run evidence (pass, 2026-03-23):
+    - `profileProjectName: "phase2-pilot-non-quicktask"`
+    - `generatedProjectName: "phase2-pilot-non-quicktask"`
+    - init/check/doctor output all reported pass.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm workspace-kit:phase2:pilot-adoption-check`
+    - `pnpm check && pnpm tasks:check && pnpm docs:check-links && pnpm release:check-workflow-contracts`
 
-### [p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
+### [~] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Close Phase 2 with objective evidence and advance kit phase state cleanly from 2 -> 3.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -571,7 +580,7 @@ Work below is triaged for implementation.
   - Evidence for 2 -> 3 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 
