@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { checkWorkflowContracts } from "../check-workflow-contracts.mjs";
+import { renderWorkflowContractSnippets } from "../generate-workflow-contract-snippets.mjs";
 
 const VALID_RELEASE_WORKFLOW = `
 on:
@@ -94,29 +95,102 @@ const readmeStatus = process.env.RELEASE_README_STATUS;
 const docsStatus = process.env.RELEASE_DOCS_STATUS;
 const docsSyncNotes = process.env.RELEASE_DOCS_SYNC_NOTES;
 `;
+const VALID_CONTRACT = {
+  schemaVersion: 1,
+  phases: [
+    {
+      id: "phase1",
+      order: 1,
+      title: "Phase one",
+      requiredChecks: ["check-a"],
+      allowedTransitions: ["phase2"]
+    },
+    {
+      id: "phase2",
+      order: 2,
+      title: "Phase two",
+      requiredChecks: ["check-b"],
+      allowedTransitions: []
+    }
+  ],
+  checks: [
+    { id: "check-a", label: "Check A", command: "pnpm check:a" },
+    { id: "check-b", label: "Check B", command: "pnpm check:b" }
+  ],
+  gates: [
+    {
+      id: "phase1-gate",
+      phaseId: "phase1",
+      requiredCheckIds: ["check-a"],
+      onFailure: "block"
+    }
+  ]
+};
+const VALID_PROFILE = {
+  project: {
+    name: "quicktask-test"
+  }
+};
+const VALID_RENDERED = renderWorkflowContractSnippets(VALID_CONTRACT, VALID_PROFILE);
 
-test("passes when workflow and scripts are aligned", () => {
-  const result = checkWorkflowContracts({
+function withWorkflowSources(overrides = {}) {
+  return {
     releaseWorkflow: VALID_RELEASE_WORKFLOW,
     rcWorkflow: VALID_RC_WORKFLOW,
     postReleaseWorkflow: VALID_POST_RELEASE_WORKFLOW,
     releaseHandoffScript: VALID_HANDOFF,
-    releaseDocsCheckScript: VALID_DOCS_CHECK
-  });
+    releaseDocsCheckScript: VALID_DOCS_CHECK,
+    workflowContract: VALID_CONTRACT,
+    workflowProfile: VALID_PROFILE,
+    generatedWorkflowSummary: VALID_RENDERED.summaryJson,
+    generatedWorkflowRule: VALID_RENDERED.ruleText,
+    ...overrides
+  };
+}
+
+test("passes when workflow and scripts are aligned", () => {
+  const result = checkWorkflowContracts(withWorkflowSources());
 
   assert.equal(result.ok, true);
   assert.equal(result.findings.length, 0);
 });
 
 test("fails when expected release input contract drifts", () => {
-  const result = checkWorkflowContracts({
-    releaseWorkflow: VALID_RELEASE_WORKFLOW.replace("docs_sync_notes", "docs_notes"),
-    rcWorkflow: VALID_RC_WORKFLOW,
-    postReleaseWorkflow: VALID_POST_RELEASE_WORKFLOW,
-    releaseHandoffScript: VALID_HANDOFF,
-    releaseDocsCheckScript: VALID_DOCS_CHECK
-  });
+  const result = checkWorkflowContracts(
+    withWorkflowSources({
+      releaseWorkflow: VALID_RELEASE_WORKFLOW.replace("docs_sync_notes", "docs_notes")
+    })
+  );
 
   assert.equal(result.ok, false);
   assert.match(result.findings.join("\n"), /docs_sync_notes/);
+});
+
+test("fails when generated workflow-contract artifacts drift", () => {
+  const result = checkWorkflowContracts(
+    withWorkflowSources({
+      generatedWorkflowSummary: `${VALID_RENDERED.summaryJson}\n# drift`,
+      generatedWorkflowRule: `${VALID_RENDERED.ruleText}\n# drift`
+    })
+  );
+
+  assert.equal(result.ok, false);
+  assert.match(result.findings.join("\n"), /summary drift detected/);
+  assert.match(result.findings.join("\n"), /rule drift detected/);
+});
+
+test("fails when workflow-contract data is malformed", () => {
+  const result = checkWorkflowContracts(
+    withWorkflowSources({
+      workflowContract: {
+        schemaVersion: 0,
+        phases: [],
+        checks: [],
+        gates: []
+      }
+    })
+  );
+
+  assert.equal(result.ok, false);
+  assert.match(result.findings.join("\n"), /workflow-contract validation/);
 });

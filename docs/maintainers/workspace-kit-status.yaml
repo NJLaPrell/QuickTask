@@ -13,23 +13,23 @@ current_kit_phase: 4
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T164 complete — execute T165 contract validation/tooling wiring"
+active_focus: "T165 complete — execute T166 docs + diagram alignment"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Wire T165 workflow-contract checks to validate schema + generation coherence"
-  - "Complete T166 docs alignment to contract-driven generated artifacts"
-  - "Run T167 Phase 4 promotion evidence and update phase state to 5 when criteria pass"
+  - "Complete T166 docs/diagram alignment to contract-driven generated artifacts"
+  - "Run T167 Phase 4 promotion evidence pass and update phase state to 5 when criteria pass"
+  - "Seed Phase 5 kickoff actions after promotion evidence closes"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T164 with a deterministic generator that renders workflow-contract summary JSON and rule snippets from contract + profile."
-  - "Added generated outputs at `.workspace-kit/generated/workflow-contract-summary.json` and `.cursor/rules/workspace-kit-workflow-contract.mdc`."
-  - "Added generator tests proving deterministic output and contract-driven change propagation."
-  - "Advanced active Phase 4 execution from T164 to T165."
+  - "Completed T165 by wiring workflow-contract validation and generated-output drift detection into `release:check-workflow-contracts`."
+  - "Extended workflow-contract tooling tests for malformed contract and generated artifact drift scenarios."
+  - "Kept validation output actionable with remediation guidance to rerun snippet generation command."
+  - "Advanced active Phase 4 execution from T165 to T166."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
