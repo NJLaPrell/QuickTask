@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "ownedPaths": [
+    ".cursor/rules/workspace-kit-agent.mdc",
+    "docs/maintainers/workspace-kit-status.yaml",
+    "workspace-kit.profile.json",
+    "schemas/workspace-kit-profile.schema.json",
+    ".workspace-kit/manifest.json",
+    ".workspace-kit/owned-paths.json"
+  ],
+  "notes": "Only paths in ownedPaths may be overwritten by the workspace-kit upgrade flow."
+}

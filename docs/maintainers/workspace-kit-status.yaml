@@ -13,15 +13,16 @@ current_kit_phase: 0
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 0 — inventory + profile schema v0 draft"
+active_focus: "Phase 0 — execute T143 -> T144 -> T145 sequence"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Add or refine [workspace-kit] tasks in TASKS.md for Phase 0 exit criteria"
-  - "Keep product README free of kit narrative"
+  - "Complete T143 inventory and map evidence to Phase 0 criteria"
+  - "Complete T144 canonical schema/manifest stub implementation"
+  - "Complete T145 metrics structure + protocol update"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary: null
@@ -31,3 +32,12 @@ pending_decisions:
   - package_name_and_scope
   - copilot_vs_cursor
   - merge_strategy_on_upgrade
+
+# Metrics baseline (ROADMAP: update at least once per kit semver minor or phase promotion)
+metrics:
+  updated_at: null
+  source: "manual"
+  time_to_doctor_minutes: null
+  cold_start_success_rate_pct: null
+  upgrade_success_rate_pct: null
+  recurring_friction_themes_count: null

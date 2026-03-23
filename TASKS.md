@@ -66,15 +66,15 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 ## Current execution state
 
-- Last updated: 2026-03-22
+- Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _None — pick next phase goal from product backlog or open a Phase 13 kickoff._
+- Current phase in execution: _Workspace kit roadmap Phase 0 bootstrap (maintainer/internal track)._
 - Phase kickoff assessment: Phase 12 kickoff was complete; close-out validation: `pnpm test`, `pnpm test:smoke`, `pnpm check`, `pnpm qt:check-contract-drift`, `pnpm tasks:check`.
-- Active implementation (`[~]`): none
-- Scheduled (`[ ]`): _Empty._
-- Ready queue (`[p]`): _Empty._
+- Active implementation (`[~]`): `T143`
+- Scheduled (`[ ]`): `T144`, `T145`
+- Ready queue (`[p]`): `T146`
 - Blocked tasks (`[!]`): none
-- Next tasks: Pick next phase goal (Phase 13 kickoff or backlog); optional: refresh `USER_FEEDBACK.md` maintainer notes now that **#41–#44, #47–#49, #51–#58, #60–#62** are closed with **`v1.1.0`**.
+- Next tasks: Complete `[workspace-kit]` Phase 0 tasks in order `T143` -> `T144` -> `T145`, then run `T146` to confirm phase-promotion evidence and update status YAML.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,10 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- _Empty._
+- `[~] T143 [workspace-kit] Seed Phase 0 inventory and backlog mapping`
+- `[ ] T144 [workspace-kit] Define and commit profile/manifest schema stubs`
+- `[ ] T145 [workspace-kit] Add agent status metrics structure and update protocol`
+- `[p] T146 [workspace-kit] Run Phase 0 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -245,6 +248,82 @@ Work below is triaged for implementation.
 - _Empty._
 
 ## Proposed task details
+
+### [~] T143 [workspace-kit] Seed Phase 0 inventory and backlog mapping
+
+- Status: [~]
+- Priority: P1
+- Goal: Convert roadmap Phase 0 scope into concrete executable inventory and linked tasks.
+- Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: none
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Inventory QuickTask-specific vs reusable workflow/process artifacts.
+  2. Record `[workspace-kit]` task mapping to roadmap phase criteria.
+  3. Update status YAML `next_agent_actions` to match current work.
+- Acceptance criteria:
+  - Inventory exists in maintainer path and is referenced by a `[workspace-kit]` task.
+  - Active `[workspace-kit]` task sequence is visible in `TASKS.md`.
+- Validation evidence:
+  - In progress.
+
+### [ ] T144 [workspace-kit] Define and commit profile/manifest schema stubs
+
+- Status: [ ]
+- Priority: P1
+- Goal: Create canonical contract stubs so agents scaffold against stable paths, not ad-hoc files.
+- Files: `workspace-kit.profile.json`, `schemas/workspace-kit-profile.schema.json`, `.workspace-kit/manifest.json`, `.workspace-kit/owned-paths.json`
+- Dependencies: T143
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add schema/document stubs at roadmap-defined canonical paths.
+  2. Add minimal field set and comments/examples for v0 profile and manifest.
+  3. Ensure stub files align with roadmap execution contracts.
+- Acceptance criteria:
+  - All canonical file-contract paths exist in repo.
+  - Stubs are valid JSON and ready for validator implementation.
+- Validation evidence:
+  - Pending.
+
+### [ ] T145 [workspace-kit] Add agent status metrics structure and update protocol
+
+- Status: [ ]
+- Priority: P2
+- Goal: Make roadmap metrics cadence actionable by adding a durable metrics structure to status handoff.
+- Files: `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
+- Dependencies: T143
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add `metrics` structure to status YAML with placeholders for required baseline metrics.
+  2. Document update cadence and expected values format.
+  3. Ensure session-end protocol includes metrics update trigger conditions.
+- Acceptance criteria:
+  - Status YAML includes a `metrics` section aligned to roadmap baseline.
+  - Agent session protocol has explicit metrics update timing.
+- Validation evidence:
+  - Pending.
+
+### [p] T146 [workspace-kit] Run Phase 0 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 0 with objective evidence and advance kit phase state cleanly.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T144, T145
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run required checks from roadmap phase promotion matrix for 0 -> 1.
+  2. Capture evidence summary in task block and update status YAML.
+  3. If criteria pass, set `current_kit_phase` to `1` and clear completed next actions.
+- Acceptance criteria:
+  - Evidence for 0 -> 1 checks is recorded in this task.
+  - Status YAML phase and focus fields reflect post-promotion state.
+- Validation evidence:
+  - Pending.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

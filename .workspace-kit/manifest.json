@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "kit": {
+    "name": "workspace-kit",
+    "version": "0.0.0-local"
+  },
+  "installedAt": null,
+  "lastUpgrade": null,
+  "ownershipPolicyPath": ".workspace-kit/owned-paths.json"
+}

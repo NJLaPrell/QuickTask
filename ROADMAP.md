@@ -304,6 +304,8 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 2. **Copilot vs Cursor** — Same profile; split or unified “directives” files (`.github/copilot-instructions.md` vs `.cursor/rules`) and how much the CLI generates.  
 3. **Merge strategy on upgrade** — Overwrite kit-owned only vs three-way merge; default should be **safe** (backup + diff).
 
+**Defaults are binding:** Until overridden by a human-recorded decision, the [Decision defaults](#decision-defaults-to-keep-execution-moving) are authoritative for implementation. Agents must not stall on an open decision that has a listed default.
+
 ---
 
 ## Recorded decisions
@@ -384,12 +386,105 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 ---
 
+## Execution contracts (agent-first defaults)
+
+These contracts make execution less ambiguous across long-running sessions and multiple agents.
+
+### Canonical file contract (create and keep stable)
+
+Use these exact paths once implemented; do not rename casually.
+
+| Contract artifact | Canonical path | Purpose |
+|-------------------|----------------|---------|
+| Profile file | `workspace-kit.profile.json` | Project-specific values used by scaffolding and generators. |
+| Profile schema | `schemas/workspace-kit-profile.schema.json` | Validation source for `check`/`doctor`. |
+| Kit manifest | `.workspace-kit/manifest.json` | Installed kit version, ownership metadata, and last upgrade details. |
+| Kit-owned paths policy | `.workspace-kit/owned-paths.json` | Explicit list of paths the kit may overwrite during `upgrade`. |
+| Friction log (Phase 5+) | `docs/maintainers/workspace-kit-friction.md` | Structured qualitative improvement input. |
+
+### Phase gate command baseline
+
+Run these commands when phase work touches shared behavior; record output summaries in task evidence.
+
+| Scope | Required commands |
+|-------|-------------------|
+| Any kit workflow/script contract change | `pnpm tasks:check && pnpm release:check-workflow-contracts` |
+| Any monorepo-impacting change | `pnpm check && pnpm test` |
+| Template behavior changed | `pnpm templates:eval` |
+| Pre-publish readiness | `pnpm release:prepare` |
+
+If a command is temporarily unavailable in a branch, create/attach a `[workspace-kit]` task that tracks restoring that gate before phase advancement.
+
+### Phase promotion matrix
+
+All listed checks must **pass** and evidence must be **recorded in the closing task** before `current_kit_phase` is bumped in the status YAML. "Evidence" means command output summary, link to passing CI, or explicit human sign-off.
+
+| Transition | Required checks | Required evidence |
+|------------|-----------------|-------------------|
+| **0 → 1** | `pnpm check && pnpm test` | Inventory doc exists at maintainer path; profile schema v0 draft committed. |
+| **1 → 2** | `pnpm check && pnpm test`; kit `doctor` exits `0` on cold-start fixture | Template + local CLI cold-start passes `doctor`; QuickTask monorepo checks still green. |
+| **2 → 3** | `pnpm check && pnpm test`; kit `check` exits `0` on pilot repo | Profile-driven rule generation verified; at least one non-QuickTask pilot adopts kit. |
+| **3 → 4** | `pnpm check && pnpm test`; kit `upgrade --dry-run` exits `0` on sample repo | Published package on registry; documented upgrade `v0.x` → `v0.y` without losing overrides; cold-start via package only. |
+| **4 → 5** | `pnpm check && pnpm test`; contract checks pass after gate edit | Single-file gate change propagates to generated outputs. |
+| **5 → 6** | `pnpm check && pnpm test`; friction log reviewed | At least one kit release includes friction-driven changes or explicit "no friction" note. |
+
+Phase 4 is optional; skip directly from 3 → 5 if Phase 4 is deferred (see [Phase 4 relationship note](#phase-4--workflow-contract-in-data-optional-but-high-leverage)).
+
+### Upgrade safety contract (`upgrade`)
+
+- Default mode: **kit-owned paths only** (from `.workspace-kit/owned-paths.json`).  
+- Always create backup under `.workspace-kit/backups/<timestamp>/` before writing.  
+- Provide `--dry-run` that emits a path-level plan with action type (`create`, `update`, `skip`, `conflict`).  
+- On failure, stop immediately and leave user files unchanged outside staged write set; print recovery instructions pointing to backup path.  
+- Never delete non-kit-owned files automatically.
+
+### Compatibility support policy (v0 line)
+
+- Node: **active LTS only** for CI and support messaging.  
+- Package manager: **pnpm** is canonical for workspace development; runtime CLI should still be invokable via `pnpm dlx`/`npx` once published.  
+- Host directives: Cursor and GitHub Copilot docs are both supported outputs; unresolved host-specific divergence stays in [Open decisions](#open-decisions) until recorded.
+
+### Decision defaults (to keep execution moving)
+
+Use these defaults unless the human overrides:
+
+1. **Copilot vs Cursor**: generate both outputs from one profile when practical; if blocked, ship Cursor first and mark Copilot parity as follow-up `[workspace-kit]` task.  
+2. **Merge strategy on upgrade**: start with overwrite kit-owned + backup + dry-run; defer three-way merge until conflict pain is proven.  
+3. **Package name unresolved**: continue implementation with placeholder package IDs in docs/scripts but **block first registry publish** until a recorded decision exists.
+
+### Metrics baseline (Phase 5 minimum)
+
+Track these per kit release cycle (manual or scripted). Record values in **`docs/maintainers/workspace-kit-status.yaml`** under a `metrics` key, or in a dedicated `docs/maintainers/workspace-kit-metrics.md` if the YAML gets unwieldy. Update **at least once per kit semver minor** (or per phase promotion, whichever comes first).
+
+- Time from empty repo to successful `doctor` (minutes).  
+- Cold-start success rate (% runs passing without manual file edits).  
+- Upgrade success rate (% upgrades with no manual rollback).  
+- Number of recurring friction themes across sessions.
+
+---
+
 ## Suggested next actions (immediate)
 
 1. Add **`[workspace-kit]`** tasks in `TASKS.md` for **Phase 0** exit criteria (no pasted roadmap bodies).  
 2. Keep **`docs/maintainers/workspace-kit-status.yaml`** in sync after substantive kit sessions.  
 3. Reserve npm scope / package name **before** [first registry publish](#first-publish-of-the-kit-registry-artifact); treat **kit release process** as separate from QuickTask extension release messaging unless you explicitly lockstep until the [versioning flip](#versioning-and-release-strategy).  
 4. When Phase 1 starts, create template/starter assets; record their location in **maintainer notes** or this roadmap — avoid folding that narrative into QuickTask’s product README.
+
+---
+
+## Execution bootstrap checklist (one-time setup for smoother walkthroughs)
+
+Complete these once to reduce agent ambiguity and handoff friction:
+
+1. Seed and maintain **`[workspace-kit]`** tasks in `TASKS.md` for the active kit phase.  
+2. Keep **`docs/maintainers/workspace-kit-status.yaml`** current after each substantive session (phase, next actions, blockers, metrics).  
+3. Keep canonical contract stubs present and valid JSON:
+   - `workspace-kit.profile.json`
+   - `schemas/workspace-kit-profile.schema.json`
+   - `.workspace-kit/manifest.json`
+   - `.workspace-kit/owned-paths.json`
+4. Define at least one repeatable **cold-start fixture** path and one **pilot consumer** path before Phase 2 promotion.  
+5. For every phase promotion, record required check outputs and evidence in the closing `[workspace-kit]` task.
 
 ---
 
@@ -401,4 +496,4 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 ---
 
-*Last updated: 2026-03-23 — agent operating model, status YAML, TASKS tag, Phase 1 CLI nuance, Cursor rule `workspace-kit-agent.mdc`*
+*Last updated: 2026-03-23 — bootstrap checklist, seeded task scaffolding, canonical stub files*
