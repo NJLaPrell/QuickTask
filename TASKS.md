@@ -70,11 +70,11 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
 - Phase kickoff assessment: Phase 2 kickoff pending (seeded by T150 phase-promotion closeout); start by defining profile-driven parameterization and pilot-repo validation plan.
-- Active implementation (`[~]`): _none_
+- Active implementation (`[~]`): `T151`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T151`
+- Ready queue (`[p]`): `T152`, `T153`, `T154`, `T155`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T151` to run Phase 2 kickoff and create concrete profile-driven migration implementation tasks.
+- Next tasks: Execute Phase 2 in order `T152` -> `T153` -> `T154`, then run `T155` for 2 -> 3 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,10 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan`
+- `[p] T152 [workspace-kit] Add profile validation command and CI gate wiring`
+- `[p] T153 [workspace-kit] Implement profile-driven project-context generation`
+- `[p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
+- `[p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -238,7 +241,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- _Empty._
+- `[~] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan`
 
 ### Blocked
 
@@ -452,9 +455,9 @@ Work below is triaged for implementation.
     - refreshed `active_focus` and `next_agent_actions` for Phase 2 planning,
     - updated `last_session_summary` with promotion closure details.
 
-### [p] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan
+### [x] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Convert Phase 2 roadmap deliverables into concrete executable tasks and dependency order.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
@@ -468,6 +471,88 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Phase 2 kickoff summary and concrete task sequence are recorded in active tracker/state files.
   - Follow-on tasks are actionable and aligned to 2 -> 3 promotion requirements.
+- Validation evidence:
+  - Phase 2 kickoff assessment completed (2026-03-23) against roadmap section `Phase 2 — State and migration`.
+  - Reviewed required docs for drift/context: `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `ROADMAP.md`, and status YAML.
+  - Added concrete follow-on task chain for Phase 2 deliverables and exit criteria:
+    - `T152` profile validation + CI gate,
+    - `T153` profile-driven generation replacing hardcoded project-name guidance,
+    - `T154` migration guide + non-QuickTask pilot adoption evidence,
+    - `T155` 2 -> 3 promotion evidence and phase-state update.
+
+### [p] T152 [workspace-kit] Add profile validation command and CI gate wiring
+
+- Status: [p]
+- Priority: P1
+- Goal: Implement `workspace-kit check` profile validation and enforce it in repository-level validation flow.
+- Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `package.json`, docs/status/task files as needed
+- Dependencies: T151
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add `check` command to workspace-kit CLI with deterministic pass/fail semantics.
+  2. Validate minimal required profile fields and command keys against Phase 2 contract.
+  3. Wire root-level validation to execute profile check in CI-relevant check flow.
+- Acceptance criteria:
+  - `workspace-kit check` exits `0` for valid profile and `1` for validation failures.
+  - Repository validation path includes profile check gate.
+- Validation evidence:
+  - Pending.
+
+### [p] T153 [workspace-kit] Implement profile-driven project-context generation
+
+- Status: [p]
+- Priority: P1
+- Goal: Replace hardcoded project-name assumptions with generated profile-driven context artifacts.
+- Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `templates/workspace-starter/**`
+- Dependencies: T152
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add generation flow from profile values to project-context artifact(s) consumed by rules/docs.
+  2. Extend `workspace-kit init` to create/update generated project-context outputs.
+  3. Add tests proving `project.name` changes update generated outputs without manual edits.
+- Acceptance criteria:
+  - Generated artifacts reflect current profile values.
+  - Changing `project.name` and rerunning generation updates output deterministically.
+- Validation evidence:
+  - Pending.
+
+### [p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
+
+- Status: [p]
+- Priority: P1
+- Goal: Document migration from hand-maintained guidance to profile-driven outputs and capture non-QuickTask pilot adoption evidence.
+- Files: `docs/maintainers/*`, `scripts/*`, `package.json`, `TASKS.md`, status YAML as needed
+- Dependencies: T153
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Write maintainer migration guide for Phase 2 adoption flow.
+  2. Add repeatable local pilot harness using a non-QuickTask fixture profile.
+  3. Capture pilot run evidence demonstrating successful adoption.
+- Acceptance criteria:
+  - Migration guide exists and documents profile-driven transition steps.
+  - Pilot harness demonstrates successful init/check flow for non-QuickTask fixture.
+- Validation evidence:
+  - Pending.
+
+### [p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 2 with objective evidence and advance kit phase state cleanly from 2 -> 3.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T152, T153, T154
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run required checks from roadmap phase promotion matrix for 2 -> 3.
+  2. Capture command and pilot evidence summary in task block and update status YAML.
+  3. If criteria pass, set `current_kit_phase` to `3` and refresh next actions for Phase 3.
+- Acceptance criteria:
+  - Evidence for 2 -> 3 checks is recorded in this task.
+  - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
   - Pending.
 
