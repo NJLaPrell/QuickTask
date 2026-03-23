@@ -13,24 +13,23 @@ current_kit_phase: 6
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Extraction follow-through in progress — automatable split completed; awaiting human gates for Workflow Cannon repo bootstrap"
+active_focus: "Extraction follow-through complete — Workflow Cannon repo bootstrap and first npm publish verified"
 
 # Human-required stops; agent must not "resolve" these without user
-blockers:
-  - "npm publish token secret (`NPM_TOKEN`) must be added in NJLaPrell/workflow-cannon before first publish dispatch"
-  - "Scope ownership for `@workflow-cannon/workspace-kit` must be confirmed by a human npm account"
+blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "After human gate clearance, run first npm publish workflow dispatch in NJLaPrell/workflow-cannon"
-  - "Capture first publish evidence and close T177 blocker record"
-  - "Keep packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) enforced while extraction cutover finalizes"
+  - "No open extraction follow-through blockers remain; keep workspace-kit in maintenance mode unless new work is requested"
+  - "Keep packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) enforced in QuickTask CI/readiness"
+  - "Use Workflow Cannon repository as canonical package home for future workspace-kit release changes"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Verified Workflow Cannon repository access and pushed subtree split history to main (`5a1f7038255a2c83e0e51ace07ea0d95a327574c`)."
-  - "Bootstrapped `workflow-cannon` package/repo for npm (`@workflow-cannon/workspace-kit`) with CI + manual publish workflow."
-  - "Confirmed npm auth is not available in this environment (`npm whoami` unauthorized); publish remains blocked on human token/scope setup."
+  - "Resolved npm human gates by setting `NPM_TOKEN` secret and confirming `@workflow-cannon` scope ownership."
+  - "Ran Workflow Cannon `Publish NPM` workflow successfully (`run_id: 23463225397`)."
+  - "Verified package is live on npm as `@workflow-cannon/workspace-kit@0.1.0` with `latest` tag."
+  - "Closed T177 extraction blocker and marked extraction follow-through complete."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions: []
@@ -39,7 +38,7 @@ pending_decisions: []
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Extraction follow-through advanced to external repo bootstrap complete; remaining blocker is npm scope/token readiness for first publish dispatch."
+  notes: "Extraction follow-through complete: Workflow Cannon repository bootstrap and first npm publish succeeded (`@workflow-cannon/workspace-kit@0.1.0`)."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null

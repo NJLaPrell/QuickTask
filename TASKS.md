@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit extraction follow-through (post-Phase 6 execution)._
-- Phase kickoff assessment: Extraction execution started for Workflow Cannon handoff; automatable split artifacts are complete and remaining publication/repository setup is human-gated.
-- Active implementation (`[~]`): _none_ (execution work complete on agent side)
+- Current phase in execution: _Workspace kit extraction follow-through complete._
+- Phase kickoff assessment: Workflow Cannon extraction bootstrap and first npm publish completed; post-Phase 6 execution is now fully closed.
+- Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
 - Ready queue (`[p]`): _none_
-- Blocked tasks (`[!]`): `T177`
-- Next tasks: Complete `T177` after human repo/org/registry gates are unblocked, then push split branch into `workflow-cannon` and finish external automation bootstrap.
+- Blocked tasks (`[!]`): none
+- Next tasks: _No open `[workspace-kit]` follow-through tasks._ Continue maintenance mode and create new scoped tasks only when additional extraction/publish changes are requested.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -242,7 +242,7 @@ Work below is triaged for implementation.
 
 ### Blocked
 
-- `[!] T177 [workspace-kit] Execute Workflow Cannon repository bootstrap and push split history (human-gated)`
+- _Empty._
 
 ## Proposed task details
 
@@ -1218,18 +1218,15 @@ Work below is triaged for implementation.
   - Split branch SHA: `5a1f7038255a2c83e0e51ace07ea0d95a327574c`.
   - Bundle artifact created: `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle`.
 
-### [!] T177 [workspace-kit] Execute Workflow Cannon repository bootstrap and push split history (human-gated)
+### [x] T177 [workspace-kit] Execute Workflow Cannon repository bootstrap and push split history (human-gated)
 
-- Status: [!]
+- Status: [x]
 - Priority: P1
 - Goal: Finish extraction by creating/pushing to external Workflow Cannon repository and enabling package publication automation.
 - Files: external `workflow-cannon` repository bootstrap (out-of-repo), `docs/maintainers/workspace-kit-phase6-extraction-plan.md`, `docs/maintainers/workspace-kit-status.yaml`
 - Dependencies: T176
-- Blocked by: human-only gates for repository/org permissions and registry credentials
-- Unblock plan:
-  1. Human confirms registry scope ownership for `@workflow-cannon/workspace-kit`.
-  2. Human adds `NPM_TOKEN` publish credential secret in `NJLaPrell/workflow-cannon`.
-  3. Agent runs first publish dispatch once token is present (or supports dry-run verification on request).
+- Blocked by: none
+- Unblock plan: n/a
 - Steps:
   1. Add new repository remote for Workflow Cannon.
   2. Push `workflow-cannon-split` branch and set default branch strategy in new repo.
@@ -1242,8 +1239,14 @@ Work below is triaged for implementation.
     - Subtree split pushed to `https://github.com/NJLaPrell/workflow-cannon` main branch.
     - Extracted package renamed/configured for npm publish target `@workflow-cannon/workspace-kit`.
     - Added standalone CI workflow and manual npm publish workflow in `workflow-cannon`.
-  - Remaining human gate:
-    - `npm whoami` from this environment returns unauthorized; publish credential must be provided via repo/org secret `NPM_TOKEN`.
+  - Human gates resolved:
+    - Scope ownership confirmed for `@workflow-cannon`.
+    - `NPM_TOKEN` secret configured in `NJLaPrell/workflow-cannon`.
+  - First publish proof:
+    - Publish workflow run succeeded: `https://github.com/NJLaPrell/workflow-cannon/actions/runs/23463225397`.
+    - npm package now resolves with `latest` tag at `0.1.0`:
+      - `npm view @workflow-cannon/workspace-kit version` → `0.1.0`
+      - `npm view @workflow-cannon/workspace-kit dist-tags --json` → `{ "latest": "0.1.0" }`
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

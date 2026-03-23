@@ -49,3 +49,5 @@ Phase 6 is complete when:
 - Subtree split branch: `workflow-cannon-split`
 - Split commit SHA: `5a1f7038255a2c83e0e51ace07ea0d95a327574c`
 - Portable split bundle artifact: `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle`
+- Publish workflow success: `https://github.com/NJLaPrell/workflow-cannon/actions/runs/23463225397`
+- npm package published: [`@workflow-cannon/workspace-kit`](https://www.npmjs.com/package/@workflow-cannon/workspace-kit) (`latest` = `0.1.0`)
