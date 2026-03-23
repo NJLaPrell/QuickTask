@@ -13,23 +13,23 @@ current_kit_phase: 1
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T148 complete — execute T149 cold-start fixture and doctor evidence capture"
+active_focus: "T149 complete — run T150 Phase 1 promotion evidence and phase-state update"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Define a canonical cold-start fixture path and copy process for template + local CLI validation"
-  - "Run `workspace-kit doctor` against the fixture and capture objective pass/fail evidence in TASKS.md"
-  - "Update metrics baseline values from fixture run outcomes and prep 1 -> 2 readiness summary"
+  - "Run 1 -> 2 promotion checks (`pnpm check && pnpm test`) and capture evidence in T150"
+  - "Include cold-start fixture doctor pass evidence in T150 validation notes"
+  - "If criteria pass, set current_kit_phase to 2 and refresh focus/next actions for Phase 2"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T148 by adding templates/workspace-starter with profile/schema/manifest/owned-paths stubs."
-  - "Added template consumer README stub documenting local 5-minute init flow."
-  - "Validated template/docs contract checks for this scope and advanced active task to T149."
-  - "No blockers identified; pending decisions remain non-blocking for Phase 1 completion."
+  - "Completed T149 by adding a repeatable cold-start fixture doc and harness command."
+  - "Confirmed workspace-kit doctor pass on canonical fixture path from templates/workspace-starter."
+  - "Updated TASKS state to close T149 and seed T150 for formal 1 -> 2 promotion evidence."
+  - "Updated metrics baseline with initial cold-start measurements; no blockers identified."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,8 +41,8 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 0 promotion baseline captured; values remain null until cold-start and upgrade rehearsals produce measurements."
-  time_to_doctor_minutes: null
-  cold_start_success_rate_pct: null
+  notes: "Baseline now includes first cold-start fixture measurement (1 successful run). Upgrade rehearsal metric remains pending."
+  time_to_doctor_minutes: 0.03
+  cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
-  recurring_friction_themes_count: null
+  recurring_friction_themes_count: 0
