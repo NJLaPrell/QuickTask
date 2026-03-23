@@ -1,6 +1,6 @@
-# Workspace Kit Starter (Phase 1)
+# Workspace Kit Starter (Phase 2)
 
-This starter is the Phase 1 bootstrap path for workspace-kit template adoption.
+This starter is the Phase 2 bootstrap path for workspace-kit template adoption.
 
 ## 5-minute local init flow
 
@@ -17,11 +17,18 @@ pnpm --filter quicktask-workspace-kit build
 node "<quicktask-repo>/packages/workspace-kit/dist/cli.js" doctor
 ```
 
-4. Run the init placeholder command:
+4. Run init to generate profile-driven project context snippets:
 
 ```bash
 node "<quicktask-repo>/packages/workspace-kit/dist/cli.js" init
 ```
+
+This creates:
+
+- `.workspace-kit/generated/project-context.json`
+- `.cursor/rules/workspace-kit-project-context.mdc`
+
+When you update `workspace-kit.profile.json` (for example changing `project.name`), rerun `init` to regenerate these outputs.
 
 ## Included starter contract files
 
@@ -29,5 +36,6 @@ node "<quicktask-repo>/packages/workspace-kit/dist/cli.js" init
 - `schemas/workspace-kit-profile.schema.json`
 - `.workspace-kit/manifest.json`
 - `.workspace-kit/owned-paths.json`
+- `.cursor/rules/workspace-kit-profile-pointer.mdc`
 
-These files are intentionally minimal for Phase 1 and will evolve as init/upgrade behavior is implemented.
+These files are intentionally minimal for Phase 2 and will evolve as init/upgrade behavior is implemented.
