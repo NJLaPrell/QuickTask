@@ -199,8 +199,9 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 **Tier 1 (required)**
 
-- **Friction log** format in repo (markdown or JSON): date, prompt intent, what broke, suggested rule change.
-- **Kit retros** tied to releases of the package (same rhythm as Changesets).
+- **Machine-readable friction log** in repo (JSON) with schema-backed required fields, severity policy, and stable IDs.
+- **Deterministic generated summary** artifact derived from friction log data (no manual summary-only edits).
+- **Kit retros** tied to releases of the package (same rhythm as Changesets) with release-impact disposition (`requires_change`, `note_only`, `none`).
 
 **Tier 2 (optional)**
 
@@ -214,6 +215,8 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 **Exit criteria**
 
 - Every kit semver minor includes either friction-driven changes or explicit “no material friction” note.
+- `workspace-kit:improvement-log:validate` and `workspace-kit:improvement-log:generate` are integrated into release/readiness automation and pass in CI.
+- At least one full release-readiness cycle uses the machine-readable improvement log and generated summary flow.
 
 ---
 
@@ -243,6 +246,7 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 - [ ] Kit is **package-primary** in daily use (Phase 3 done).
 - [ ] At least **one** non–QuickTask consumer or a **dedicated template repo** has successfully adopted upgrades.
 - [ ] QuickTask CI can run **only** against the **published** kit (or a tagged tarball), not monorepo-relative paths to unpublished kit sources.
+- [ ] Phase 5 improvement engine has completed at least one release-readiness cycle with machine-readable log + deterministic summary checks enforced.
 - [ ] You have chosen **history strategy** (new repo with fresh start vs subtree/filter-repo to preserve kit file history).
 
 **“Fork” vs new repository**
@@ -395,13 +399,15 @@ These contracts make execution less ambiguous across long-running sessions and m
 
 Use these exact paths once implemented; do not rename casually.
 
-| Contract artifact       | Canonical path                               | Purpose                                                              |
-| ----------------------- | -------------------------------------------- | -------------------------------------------------------------------- |
-| Profile file            | `workspace-kit.profile.json`                 | Project-specific values used by scaffolding and generators.          |
-| Profile schema          | `schemas/workspace-kit-profile.schema.json`  | Validation source for `check`/`doctor`.                              |
-| Kit manifest            | `.workspace-kit/manifest.json`               | Installed kit version, ownership metadata, and last upgrade details. |
-| Kit-owned paths policy  | `.workspace-kit/owned-paths.json`            | Explicit list of paths the kit may overwrite during `upgrade`.       |
-| Friction log (Phase 5+) | `docs/maintainers/workspace-kit-friction.md` | Structured qualitative improvement input.                            |
+| Contract artifact               | Canonical path                                      | Purpose                                                                          |
+| ------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Profile file                    | `workspace-kit.profile.json`                        | Project-specific values used by scaffolding and generators.                      |
+| Profile schema                  | `schemas/workspace-kit-profile.schema.json`         | Validation source for `check`/`doctor`.                                          |
+| Kit manifest                    | `.workspace-kit/manifest.json`                      | Installed kit version, ownership metadata, and last upgrade details.             |
+| Kit-owned paths policy          | `.workspace-kit/owned-paths.json`                   | Explicit list of paths the kit may overwrite during `upgrade`.                   |
+| Improvement log (Phase 5+)      | `.workspace-kit/improvement-log.json`               | Machine-readable friction and release-retro source of truth.                     |
+| Improvement summary (generated) | `.workspace-kit/generated/improvement-summary.json` | Deterministic aggregate summary for CI/release checks and maintainers.           |
+| Friction maintainer view        | `docs/maintainers/workspace-kit-friction.md`        | Human-readable contract reference and operating guide for improvement data flow. |
 
 ### Phase gate command baseline
 
@@ -420,14 +426,14 @@ If a command is temporarily unavailable in a branch, create/attach a `[workspace
 
 All listed checks must **pass** and evidence must be **recorded in the closing task** before `current_kit_phase` is bumped in the status YAML. "Evidence" means command output summary, link to passing CI, or explicit human sign-off.
 
-| Transition | Required checks                                                             | Required evidence                                                                                                        |
-| ---------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **0 → 1**  | `pnpm check && pnpm test`                                                   | Inventory doc exists at maintainer path; profile schema v0 draft committed.                                              |
-| **1 → 2**  | `pnpm check && pnpm test`; kit `doctor` exits `0` on cold-start fixture     | Template + local CLI cold-start passes `doctor`; QuickTask monorepo checks still green.                                  |
-| **2 → 3**  | `pnpm check && pnpm test`; kit `check` exits `0` on pilot repo              | Profile-driven rule generation verified; at least one non-QuickTask pilot adopts kit.                                    |
-| **3 → 4**  | `pnpm check && pnpm test`; kit `upgrade --dry-run` exits `0` on sample repo | Published package on registry; documented upgrade `v0.x` → `v0.y` without losing overrides; cold-start via package only. |
-| **4 → 5**  | `pnpm check && pnpm test`; contract checks pass after gate edit             | Single-file gate change propagates to generated outputs.                                                                 |
-| **5 → 6**  | `pnpm check && pnpm test`; friction log reviewed                            | At least one kit release includes friction-driven changes or explicit "no friction" note.                                |
+| Transition | Required checks                                                                                                         | Required evidence                                                                                                                                 |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **0 → 1**  | `pnpm check && pnpm test`                                                                                               | Inventory doc exists at maintainer path; profile schema v0 draft committed.                                                                       |
+| **1 → 2**  | `pnpm check && pnpm test`; kit `doctor` exits `0` on cold-start fixture                                                 | Template + local CLI cold-start passes `doctor`; QuickTask monorepo checks still green.                                                           |
+| **2 → 3**  | `pnpm check && pnpm test`; kit `check` exits `0` on pilot repo                                                          | Profile-driven rule generation verified; at least one non-QuickTask pilot adopts kit.                                                             |
+| **3 → 4**  | `pnpm check && pnpm test`; kit `upgrade --dry-run` exits `0` on sample repo                                             | Published package on registry; documented upgrade `v0.x` → `v0.y` without losing overrides; cold-start via package only.                          |
+| **4 → 5**  | `pnpm check && pnpm test`; contract checks pass after gate edit                                                         | Single-file gate change propagates to generated outputs.                                                                                          |
+| **5 → 6**  | `pnpm check && pnpm test`; `pnpm workspace-kit:improvement-log:validate`; `pnpm release:prepare`; friction log reviewed | At least one kit release-readiness cycle includes friction-driven changes or explicit "no friction" note, backed by deterministic summary output. |
 
 Phase 4 is optional; skip directly from 3 → 5 if Phase 4 is deferred (see [Phase 4 relationship note](#phase-4--workflow-contract-in-data-optional-but-high-leverage)).
 

@@ -26,18 +26,22 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 2. Review `docs/release-readiness-report.md`.
    - Includes changeset preflight (`pending .changeset/*.md` entries).
    - Report writes are stable: timestamp-only deltas do not rewrite the file.
-3. Perform a README prerelease audit:
+3. Validate workspace-kit improvement data before release handoff:
+   - ensure `.workspace-kit/improvement-log.json` contains the latest friction/release-retro updates for this cycle,
+   - run `pnpm workspace-kit:improvement-log:validate`,
+   - regenerate summary with `pnpm workspace-kit:improvement-log:generate` when record changes are made.
+4. Perform a README prerelease audit:
    - update `README.md` with any missing user-facing documentation for shipped behavior,
    - follow `README_EDITING.md` while editing.
-4. For each finding:
+5. For each finding:
    - If it maps to an existing task, update that task section in `TASKS.md` with validation evidence.
    - If no task exists, add a new task to `TASKS.md`.
-5. For any newly added task:
+6. For any newly added task:
    - assign phase manually,
    - assign priority manually (`P0` through `P5`),
    - include dependency links where relevant.
-6. Re-run `pnpm release:prepare` after changes.
-7. When report has no new medium/high findings for the current release phase, handoff to release:
+7. Re-run `pnpm release:prepare` after changes.
+8. When report has no new medium/high findings for the current release phase, handoff to release:
    - follow `RELEASE_STRATEGY.md` manual release checklist.
    - optional single-command handoff: `pnpm release:handoff -- --readme-status <updated|no-change> --docs-status <updated|no-change> --docs-sync-notes "<notes>" --rc-run-id <id>`
 
@@ -50,6 +54,7 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 - `pnpm tasks:check`
 - `pnpm tasks:check-templates`
 - `pnpm release:check-workflow-contracts`
+- `pnpm workspace-kit:improvement-log:validate`
 - `pnpm docs:check-links`
 - `pnpm check:command-entrypoints`
 - `pnpm check:generated-artifacts`

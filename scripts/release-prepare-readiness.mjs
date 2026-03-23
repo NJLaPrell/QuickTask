@@ -55,6 +55,13 @@ const commandChecks = [
     failureSeverity: "medium"
   },
   {
+    id: "workspace-kit-improvement-log",
+    label: "Workspace-kit improvement log validation",
+    command: "pnpm",
+    args: ["workspace-kit:improvement-log:validate"],
+    failureSeverity: "medium"
+  },
+  {
     id: "docs-links",
     label: "Docs link integrity check",
     command: "pnpm",

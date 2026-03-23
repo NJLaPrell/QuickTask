@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { checkWorkflowContracts } from "../check-workflow-contracts.mjs";
+import { buildWorkspaceKitImprovementSummary } from "../generate-workspace-kit-improvement-summary.mjs";
 import { renderWorkflowContractSnippets } from "../generate-workflow-contract-snippets.mjs";
 
 const VALID_RELEASE_WORKFLOW = `
@@ -132,6 +133,53 @@ const VALID_PROFILE = {
   }
 };
 const VALID_RENDERED = renderWorkflowContractSnippets(VALID_CONTRACT, VALID_PROFILE);
+const VALID_IMPROVEMENT_LOG = {
+  schemaVersion: 1,
+  policy: {
+    reviewCadence: "per-kit-minor-release",
+    severityLevels: ["low", "medium", "high"],
+    categoryTaxonomy: ["process", "release"],
+    requiredFieldsBySeverity: {
+      low: ["id", "title"],
+      medium: ["id", "title", "followUpTaskId"],
+      high: ["id", "title", "followUpTaskId", "disposition"]
+    },
+    archivePolicy: {
+      archiveClosedAfterDays: 30,
+      retentionDays: 365
+    }
+  },
+  records: [
+    {
+      id: "F001",
+      title: "Sample friction",
+      status: "in_progress",
+      severity: "medium",
+      category: "process",
+      source: {
+        kind: "manual",
+        reference: "sample"
+      },
+      detectedAt: "2026-03-23",
+      lastUpdated: "2026-03-23",
+      promptIntent: "Improve delivery loop",
+      frictionObserved: "Manual process drift",
+      proposedChange: "Add checks",
+      affectedAreas: ["release"],
+      followUpTaskId: "T168",
+      releaseImpact: "requires_change",
+      disposition: {
+        kind: "planned_fix",
+        notes: "In progress"
+      }
+    }
+  ]
+};
+const VALID_IMPROVEMENT_SUMMARY = `${JSON.stringify(
+  buildWorkspaceKitImprovementSummary(VALID_IMPROVEMENT_LOG),
+  null,
+  2
+)}\n`;
 
 function withWorkflowSources(overrides = {}) {
   return {
@@ -144,6 +192,8 @@ function withWorkflowSources(overrides = {}) {
     workflowProfile: VALID_PROFILE,
     generatedWorkflowSummary: VALID_RENDERED.summaryJson,
     generatedWorkflowRule: VALID_RENDERED.ruleText,
+    workspaceKitImprovementLog: VALID_IMPROVEMENT_LOG,
+    generatedImprovementSummary: VALID_IMPROVEMENT_SUMMARY,
     ...overrides
   };
 }
@@ -193,4 +243,39 @@ test("fails when workflow-contract data is malformed", () => {
 
   assert.equal(result.ok, false);
   assert.match(result.findings.join("\n"), /workflow-contract validation/);
+});
+
+test("fails when workspace-kit improvement summary drifts", () => {
+  const result = checkWorkflowContracts(
+    withWorkflowSources({
+      generatedImprovementSummary: `${VALID_IMPROVEMENT_SUMMARY}\n# drift`
+    })
+  );
+
+  assert.equal(result.ok, false);
+  assert.match(result.findings.join("\n"), /improvement summary drift detected/);
+});
+
+test("fails when workspace-kit improvement log is malformed", () => {
+  const result = checkWorkflowContracts(
+    withWorkflowSources({
+      workspaceKitImprovementLog: {
+        schemaVersion: 1,
+        policy: {
+          reviewCadence: "",
+          severityLevels: [],
+          categoryTaxonomy: [],
+          requiredFieldsBySeverity: {},
+          archivePolicy: {
+            archiveClosedAfterDays: 0,
+            retentionDays: 0
+          }
+        },
+        records: []
+      }
+    })
+  );
+
+  assert.equal(result.ok, false);
+  assert.match(result.findings.join("\n"), /improvement-log validation/);
 });

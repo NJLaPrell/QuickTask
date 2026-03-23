@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/workspace-kit-improvement-log.schema.json",
+  "title": "Workspace Kit Improvement Log",
+  "type": "object",
+  "required": ["schemaVersion", "policy", "records"],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "reviewCadence",
+        "severityLevels",
+        "categoryTaxonomy",
+        "requiredFieldsBySeverity",
+        "archivePolicy"
+      ],
+      "properties": {
+        "reviewCadence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severityLevels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        },
+        "categoryTaxonomy": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "requiredFieldsBySeverity": {
+          "type": "object",
+          "required": ["low", "medium", "high"],
+          "properties": {
+            "low": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "medium": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "high": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "archivePolicy": {
+          "type": "object",
+          "required": ["archiveClosedAfterDays", "retentionDays"],
+          "properties": {
+            "archiveClosedAfterDays": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "retentionDays": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "severity",
+          "category",
+          "source",
+          "detectedAt",
+          "lastUpdated",
+          "promptIntent",
+          "frictionObserved",
+          "proposedChange",
+          "affectedAreas",
+          "releaseImpact"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^F\\d{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": ["open", "in_progress", "resolved", "accepted_risk", "archived"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "object",
+            "required": ["kind", "reference"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["manual", "ci", "release_prepare", "session_retro"]
+              },
+              "reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date"
+          },
+          "promptIntent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frictionObserved": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposedChange": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affectedAreas": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "followUpTaskId": {
+            "type": ["string", "null"],
+            "pattern": "^T\\d{3}$"
+          },
+          "releaseImpact": {
+            "type": "string",
+            "enum": ["none", "note_only", "requires_change"]
+          },
+          "disposition": {
+            "type": "object",
+            "required": ["kind", "notes"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["planned_fix", "accepted_risk", "resolved", "deferred"]
+              },
+              "notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sunsetDate": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

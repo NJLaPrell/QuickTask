@@ -204,6 +204,7 @@ jobs:
 
       - name: Validate release workflow contracts
         run: |
+          pnpm workspace-kit:improvement-log:validate
           pnpm release:check-workflow-contracts
           pnpm docs:check-links
           pnpm check:command-entrypoints
