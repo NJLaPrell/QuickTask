@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 5 improvement loop._
-- Phase kickoff assessment: Phase 5 kickoff complete and first release-cycle evidence pass recorded; next closeout step is 5 -> 6 promotion evidence.
+- Current phase in execution: _Workspace kit roadmap Phase 6 extraction and product boundary._
+- Phase kickoff assessment: Phase 6 kickoff pending; define single-package extraction execution plan, cutover sequencing, and consumer-regression validation tasks.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T170`
+- Ready queue (`[p]`): `T171`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T170` to run 5 -> 6 promotion evidence pass and phase-state update.
+- Next tasks: Execute `T171` Phase 6 kickoff assessment, then implement extraction execution tasks and close with final extraction evidence.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T170 [workspace-kit] Run Phase 5 promotion evidence pass and status update`
+- `[p] T171 [workspace-kit] Kick off Phase 6 extraction execution plan and task mapping`
 
 ### Scheduled (`[ ]`)
 
@@ -1041,9 +1041,9 @@ Work below is triaged for implementation.
       - `Findings: None`
       - `Handoff decision: READY`
 
-### [p] T170 [workspace-kit] Run Phase 5 promotion evidence pass and status update
+### [x] T170 [workspace-kit] Run Phase 5 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 5 with objective evidence and advance kit phase state from 5 -> 6 only when automated improvement-engine gates and release-cycle evidence are complete.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md` (if evidence wording needs alignment)
@@ -1057,6 +1057,37 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Phase 5 promotion evidence is recorded with explicit command outcomes and improvement-loop proof.
   - Status YAML reflects post-promotion phase state and Phase 6 extraction-execution focus.
+- Validation evidence:
+  - Phase 5 promotion matrix checks (pass, 2026-03-23):
+    - `pnpm check`
+    - `pnpm test`
+    - `pnpm workspace-kit:improvement-log:validate`
+    - `pnpm release:prepare`
+  - Improvement engine proof:
+    - `.workspace-kit/improvement-log.json` contains cycle-closed evidence records with policy-compliant fields.
+    - `.workspace-kit/generated/improvement-summary.json` reports deterministic aligned output with no open records.
+    - `docs/release-readiness-report.md` remains in READY state with no findings and passing improvement validation check.
+  - Promotion result:
+    - `current_kit_phase` advanced from `5` to `6` in `docs/maintainers/workspace-kit-status.yaml`.
+    - Active focus moved to Phase 6 kickoff/extraction execution planning.
+    - Phase 6 kickoff task `T171` seeded in active backlog.
+
+### [p] T171 [workspace-kit] Kick off Phase 6 extraction execution plan and task mapping
+
+- Status: [p]
+- Priority: P1
+- Goal: Run Phase 6 kickoff assessment and convert extraction strategy into executable tasks for single-package split, cutover, and consumer regression coverage.
+- Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`, extraction docs/scripts as needed
+- Dependencies: T170
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Review Phase 6 deliverables, cutover gates, and single-package extraction constraints from roadmap decisions.
+  2. Seed concrete `[workspace-kit]` extraction tasks (repo cutover plan, CI consumer validation against published kit, history strategy execution path).
+  3. Update current execution state and status YAML next actions for ordered Phase 6 implementation.
+- Acceptance criteria:
+  - Phase 6 kickoff outputs an ordered extraction task chain with clear acceptance criteria and validation commands.
+  - Status handoff files reflect Phase 6 active focus and next extraction tasks.
 - Validation evidence:
   - Pending.
 

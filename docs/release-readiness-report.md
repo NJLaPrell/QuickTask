@@ -1,26 +1,26 @@
 # Release Readiness Report
 
-- Generated at: 2026-03-23T19:03:42.565Z
+- Generated at: 2026-03-23T19:09:26.538Z
 - Scope target: all phases (fixed)
 - Current release phase: Phase 12
 - Scope: pre-release readiness checks before `Release` workflow handoff
 - Blocking policy: only new medium/high findings for the current release phase block handoff
-- Pending changesets: 17
+- Pending changesets: 18
 
 ## Command checks
 
 | Check | Result | Severity on failure | Duration |
 | --- | --- | --- | --- |
-| Workspace typecheck | pass | high | 4026ms |
-| Workspace tests | pass | high | 2513ms |
-| Workspace build | pass | high | 1490ms |
-| Release docs sync gate | pass | medium | 212ms |
-| Task tracker schema check | pass | medium | 318ms |
-| Release workflow contract check | pass | medium | 215ms |
-| Workspace-kit improvement log validation | pass | medium | 204ms |
-| Docs link integrity check | pass | medium | 316ms |
-| Command entrypoint reference check | pass | medium | 202ms |
-| Generated artifact policy check | pass | medium | 217ms |
+| Workspace typecheck | pass | high | 4025ms |
+| Workspace tests | pass | high | 2686ms |
+| Workspace build | pass | high | 1549ms |
+| Release docs sync gate | pass | medium | 216ms |
+| Task tracker schema check | pass | medium | 225ms |
+| Release workflow contract check | pass | medium | 228ms |
+| Workspace-kit improvement log validation | pass | medium | 219ms |
+| Docs link integrity check | pass | medium | 222ms |
+| Command entrypoint reference check | pass | medium | 220ms |
+| Generated artifact policy check | pass | medium | 240ms |
 
 ## Findings
 
