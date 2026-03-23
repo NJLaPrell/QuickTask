@@ -13,22 +13,25 @@ current_kit_phase: 6
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Roadmap complete with decisions finalized; execute extraction follow-through only when explicitly requested"
+active_focus: "Extraction follow-through in progress — automatable split completed; awaiting human gates for Workflow Cannon repo bootstrap"
 
 # Human-required stops; agent must not "resolve" these without user
-blockers: []
+blockers:
+  - "Workflow Cannon repository/org permissions must be created or delegated by a human before push/bootstrap"
+  - "Registry scope and publish credential path for @workflow-cannon/workspace-kit must be confirmed by a human"
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "No open Phase 0-6 roadmap tasks remain; keep workspace-kit in maintenance mode unless new scoped work is requested"
-  - "If extraction execution is requested, use Workflow Cannon repo target (`workflow-cannon`) and package scope (`@workflow-cannon/workspace-kit`)"
-  - "Preserve packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) in CI/release/readiness flows"
+  - "After human gate clearance, push `workflow-cannon-split` (sha `5a1f7038255a2c83e0e51ace07ea0d95a327574c`) into Workflow Cannon repository"
+  - "Complete T177 repository bootstrap and release automation handoff in external repo scope"
+  - "Keep packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) enforced while extraction cutover finalizes"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Recorded final naming/package/merge/directives decisions in `ROADMAP.md`, including Workflow Cannon and `workflow-cannon`."
-  - "Cleared all remaining pending decision items from workspace-kit status handoff."
-  - "Kept roadmap state complete through Phase 6 and constrained next actions to optional extraction follow-through."
+  - "Started extraction follow-through execution after roadmap closeout by seeding T175-T177 task chain."
+  - "Captured pre-split freeze SHA (`65797d888629d017f3538bd793c5e7cd781edf7d`) and generated `workflow-cannon-split` branch (`5a1f7038255a2c83e0e51ace07ea0d95a327574c`)."
+  - "Created fallback split bundle artifact at `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle`."
+  - "Marked T177 blocked pending human-only repository/org/registry gates."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions: []
@@ -37,7 +40,7 @@ pending_decisions: []
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 6 complete with final decisions recorded (name/repo/package/directives/merge policy); extraction follow-through is optional and ready."
+  notes: "Extraction follow-through execution started: split artifacts prepared and handoff now blocked only by human repository/registry gates."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
