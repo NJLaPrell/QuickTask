@@ -1,27 +1,27 @@
 # Release Readiness Report
 
-- Generated at: 2026-03-23T19:22:45.438Z
+- Generated at: 2026-03-23T19:36:33.120Z
 - Scope target: all phases (fixed)
 - Current release phase: Phase 12
 - Scope: pre-release readiness checks before `Release` workflow handoff
 - Blocking policy: only new medium/high findings for the current release phase block handoff
-- Pending changesets: 19
+- Pending changesets: 20
 
 ## Command checks
 
 | Check | Result | Severity on failure | Duration |
 | --- | --- | --- | --- |
-| Workspace typecheck | pass | high | 4072ms |
-| Workspace tests | pass | high | 2499ms |
-| Workspace build | pass | high | 1480ms |
-| Release docs sync gate | pass | medium | 218ms |
-| Task tracker schema check | pass | medium | 207ms |
-| Release workflow contract check | pass | medium | 219ms |
-| Workspace-kit improvement log validation | pass | medium | 205ms |
-| Workspace-kit tarball consumer regression check | pass | medium | 2642ms |
-| Docs link integrity check | pass | medium | 211ms |
-| Command entrypoint reference check | pass | medium | 205ms |
-| Generated artifact policy check | pass | medium | 218ms |
+| Workspace typecheck | pass | high | 3650ms |
+| Workspace tests | pass | high | 2428ms |
+| Workspace build | pass | high | 1383ms |
+| Release docs sync gate | pass | medium | 204ms |
+| Task tracker schema check | pass | medium | 202ms |
+| Release workflow contract check | pass | medium | 210ms |
+| Workspace-kit improvement log validation | pass | medium | 199ms |
+| Workspace-kit tarball consumer regression check | pass | medium | 2458ms |
+| Docs link integrity check | pass | medium | 204ms |
+| Command entrypoint reference check | pass | medium | 200ms |
+| Generated artifact policy check | pass | medium | 217ms |
 
 ## Findings
 

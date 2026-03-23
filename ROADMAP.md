@@ -304,9 +304,7 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 ## Open decisions
 
-1. **Package name and scope** — Neutral (`@yourorg/dev-workspace-kit`) vs QuickTask-adjacent (`@quicktask/workspace-kit`); affects branding and npm availability. **Resolve before first registry publish** (prerequisite checklist).
-2. **Copilot vs Cursor** — Same profile; split or unified “directives” files (`.github/copilot-instructions.md` vs `.cursor/rules`) and how much the CLI generates.
-3. **Merge strategy on upgrade** — Overwrite kit-owned only vs three-way merge; default should be **safe** (backup + diff).
+- No open blocking decisions for Phase 0-6 roadmap execution.
 
 **Defaults are binding:** Until overridden by a human-recorded decision, the [Decision defaults](#decision-defaults-to-keep-execution-moving) are authoritative for implementation. Agents must not stall on an open decision that has a listed default.
 
@@ -319,6 +317,10 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 | **Package layout**                      | **Single publishable package** until **reuse or install-size pain** warrants splitting into multiple packages.                                          |
 | **TASKS.md tagging**                    | **`[workspace-kit]`** in the **task title** for all kit work. Do not use alternate tag sets for the same program.                                       |
 | **Phase 6 extraction history strategy** | Use **`git subtree split`** from `packages/workspace-kit` into a new repository to preserve kit-only history without moving unrelated monorepo history. |
+| **Project and repository name**         | Use project name **Workflow Cannon** and repository slug **`workflow-cannon`** for extraction follow-through.                                           |
+| **Package name and scope**              | Use **`@workflow-cannon/workspace-kit`** as the package identity for extraction follow-through.                                                         |
+| **Copilot vs Cursor directives model**  | Keep one profile and generate/maintain both instruction surfaces (`.cursor/rules` and `.github/copilot-instructions.md`) from shared contract intent.   |
+| **Upgrade merge strategy**              | Default to safe overwrite for kit-owned paths with backup + diff evidence; do not perform implicit three-way merges.                                    |
 
 ---
 

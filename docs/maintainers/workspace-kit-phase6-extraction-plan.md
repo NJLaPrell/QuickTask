@@ -10,6 +10,8 @@ This document is the maintainer source of truth for Phase 6 extraction execution
 
 ## Chosen approach
 
+- Project/repo identity: Workflow Cannon (`workflow-cannon`).
+- Package identity: `@workflow-cannon/workspace-kit`.
 - Repository shape: single-package extracted repository first.
 - History strategy: `git subtree split` from `packages/workspace-kit` to preserve kit history without carrying unrelated monorepo history.
 - Cutover policy: use a pre-split freeze commit in QuickTask, then treat the extracted repository as the package home.
@@ -31,7 +33,6 @@ This document is the maintainer source of truth for Phase 6 extraction execution
 
 - New repository creation and org-level permissions.
 - Registry/org credentials, publish secrets, and package ownership.
-- Final naming/scope policy decision for public package identity.
 
 ## Completion evidence
 
