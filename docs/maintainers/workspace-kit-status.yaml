@@ -13,23 +13,23 @@ current_kit_phase: 2
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 2 kickoff — define profile-driven migration implementation tasks"
+active_focus: "Phase 2 kickoff complete — execute T152 profile validation + CI gate"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T151 Phase 2 kickoff assessment and map roadmap deliverables to concrete tasks"
-  - "Prioritize profile validation + parameterized rule generation work for first Phase 2 implementation slice"
-  - "Define pilot-repo adoption evidence requirements and dependency order"
+  - "Implement T152 workspace-kit check command and wire it into repo-level validation"
+  - "Implement T153 profile-driven generation to replace hardcoded project-name assumptions"
+  - "Implement T154 migration guide and pilot harness, then run T155 promotion evidence pass"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Ran and passed Phase 1 promotion checks (`pnpm check && pnpm test`)."
-  - "Verified cold-start fixture doctor pass via `pnpm workspace-kit:phase1:cold-start-check`."
-  - "Closed T150 with recorded 1 -> 2 evidence and advanced current_kit_phase to 2."
-  - "Seeded T151 to drive Phase 2 kickoff and implementation planning."
+  - "Completed T151 Phase 2 kickoff assessment against roadmap deliverables and exit criteria."
+  - "Added actionable task sequence T152 through T155 with dependency order and acceptance criteria."
+  - "Set active execution focus to T152 profile validation + CI gate implementation."
+  - "No blockers identified; pending decisions remain non-blocking for current Phase 2 sequence."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
