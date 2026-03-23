@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap delivered through Phase 6 (complete)._
-- Phase kickoff assessment: Phase 6 kickoff and extraction closeout completed; extraction path, consumer boundary checks, and release-independence gates are now codified.
-- Active implementation (`[~]`): _none_
+- Current phase in execution: _Workspace kit extraction follow-through (post-Phase 6 execution)._
+- Phase kickoff assessment: Extraction execution started for Workflow Cannon handoff; automatable split artifacts are complete and remaining publication/repository setup is human-gated.
+- Active implementation (`[~]`): _none_ (execution work complete on agent side)
 - Scheduled (`[ ]`): _none_
 - Ready queue (`[p]`): _none_
-- Blocked tasks (`[!]`): none
-- Next tasks: _No open `[workspace-kit]` phase tasks._ Track future kit follow-ups as new backlog items when extraction repository execution is initiated.
+- Blocked tasks (`[!]`): `T177`
+- Next tasks: Complete `T177` after human repo/org/registry gates are unblocked, then push split branch into `workflow-cannon` and finish external automation bootstrap.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -242,7 +242,7 @@ Work below is triaged for implementation.
 
 ### Blocked
 
-- _Empty._
+- `[!] T177 [workspace-kit] Execute Workflow Cannon repository bootstrap and push split history (human-gated)`
 
 ## Proposed task details
 
@@ -1174,6 +1174,71 @@ Work below is triaged for implementation.
   - Promotion result:
     - No open `[workspace-kit]` roadmap phase tasks remain in active backlog.
     - `current_kit_phase` remains `6` and status handoff now marks roadmap completion with extraction follow-through as optional future work.
+
+### [x] T175 [workspace-kit] Start Workflow Cannon extraction execution follow-through
+
+- Status: [x]
+- Priority: P1
+- Goal: Kick off post-roadmap extraction execution using finalized Workflow Cannon decisions and convert follow-through into explicit tasks.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `docs/maintainers/workspace-kit-phase6-extraction-plan.md`
+- Dependencies: T174
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Re-open active backlog for extraction follow-through tasks.
+  2. Align status handoff focus to execution mode and human-gate awareness.
+  3. Sequence automatable split steps before human-only repository/publish gates.
+- Acceptance criteria:
+  - Follow-through tasks exist with clear status and dependencies.
+  - Status handoff reflects extraction execution state.
+- Validation evidence:
+  - Added `T175`-`T177` extraction follow-through tasks and updated current execution state.
+  - Updated status handoff focus/actions for Workflow Cannon extraction execution and blocker handling.
+
+### [x] T176 [workspace-kit] Produce pre-split freeze evidence and split artifacts for Workflow Cannon repo
+
+- Status: [x]
+- Priority: P1
+- Goal: Complete all automatable extraction steps before human-gated repository/registry setup.
+- Files: `docs/maintainers/workspace-kit-phase6-extraction-plan.md`, `TASKS.md`, `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle` (generated artifact, untracked)
+- Dependencies: T175
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Capture pre-split freeze commit SHA in QuickTask mainline.
+  2. Generate subtree split branch from `packages/workspace-kit`.
+  3. Create portable bundle artifact for handoff/import safety.
+- Acceptance criteria:
+  - Freeze SHA and split SHA are recorded in maintainer docs.
+  - Local split branch exists and can be pushed once human gates are cleared.
+  - Bundle artifact is generated for fallback transfer.
+- Validation evidence:
+  - Freeze commit SHA captured: `65797d888629d017f3538bd793c5e7cd781edf7d`.
+  - Subtree split command run: `git subtree split --prefix packages/workspace-kit -b workflow-cannon-split`.
+  - Split branch SHA: `5a1f7038255a2c83e0e51ace07ea0d95a327574c`.
+  - Bundle artifact created: `artifacts/workspace-kit-extraction/workflow-cannon-split.bundle`.
+
+### [!] T177 [workspace-kit] Execute Workflow Cannon repository bootstrap and push split history (human-gated)
+
+- Status: [!]
+- Priority: P1
+- Goal: Finish extraction by creating/pushing to external Workflow Cannon repository and enabling package publication automation.
+- Files: external `workflow-cannon` repository bootstrap (out-of-repo), `docs/maintainers/workspace-kit-phase6-extraction-plan.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T176
+- Blocked by: human-only gates for repository/org permissions and registry credentials
+- Unblock plan:
+  1. Human creates/authorizes `workflow-cannon` repository access and required org permissions.
+  2. Human confirms registry scope ownership for `@workflow-cannon/workspace-kit` and publish credentials path.
+  3. Agent pushes `workflow-cannon-split` to new remote and wires release automation bootstrap.
+- Steps:
+  1. Add new repository remote for Workflow Cannon.
+  2. Push `workflow-cannon-split` branch and set default branch strategy in new repo.
+  3. Port release workflows and verify package publish baseline in new repository.
+- Acceptance criteria:
+  - New repository receives split history and is ready for package lifecycle automation.
+  - QuickTask extraction handoff notes are updated with remote URL and bootstrap evidence.
+- Validation evidence:
+  - Pending human gate completion.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 
