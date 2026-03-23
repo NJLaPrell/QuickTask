@@ -69,12 +69,12 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
-- Phase kickoff assessment: Phase 2 kickoff completed via `T151`; execution is now in deliverable implementation and promotion evidence capture.
+- Phase kickoff assessment: Phase 3 kickoff completed via `T156`; execution is now in Phase 3 deliverable implementation.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T156`
+- Ready queue (`[p]`): `T157`, `T158`, `T159`, `T160`, `T161`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T156` to run Phase 3 kickoff assessment and map upgrade/distribution deliverables into concrete tasks.
+- Next tasks: Execute Phase 3 in order `T157` -> `T158` -> `T159` -> `T160`, then run `T161` for 3 -> 4 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,11 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T156 [workspace-kit] Kick off Phase 3 package-primary upgrade/distribution plan`
+- `[p] T157 [workspace-kit] Implement upgrade command with kit-owned merge + backup`
+- `[p] T158 [workspace-kit] Add drift-check command and CI wiring for pinned assets`
+- `[p] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff`
+- `[p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper`
+- `[p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -599,9 +603,9 @@ Work below is triaged for implementation.
     - set `current_kit_phase: 3`,
     - refresh `active_focus` and `next_agent_actions` for Phase 3 kickoff.
 
-### [p] T156 [workspace-kit] Kick off Phase 3 package-primary upgrade/distribution plan
+### [x] T156 [workspace-kit] Kick off Phase 3 package-primary upgrade/distribution plan
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Convert Phase 3 roadmap deliverables into concrete executable tasks and dependency order.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
@@ -615,6 +619,108 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Phase 3 kickoff summary and concrete task sequence are recorded in active tracker/state files.
   - Follow-on tasks are actionable and aligned to 3 -> 4 promotion requirements.
+- Validation evidence:
+  - Phase 3 kickoff assessment completed (2026-03-23) against roadmap section `Phase 3 — Package-primary distribution and upgrades`.
+  - Reviewed required docs for drift/context: `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `ROADMAP.md`, and status YAML.
+  - Added concrete follow-on task chain for Phase 3 deliverables and exit criteria:
+    - `T157` upgrade command with kit-owned merge strategy and backups,
+    - `T158` drift-check command with CI enforcement for pinned package assets,
+    - `T159` package-primary distribution readiness/publish handoff using changesets semantics,
+    - `T160` starter-template reduction to thin wrapper around package,
+    - `T161` 3 -> 4 promotion evidence and phase-state update.
+
+### [p] T157 [workspace-kit] Implement upgrade command with kit-owned merge + backup
+
+- Status: [p]
+- Priority: P1
+- Goal: Add `workspace-kit upgrade` that updates kit-owned paths from package assets while preserving custom overrides via backups/merge policy.
+- Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `templates/workspace-starter/**`, docs/status/task files as needed
+- Dependencies: T156
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add `upgrade` command with deterministic merge/overwrite behavior for kit-owned paths.
+  2. Implement backup creation for changed kit-owned files before write.
+  3. Add tests for merge, overwrite, and backup behavior.
+- Acceptance criteria:
+  - `workspace-kit upgrade` updates kit-owned assets and writes backup artifacts.
+  - Merge strategy is explicit and deterministic for owned vs user-managed paths.
+- Validation evidence:
+  - Pending.
+
+### [p] T158 [workspace-kit] Add drift-check command and CI wiring for pinned assets
+
+- Status: [p]
+- Priority: P1
+- Goal: Detect installed-asset drift relative to pinned kit version and enforce drift check in CI paths.
+- Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, root `package.json`, scripts/docs/status/task files as needed
+- Dependencies: T157
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add `workspace-kit drift-check` command comparing installed assets against pinned manifest version.
+  2. Define warning/failure semantics for drift outcomes.
+  3. Wire drift-check into repository check flow appropriate for Phase 3 evidence.
+- Acceptance criteria:
+  - Drift check reports deterministic pass/fail status for asset-version mismatches.
+  - CI-relevant validation path includes drift check execution.
+- Validation evidence:
+  - Pending.
+
+### [p] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff
+
+- Status: [p]
+- Priority: P1
+- Goal: Establish publish-ready package-primary workflow with lockstep version/changelog handoff evidence.
+- Files: `packages/workspace-kit/package.json`, release scripts/config, changesets/docs/status/task files as needed
+- Dependencies: T158
+- Blocked by: human gate for registry credentials/publish permissions
+- Unblock plan: prepare publish-handoff checklist and artifact verification evidence while keeping actual publish human-triggered.
+- Steps:
+  1. Add package readiness scripts/docs for publish handoff using existing release strategy.
+  2. Ensure changeset/release metadata for workspace-kit package path are validated.
+  3. Record human-gated handoff checklist for publish trigger.
+- Acceptance criteria:
+  - Publish-readiness checks are documented and executable without publishing.
+  - Human-only publish gates are explicit and auditable.
+- Validation evidence:
+  - Pending.
+
+### [p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper
+
+- Status: [p]
+- Priority: P1
+- Goal: Align starter template to Phase 3 objective so it acts as profile stub + package invocation wrapper.
+- Files: `templates/workspace-starter/**`, docs/status/task files as needed
+- Dependencies: T157, T158
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Minimize starter files to profile/config essentials and package-driven commands.
+  2. Update starter README to package-primary cold-start flow.
+  3. Validate starter cold-start can reach Phase 1-complete project baseline using package + profile.
+- Acceptance criteria:
+  - Starter template is thin and package-primary.
+  - Cold-start flow works with package + profile and no manual rule copying.
+- Validation evidence:
+  - Pending.
+
+### [p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 3 with objective evidence and advance kit phase state cleanly from 3 -> 4.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T157, T158, T159, T160
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run required checks from roadmap phase promotion matrix for 3 -> 4.
+  2. Capture command and upgrade/drift/package evidence summary in task block and update status YAML.
+  3. If criteria pass, set `current_kit_phase` to `4` and refresh next actions for Phase 4.
+- Acceptance criteria:
+  - Evidence for 3 -> 4 checks is recorded in this task.
+  - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
   - Pending.
 
