@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "projectName": "example-project",
+  "generatedAt": "deterministic-contract-render",
+  "phaseCount": 7,
+  "phases": [
+    {
+      "id": "phase0",
+      "order": 0,
+      "title": "Inventory and contracts",
+      "requiredChecks": ["docs-links", "tasks-check"],
+      "allowedTransitions": ["phase1"],
+      "gate": {
+        "id": "phase0-gate",
+        "onFailure": "block",
+        "requiredCheckIds": ["docs-links", "tasks-check"]
+      }
+    },
+    {
+      "id": "phase1",
+      "order": 1,
+      "title": "Template plus local package skeleton",
+      "requiredChecks": ["monorepo-check", "workspace-kit-cold-start"],
+      "allowedTransitions": ["phase2"],
+      "gate": {
+        "id": "phase1-gate",
+        "onFailure": "block",
+        "requiredCheckIds": ["monorepo-check", "workspace-kit-cold-start"]
+      }
+    },
+    {
+      "id": "phase2",
+      "order": 2,
+      "title": "State and migration",
+      "requiredChecks": ["monorepo-check", "pilot-adoption-check"],
+      "allowedTransitions": ["phase3"],
+      "gate": {
+        "id": "phase2-gate",
+        "onFailure": "block",
+        "requiredCheckIds": ["monorepo-check", "pilot-adoption-check"]
+      }
+    },
+    {
+      "id": "phase3",
+      "order": 3,
+      "title": "Package-primary distribution and upgrades",
+      "requiredChecks": ["drift-check", "package-cold-start-check", "publish-readiness-check"],
+      "allowedTransitions": ["phase4"],
+      "gate": {
+        "id": "phase3-gate",
+        "onFailure": "block",
+        "requiredCheckIds": ["drift-check", "package-cold-start-check", "publish-readiness-check"]
+      }
+    },
+    {
+      "id": "phase4",
+      "order": 4,
+      "title": "Workflow contract in data",
+      "requiredChecks": ["workflow-contract-check"],
+      "allowedTransitions": ["phase5"],
+      "gate": {
+        "id": "phase4-gate",
+        "onFailure": "block",
+        "requiredCheckIds": ["workflow-contract-check"]
+      }
+    },
+    {
+      "id": "phase5",
+      "order": 5,
+      "title": "Improvement loop",
+      "requiredChecks": ["release-prepare", "workflow-contract-check"],
+      "allowedTransitions": ["phase6"],
+      "gate": {
+        "id": "phase5-gate",
+        "onFailure": "warn",
+        "requiredCheckIds": ["release-prepare", "workflow-contract-check"]
+      }
+    },
+    {
+      "id": "phase6",
+      "order": 6,
+      "title": "Extraction and product boundary",
+      "requiredChecks": ["release-prepare", "workflow-contract-check"],
+      "allowedTransitions": [],
+      "gate": {
+        "id": "phase6-gate",
+        "onFailure": "warn",
+        "requiredCheckIds": ["release-prepare", "workflow-contract-check"]
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "docs-links",
+      "label": "Docs link integrity",
+      "command": "pnpm docs:check-links"
+    },
+    {
+      "id": "drift-check",
+      "label": "Managed asset drift check",
+      "command": "pnpm workspace-kit:drift-check"
+    },
+    {
+      "id": "monorepo-check",
+      "label": "Repository compile and kit checks",
+      "command": "pnpm check"
+    },
+    {
+      "id": "package-cold-start-check",
+      "label": "Package-primary cold-start fixture",
+      "command": "pnpm workspace-kit:phase3:package-cold-start-check"
+    },
+    {
+      "id": "pilot-adoption-check",
+      "label": "Non-QuickTask pilot adoption",
+      "command": "pnpm workspace-kit:phase2:pilot-adoption-check"
+    },
+    {
+      "id": "publish-readiness-check",
+      "label": "Package publish readiness",
+      "command": "pnpm workspace-kit:phase3:publish-readiness-check"
+    },
+    {
+      "id": "release-prepare",
+      "label": "Release readiness aggregate",
+      "command": "pnpm release:prepare"
+    },
+    {
+      "id": "tasks-check",
+      "label": "Task tracker consistency",
+      "command": "pnpm tasks:check"
+    },
+    {
+      "id": "workflow-contract-check",
+      "label": "Workflow contract drift check",
+      "command": "pnpm workspace-kit:validate-workflow-contract"
+    },
+    {
+      "id": "workspace-kit-cold-start",
+      "label": "Starter fixture cold-start",
+      "command": "pnpm workspace-kit:phase1:cold-start-check"
+    }
+  ]
+}

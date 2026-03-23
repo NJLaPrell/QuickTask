@@ -1,0 +1,63 @@
+# Workspace Kit Workflow Contract
+
+Project: `example-project`
+
+This rule is generated from `.workspace-kit/workflow-contract.json` plus `workspace-kit.profile.json`.
+Do not manually edit this file; run `pnpm workspace-kit:generate-workflow-contract-snippets`.
+
+## Phase gates
+
+### phase0 (Inventory and contracts)
+- Required checks: tasks-check, docs-links
+- Allowed transitions: phase1
+- Gate policy: block
+- Gate checks: tasks-check, docs-links
+
+### phase1 (Template plus local package skeleton)
+- Required checks: monorepo-check, workspace-kit-cold-start
+- Allowed transitions: phase2
+- Gate policy: block
+- Gate checks: monorepo-check, workspace-kit-cold-start
+
+### phase2 (State and migration)
+- Required checks: monorepo-check, pilot-adoption-check
+- Allowed transitions: phase3
+- Gate policy: block
+- Gate checks: monorepo-check, pilot-adoption-check
+
+### phase3 (Package-primary distribution and upgrades)
+- Required checks: drift-check, publish-readiness-check, package-cold-start-check
+- Allowed transitions: phase4
+- Gate policy: block
+- Gate checks: drift-check, publish-readiness-check, package-cold-start-check
+
+### phase4 (Workflow contract in data)
+- Required checks: workflow-contract-check
+- Allowed transitions: phase5
+- Gate policy: block
+- Gate checks: workflow-contract-check
+
+### phase5 (Improvement loop)
+- Required checks: workflow-contract-check, release-prepare
+- Allowed transitions: phase6
+- Gate policy: warn
+- Gate checks: workflow-contract-check, release-prepare
+
+### phase6 (Extraction and product boundary)
+- Required checks: workflow-contract-check, release-prepare
+- Allowed transitions: none
+- Gate policy: warn
+- Gate checks: workflow-contract-check, release-prepare
+
+## Check commands
+- docs-links: pnpm docs:check-links
+- drift-check: pnpm workspace-kit:drift-check
+- monorepo-check: pnpm check
+- package-cold-start-check: pnpm workspace-kit:phase3:package-cold-start-check
+- pilot-adoption-check: pnpm workspace-kit:phase2:pilot-adoption-check
+- publish-readiness-check: pnpm workspace-kit:phase3:publish-readiness-check
+- release-prepare: pnpm release:prepare
+- tasks-check: pnpm tasks:check
+- workflow-contract-check: pnpm workspace-kit:validate-workflow-contract
+- workspace-kit-cold-start: pnpm workspace-kit:phase1:cold-start-check
+
