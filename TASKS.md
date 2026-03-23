@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
-- Phase kickoff assessment: Phase 3 kickoff completed via `T156`; execution is now in Phase 3 deliverable implementation.
-- Active implementation (`[~]`): `T161`
+- Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
+- Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
+- Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): _none_
+- Ready queue (`[p]`): `T162`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute Phase 3 in order `T157` -> `T158` -> `T159` -> `T160`, then run `T161` for 3 -> 4 promotion evidence and phase-state update.
+- Next tasks: Execute `T162` to run Phase 4 kickoff assessment and map workflow-contract-in-data deliverables into concrete tasks.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update`
+- `[p] T162 [workspace-kit] Kick off Phase 4 workflow-contract-in-data plan`
 
 ### Scheduled (`[ ]`)
 
@@ -748,9 +748,9 @@ Work below is triaged for implementation.
     - `pnpm workspace-kit:phase3:package-cold-start-check`
     - `pnpm workspace-kit:phase1:cold-start-check`
 
-### [~] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
+### [x] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 3 with objective evidence and advance kit phase state cleanly from 3 -> 4.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -765,7 +765,46 @@ Work below is triaged for implementation.
   - Evidence for 3 -> 4 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - In progress.
+  - Ran required promotion checks for `3 -> 4` (pass, 2026-03-23):
+    - `pnpm check`
+    - `pnpm test`
+    - `pnpm tasks:check`
+    - `pnpm docs:check-links`
+    - `pnpm release:check-workflow-contracts`
+  - Confirmed Phase 3 distribution/readiness evidence:
+    - `pnpm workspace-kit:phase3:publish-readiness-check`
+    - Output included artifact `quicktask-workspace-kit-0.0.0.tgz` and explicit human-gate checklist.
+  - Confirmed package-primary cold-start exit criteria evidence:
+    - `pnpm workspace-kit:phase3:package-cold-start-check`
+    - Output included pass results for `upgrade`, `init`, `check`, and `doctor` in fixture path `artifacts/workspace-kit-fixtures/phase3-package-cold-start`.
+  - Reconfirmed pilot fixture compatibility after thin-starter transition:
+    - `pnpm workspace-kit:phase2:pilot-adoption-check`
+    - Output included matching values:
+      - `profileProjectName: "phase2-pilot-non-quicktask"`
+      - `generatedProjectName: "phase2-pilot-non-quicktask"`
+      - upgrade/init/check/doctor pass output for pilot fixture.
+  - Updated `docs/maintainers/workspace-kit-status.yaml` to:
+    - set `current_kit_phase: 4`,
+    - refresh `active_focus` and `next_agent_actions` for Phase 4 kickoff.
+
+### [p] T162 [workspace-kit] Kick off Phase 4 workflow-contract-in-data plan
+
+- Status: [p]
+- Priority: P1
+- Goal: Convert Phase 4 roadmap deliverables into concrete executable tasks and dependency order.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
+- Dependencies: T161
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run a Phase 4 kickoff assessment against roadmap deliverables and exit criteria.
+  2. Define implementation tasks for workflow contract schema, generators, and single-source-of-truth docs alignment.
+  3. Update execution state and status YAML with ordered next actions.
+- Acceptance criteria:
+  - Phase 4 kickoff summary and concrete task sequence are recorded in active tracker/state files.
+  - Follow-on tasks are actionable and aligned to 4 -> 5 promotion requirements.
+- Validation evidence:
+  - Pending.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

@@ -7,29 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 3
+current_kit_phase: 4
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T160 complete — run T161 Phase 3 promotion evidence and phase-state update"
+active_focus: "Phase 4 kickoff — define workflow-contract-in-data implementation tasks"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run and record full 3 -> 4 promotion validation command set"
-  - "Capture explicit evidence for upgrade, drift-check, publish readiness, and package-primary cold-start criteria"
-  - "Advance `current_kit_phase` to 4 if criteria pass and seed Phase 4 starter tasks"
+  - "Run T162 Phase 4 kickoff assessment and map roadmap deliverables to concrete tasks"
+  - "Prioritize workflow contract schema + generator dependency order"
+  - "Define single-source-of-truth documentation output requirements for contract-driven flow"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T160 by reducing starter template to profile + package-wrapper baseline."
-  - "Added package-primary cold-start fixture command and maintainer documentation for Phase 3 validation."
-  - "Updated legacy phase1 fixture harness to materialize managed assets via upgrade/init before doctor."
-  - "Advanced active Phase 3 execution from T160 to T161."
+  - "Ran and passed Phase 3 promotion checks (`pnpm check`, `pnpm test`, docs/tasks/workflow checks)."
+  - "Verified package-primary publish-readiness and cold-start fixture evidence commands."
+  - "Confirmed pilot adoption fixture still passes after thin-starter transition."
+  - "Closed T161 and advanced current kit phase from 3 to 4, seeding T162 kickoff."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 2 promotion complete: profile check + generated context + non-QuickTask pilot adoption evidence recorded. Upgrade rehearsal metric remains pending."
+  notes: "Phase 3 promotion complete: upgrade + drift-check + publish-readiness + package-primary cold-start evidence recorded. Contract-in-data phase kickoff pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
