@@ -13,23 +13,23 @@ current_kit_phase: 4
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T163 complete — execute T164 contract-driven generator implementation"
+active_focus: "T164 complete — execute T165 contract validation/tooling wiring"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Implement T164 generator outputs from contract + profile"
   - "Wire T165 workflow-contract checks to validate schema + generation coherence"
-  - "Complete T166 docs alignment and close T167 promotion evidence"
+  - "Complete T166 docs alignment to contract-driven generated artifacts"
+  - "Run T167 Phase 4 promotion evidence and update phase state to 5 when criteria pass"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T163 by adding workflow-contract schema, canonical contract data file, and validation script/tests."
-  - "Added root command `workspace-kit:validate-workflow-contract` for machine-readable contract validation."
-  - "Validated contract schema path via `pnpm workspace-kit:validate-workflow-contract`, `pnpm test`, and `pnpm check`."
-  - "Advanced active Phase 4 execution from T163 to T164."
+  - "Completed T164 with a deterministic generator that renders workflow-contract summary JSON and rule snippets from contract + profile."
+  - "Added generated outputs at `.workspace-kit/generated/workflow-contract-summary.json` and `.cursor/rules/workspace-kit-workflow-contract.mdc`."
+  - "Added generator tests proving deterministic output and contract-driven change propagation."
+  - "Advanced active Phase 4 execution from T164 to T165."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:

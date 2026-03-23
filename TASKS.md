@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
 - Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): `T164`
+- Active implementation (`[~]`): `T165`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T165`, `T166`, `T167`
+- Ready queue (`[p]`): `T166`, `T167`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets`
 - `[p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling`
 - `[p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment`
 - `[p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update`
@@ -847,9 +846,9 @@ Work below is triaged for implementation.
     - `pnpm test`
     - `pnpm check`
 
-### [~] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets
+### [x] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Generate workflow-facing snippets from contract + profile so rules/docs consume one contract source instead of duplicated prose.
 - Files: generator scripts under `scripts/**` or `packages/workspace-kit/src/**`, generated outputs/docs as needed
@@ -864,11 +863,23 @@ Work below is triaged for implementation.
   - Generator outputs are deterministic and contract-driven.
   - Contract edits propagate to generated snippets without manual copy edits.
 - Validation evidence:
-  - In progress.
+  - Added generator script:
+    - `scripts/generate-workflow-contract-snippets.mjs`
+  - Added generator tests:
+    - `scripts/test/generate-workflow-contract-snippets.test.mjs`
+  - Added root command:
+    - `pnpm workspace-kit:generate-workflow-contract-snippets`
+  - Added generated contract-driven outputs:
+    - `.workspace-kit/generated/workflow-contract-summary.json`
+    - `.cursor/rules/workspace-kit-workflow-contract.mdc`
+  - Validation run (pass, 2026-03-23):
+    - `pnpm workspace-kit:generate-workflow-contract-snippets`
+    - `pnpm test`
+    - `pnpm check`
 
-### [p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
+### [~] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Enforce contract correctness and generated-output consistency in CI-relevant validation flow.
 - Files: `scripts/check-workflow-contracts.mjs`, root `package.json`, related tests/docs/status files
@@ -883,7 +894,7 @@ Work below is triaged for implementation.
   - Contract and generated-output drift is detectable and enforced in checks.
   - Validation output is deterministic and actionable.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
 
