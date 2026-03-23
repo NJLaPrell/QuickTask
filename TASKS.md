@@ -69,10 +69,10 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 1 dual-track bootstrap (template + package skeleton)._
-- Phase kickoff assessment: Phase 12 kickoff was complete; close-out validation: `pnpm test`, `pnpm test:smoke`, `pnpm check`, `pnpm qt:check-contract-drift`, `pnpm tasks:check`.
-- Active implementation (`[~]`): _none_
+- Phase kickoff assessment: Phase 1 kickoff complete (2026-03-23). Reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and kit roadmap/status docs; confirmed scope alignment with Phase 1 deliverables and set `T147` as active implementation.
+- Active implementation (`[~]`): `T148`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T147`, `T148`, `T149`
+- Ready queue (`[p]`): `T149`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 1 bootstrap in order `T147` -> `T148` -> `T149` and record cold-start `doctor` evidence for 1 -> 2 readiness.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,8 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T147 [workspace-kit] Scaffold package skeleton for Phase 1 local CLI`
-- `[p] T148 [workspace-kit] Create template starter path and consumer README stub`
 - `[p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness`
 
 ### Scheduled (`[ ]`)
@@ -240,7 +238,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- _Empty._
+- `[~] T148 [workspace-kit] Create template starter path and consumer README stub`
 
 ### Blocked
 
@@ -348,9 +346,9 @@ Work below is triaged for implementation.
     - populated `last_session_summary`,
     - metrics baseline timestamp update (`metrics.updated_at`).
 
-### [p] T147 [workspace-kit] Scaffold package skeleton for Phase 1 local CLI
+### [x] T147 [workspace-kit] Scaffold package skeleton for Phase 1 local CLI
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Create `packages/workspace-kit` CLI skeleton with `init` and `doctor` command placeholders aligned to roadmap CLI contract.
 - Files: `packages/workspace-kit/*`, `package.json`, `pnpm-workspace.yaml`, tests/docs as needed
@@ -365,11 +363,16 @@ Work below is triaged for implementation.
   - `packages/workspace-kit` exists with runnable CLI entry and documented command placeholders.
   - CLI returns stable exit codes per roadmap minimal contract.
 - Validation evidence:
-  - Pending.
+  - Added new package skeleton at `packages/workspace-kit` with TypeScript build/check/test scripts and dry-run pack stub (`pack:dry-run`) in `packages/workspace-kit/package.json`.
+  - Implemented CLI entrypoint with deterministic placeholder handlers and stable exit-code contract (`0` success, `1` validation failure, `2` usage error, `3` internal error) in `packages/workspace-kit/src/cli.ts`.
+  - Added package tests for command invocation and `doctor` validation behavior in `packages/workspace-kit/test/cli.test.mjs`.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm --filter quicktask-workspace-kit test`
+    - `pnpm check && pnpm test && pnpm tasks:check && pnpm release:check-workflow-contracts`
 
-### [p] T148 [workspace-kit] Create template starter path and consumer README stub
+### [~] T148 [workspace-kit] Create template starter path and consumer README stub
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Stand up Phase 1 template starter location with profile stub and kit-consumer onboarding README.
 - Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -384,7 +387,7 @@ Work below is triaged for implementation.
   - Starter template path exists and includes profile stub plus consumer-facing README.
   - README guides local CLI/bootstrap path for Phase 1.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
 
