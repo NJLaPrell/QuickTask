@@ -13,23 +13,23 @@ current_kit_phase: 4
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 4 kickoff — define workflow-contract-in-data implementation tasks"
+active_focus: "Phase 4 kickoff complete — execute T163 workflow-contract schema definition"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T162 Phase 4 kickoff assessment and map roadmap deliverables to concrete tasks"
-  - "Prioritize workflow contract schema + generator dependency order"
-  - "Define single-source-of-truth documentation output requirements for contract-driven flow"
+  - "Implement T163 workflow-contract schema for phases/checks/transitions"
+  - "Implement T164 generator outputs from contract + profile and wire T165 validation checks"
+  - "Complete T166 docs alignment and close T167 promotion evidence"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Ran and passed Phase 3 promotion checks (`pnpm check`, `pnpm test`, docs/tasks/workflow checks)."
-  - "Verified package-primary publish-readiness and cold-start fixture evidence commands."
-  - "Confirmed pilot adoption fixture still passes after thin-starter transition."
-  - "Closed T161 and advanced current kit phase from 3 to 4, seeding T162 kickoff."
+  - "Completed T162 Phase 4 kickoff assessment against roadmap deliverables and exit criteria."
+  - "Added actionable Phase 4 task sequence T163 through T167 with dependency order and acceptance criteria."
+  - "Set active execution focus to T163 workflow-contract schema implementation."
+  - "No blockers identified for Phase 4 kickoff execution."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
