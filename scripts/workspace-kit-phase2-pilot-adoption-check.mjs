@@ -43,6 +43,7 @@ function main() {
 
   run("pnpm", ["--filter", "quicktask-workspace-kit", "build"], { cwd: repoRoot });
 
+  const upgradeOutput = run("node", [cliPath, "upgrade"], { cwd: fixtureRoot });
   const initOutput = run("node", [cliPath, "init"], { cwd: fixtureRoot });
   const checkOutput = run("node", [cliPath, "check"], { cwd: fixtureRoot });
   const doctorOutput = run("node", [cliPath, "doctor"], { cwd: fixtureRoot });
@@ -60,6 +61,7 @@ function main() {
         fixtureRoot,
         profileProjectName: profile.project.name,
         generatedProjectName: generatedContext.projectName,
+        upgradeOutput,
         initOutput,
         checkOutput,
         doctorOutput
