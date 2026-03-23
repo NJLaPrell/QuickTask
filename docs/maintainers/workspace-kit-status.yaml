@@ -13,23 +13,23 @@ current_kit_phase: 3
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T158 complete — execute T159 package-primary distribution readiness handoff"
+active_focus: "T159 complete — execute T160 thin-wrapper starter alignment"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Execute T159 publish-readiness scripts/docs and capture human-gated handoff checklist"
-  - "Execute T160 template thin-wrapper reduction for package-primary startup flow"
+  - "Execute T160 starter reduction to profile + package wrapper flow"
+  - "Validate package-primary cold-start path reaches Phase 1-complete baseline"
   - "Close T161 with 3 -> 4 promotion evidence and phase-state update"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T158 by adding workspace-kit drift-check command with deterministic drift finding output."
-  - "Wired drift-check into repository-level check flow via root package scripts."
-  - "Added test coverage for drift-check pass and drift-failure behavior."
-  - "Advanced active Phase 3 execution from T158 to T159."
+  - "Completed T159 by adding package publish-readiness command and maintainer handoff guide."
+  - "Captured dry-run package artifact evidence and changeset validation output."
+  - "Recorded explicit human-gated publish requirements for credentials and workflow trigger."
+  - "Advanced active Phase 3 execution from T159 to T160."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
