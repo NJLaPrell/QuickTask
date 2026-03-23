@@ -1,0 +1,16 @@
+{
+  "name": "workspace-kit-starter",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "workspace-kit:upgrade": "workspace-kit upgrade",
+    "workspace-kit:init": "workspace-kit init",
+    "workspace-kit:check": "workspace-kit check",
+    "workspace-kit:doctor": "workspace-kit doctor",
+    "workspace-kit:drift-check": "workspace-kit drift-check"
+  },
+  "devDependencies": {
+    "quicktask-workspace-kit": "0.0.0"
+  }
+}

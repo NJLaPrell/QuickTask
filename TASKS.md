@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
 - Phase kickoff assessment: Phase 3 kickoff completed via `T156`; execution is now in Phase 3 deliverable implementation.
-- Active implementation (`[~]`): `T160`
+- Active implementation (`[~]`): `T161`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T161`
+- Ready queue (`[p]`): _none_
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 3 in order `T157` -> `T158` -> `T159` -> `T160`, then run `T161` for 3 -> 4 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper`
 - `[p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
@@ -525,7 +524,7 @@ Work below is triaged for implementation.
   - Updated `workspace-kit init` to generate profile-driven artifacts:
     - generated project-context JSON output in the workspace-kit metadata directory
     - generated Cursor project-context rule output under workspace rules
-  - Updated starter template to remove hardcoded project-name assumptions and point to profile/generated context via `templates/workspace-starter/.cursor/rules/workspace-kit-profile-pointer.mdc`.
+  - Updated starter template guidance to remove hardcoded project-name assumptions and point to profile/generated context flow.
   - Updated template owned paths and README to document generated project-context behavior and regeneration after profile edits.
   - Added tests in `packages/workspace-kit/test/cli.test.mjs` proving:
     - init generates profile-driven outputs,
@@ -719,9 +718,9 @@ Work below is triaged for implementation.
       - explicit human-gate checklist entries.
   - Confirms publish itself remains human-triggered per release strategy and credentials gate.
 
-### [~] T160 [workspace-kit] Reduce starter to thin profile + package wrapper
+### [x] T160 [workspace-kit] Reduce starter to thin profile + package wrapper
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Align starter template to Phase 3 objective so it acts as profile stub + package invocation wrapper.
 - Files: `templates/workspace-starter/**`, docs/status/task files as needed
@@ -736,11 +735,22 @@ Work below is triaged for implementation.
   - Starter template is thin and package-primary.
   - Cold-start flow works with package + profile and no manual rule copying.
 - Validation evidence:
-  - In progress.
+  - Reduced `templates/workspace-starter` to thin package-wrapper baseline:
+    - retained profile stub and README,
+    - added starter `package.json` with package-driven workspace-kit scripts,
+    - removed pre-materialized schema/manifest/owned-paths/pointer-rule assets.
+  - Added package-primary cold-start fixture command and maintainer note:
+    - `scripts/workspace-kit-phase3-package-cold-start-check.mjs`
+    - `pnpm workspace-kit:phase3:package-cold-start-check`
+    - `docs/maintainers/workspace-kit-phase3-package-cold-start.md`
+  - Updated Phase 1 cold-start harness to include upgrade/init materialization before doctor for compatibility with thin starter baseline.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm workspace-kit:phase3:package-cold-start-check`
+    - `pnpm workspace-kit:phase1:cold-start-check`
 
-### [p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
+### [~] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Close Phase 3 with objective evidence and advance kit phase state cleanly from 3 -> 4.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -755,7 +765,7 @@ Work below is triaged for implementation.
   - Evidence for 3 -> 4 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 
