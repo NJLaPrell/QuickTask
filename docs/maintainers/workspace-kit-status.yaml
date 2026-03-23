@@ -13,23 +13,23 @@ current_kit_phase: 5
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T168 complete — execute T169 first release-cycle evidence pass for improvement engine"
+active_focus: "T169 complete — execute T170 Phase 5 promotion evidence and state update"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T169 release-cycle evidence pass using machine-readable improvement log + deterministic summary"
-  - "Capture release:prepare evidence that includes workspace-kit improvement checks"
-  - "Plan and execute dedicated 5 -> 6 promotion closeout task once release-cycle evidence is recorded"
+  - "Run T170 promotion closeout using Phase 5 matrix checks (including improvement log validation and release-readiness evidence)"
+  - "If T170 evidence passes, advance `current_kit_phase` to 6 and set extraction execution as active focus"
+  - "Prepare Phase 6 extraction execution task chain for single-package split path"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T168 by implementing a schema-backed workspace-kit improvement log and deterministic generated summary artifacts."
-  - "Added validation/generation scripts with tests and wired improvement checks into workflow-contract checks, release readiness, and CI."
-  - "Updated Phase 5/6 roadmap and maintainer docs to use contract-first, configurable improvement policy."
-  - "Set next execution focus to T169 for first release-cycle evidence capture before Phase 6 extraction execution."
+  - "Completed T169 first release-cycle evidence pass using machine-readable improvement log and deterministic summary generation."
+  - "Resolved baseline friction record and captured release-cycle evidence record in `.workspace-kit/improvement-log.json`."
+  - "Validated improvement engine in release-readiness flow (`release:prepare`) with zero new findings and READY handoff state."
+  - "Set next execution focus to T170 for 5 -> 6 promotion closeout evidence."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,8 +41,8 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 5 kickoff complete: machine-readable improvement log and deterministic summary checks integrated; release-cycle evidence pass pending."
+  notes: "T169 complete: first release-cycle evidence pass recorded for machine-readable improvement engine; Phase 5 promotion closeout pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
-  recurring_friction_themes_count: 0
+  recurring_friction_themes_count: 1
