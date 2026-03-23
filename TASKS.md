@@ -70,11 +70,11 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
 - Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): _none_
+- Active implementation (`[~]`): `T163`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T162`
+- Ready queue (`[p]`): `T164`, `T165`, `T166`, `T167`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T162` to run Phase 4 kickoff assessment and map workflow-contract-in-data deliverables into concrete tasks.
+- Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,11 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T162 [workspace-kit] Kick off Phase 4 workflow-contract-in-data plan`
+- `[p] T163 [workspace-kit] Define workflow-contract schema for phases, gates, transitions`
+- `[p] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets`
+- `[p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling`
+- `[p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment`
+- `[p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -787,9 +791,9 @@ Work below is triaged for implementation.
     - set `current_kit_phase: 4`,
     - refresh `active_focus` and `next_agent_actions` for Phase 4 kickoff.
 
-### [p] T162 [workspace-kit] Kick off Phase 4 workflow-contract-in-data plan
+### [x] T162 [workspace-kit] Kick off Phase 4 workflow-contract-in-data plan
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Convert Phase 4 roadmap deliverables into concrete executable tasks and dependency order.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
@@ -803,6 +807,108 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - Phase 4 kickoff summary and concrete task sequence are recorded in active tracker/state files.
   - Follow-on tasks are actionable and aligned to 4 -> 5 promotion requirements.
+- Validation evidence:
+  - Phase 4 kickoff assessment completed (2026-03-23) against roadmap section `Phase 4 — Workflow contract in data`.
+  - Reviewed required docs for drift/context: `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, `ROADMAP.md`, and status YAML.
+  - Added concrete follow-on task chain for Phase 4 deliverables and exit criteria:
+    - `T163` workflow-contract schema for phases/checks/transitions,
+    - `T164` generator implementation for rules/instructions snippets from contract + profile,
+    - `T165` contract validation integration with workflow-contract checks,
+    - `T166` single-source-of-truth docs/diagram alignment,
+    - `T167` 4 -> 5 promotion evidence and phase-state update.
+
+### [~] T163 [workspace-kit] Define workflow-contract schema for phases, gates, transitions
+
+- Status: [~]
+- Priority: P1
+- Goal: Establish structured workflow-contract data schema that captures phases, gates, checks, and allowed transitions.
+- Files: `schemas/**`, `docs/**`, `scripts/check-workflow-contracts.mjs` (or related validator entrypoints), status/task files as needed
+- Dependencies: T162
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Define canonical workflow-contract schema files for phase metadata and gate/check definitions.
+  2. Encode allowed transitions and minimal required check sets by phase.
+  3. Add validation scaffolding for schema shape correctness.
+- Acceptance criteria:
+  - Contract data schema exists and represents phases/checks/transitions in machine-readable form.
+  - Validation path can reject malformed contract data.
+- Validation evidence:
+  - In progress.
+
+### [p] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets
+
+- Status: [p]
+- Priority: P1
+- Goal: Generate workflow-facing snippets from contract + profile so rules/docs consume one contract source instead of duplicated prose.
+- Files: generator scripts under `scripts/**` or `packages/workspace-kit/src/**`, generated outputs/docs as needed
+- Dependencies: T163
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add generator that reads workflow contract data and profile values.
+  2. Produce deterministic snippet outputs for rule/instructions consumption.
+  3. Add tests that prove generated outputs change when contract data changes.
+- Acceptance criteria:
+  - Generator outputs are deterministic and contract-driven.
+  - Contract edits propagate to generated snippets without manual copy edits.
+- Validation evidence:
+  - Pending.
+
+### [p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
+
+- Status: [p]
+- Priority: P1
+- Goal: Enforce contract correctness and generated-output consistency in CI-relevant validation flow.
+- Files: `scripts/check-workflow-contracts.mjs`, root `package.json`, related tests/docs/status files
+- Dependencies: T163, T164
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Extend workflow-contract check tooling to validate contract schema and generation coherence.
+  2. Add check commands/wiring in root scripts where needed.
+  3. Ensure failing contract/generation drift blocks validation.
+- Acceptance criteria:
+  - Contract and generated-output drift is detectable and enforced in checks.
+  - Validation output is deterministic and actionable.
+- Validation evidence:
+  - Pending.
+
+### [p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
+
+- Status: [p]
+- Priority: P1
+- Goal: Document contract-driven architecture with one canonical diagram/source and align maintainer docs to generated flow.
+- Files: `docs/**`, `ARCHITECTURE.md` (if needed), contract/reference docs as needed
+- Dependencies: T163, T164, T165
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add single-source-of-truth diagram for workflow contract and generated outputs.
+  2. Update maintainer docs to reference contract-driven sources over prose duplication.
+  3. Validate links and documentation boundaries remain policy-compliant.
+- Acceptance criteria:
+  - Contract-driven flow has a clear canonical documentation source.
+  - Docs references point to contract/generator artifacts rather than duplicated prose.
+- Validation evidence:
+  - Pending.
+
+### [p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 4 with objective evidence and advance kit phase state cleanly from 4 -> 5.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T163, T164, T165, T166
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run required checks from roadmap phase promotion matrix for 4 -> 5.
+  2. Capture command and contract/generator/docs evidence summary in task block and update status YAML.
+  3. If criteria pass, set `current_kit_phase` to `5` and refresh next actions for Phase 5.
+- Acceptance criteria:
+  - Evidence for 4 -> 5 checks is recorded in this task.
+  - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
   - Pending.
 
