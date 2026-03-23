@@ -7,29 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 1
+current_kit_phase: 2
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T149 complete — run T150 Phase 1 promotion evidence and phase-state update"
+active_focus: "Phase 2 kickoff — define profile-driven migration implementation tasks"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run 1 -> 2 promotion checks (`pnpm check && pnpm test`) and capture evidence in T150"
-  - "Include cold-start fixture doctor pass evidence in T150 validation notes"
-  - "If criteria pass, set current_kit_phase to 2 and refresh focus/next actions for Phase 2"
+  - "Run T151 Phase 2 kickoff assessment and map roadmap deliverables to concrete tasks"
+  - "Prioritize profile validation + parameterized rule generation work for first Phase 2 implementation slice"
+  - "Define pilot-repo adoption evidence requirements and dependency order"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T149 by adding a repeatable cold-start fixture doc and harness command."
-  - "Confirmed workspace-kit doctor pass on canonical fixture path from templates/workspace-starter."
-  - "Updated TASKS state to close T149 and seed T150 for formal 1 -> 2 promotion evidence."
-  - "Updated metrics baseline with initial cold-start measurements; no blockers identified."
+  - "Ran and passed Phase 1 promotion checks (`pnpm check && pnpm test`)."
+  - "Verified cold-start fixture doctor pass via `pnpm workspace-kit:phase1:cold-start-check`."
+  - "Closed T150 with recorded 1 -> 2 evidence and advanced current_kit_phase to 2."
+  - "Seeded T151 to drive Phase 2 kickoff and implementation planning."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Baseline now includes first cold-start fixture measurement (1 successful run). Upgrade rehearsal metric remains pending."
+  notes: "Phase 1 promotion complete: checks and fixture doctor pass recorded. Upgrade rehearsal metric remains pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
