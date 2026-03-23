@@ -1,0 +1,15 @@
+{
+  "$schema": "./schemas/workspace-kit-profile.schema.json",
+  "project": {
+    "name": "starter-project"
+  },
+  "packageManager": "pnpm",
+  "commands": {
+    "test": "pnpm test",
+    "lint": "pnpm lint",
+    "typecheck": "pnpm check"
+  },
+  "github": {
+    "defaultBranch": "main"
+  }
+}
