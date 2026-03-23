@@ -76,6 +76,13 @@ For workspace-kit phase/gate/check contract details, generated artifact paths, a
 
 That maintainer doc is the single source of truth for contract-in-data wiring between schema/data, generators, and release contract checks.
 
+## Workspace-kit Phase 6 extraction source
+
+For extraction sequencing and consumer-boundary policy used to keep kit/QuickTask release independence, use:
+
+- `docs/maintainers/workspace-kit-phase6-extraction-plan.md`
+- `docs/maintainers/workspace-kit-phase6-consumer-boundary.md`
+
 ## Approved command-surface scope
 
 QuickTask keeps an intentionally minimal `/qt` surface:

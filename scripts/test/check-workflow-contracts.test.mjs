@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Validate docs/command contracts
         run: |
+          pnpm workspace-kit:phase6:consumer-check
           pnpm docs:check-links
           pnpm check:command-entrypoints
       - name: Validate generated artifact policy
@@ -47,6 +48,7 @@ jobs:
     steps:
       - name: Validate docs/command contracts
         run: |
+          pnpm workspace-kit:phase6:consumer-check
           pnpm docs:check-links
           pnpm check:command-entrypoints
       - name: Validate generated artifact policy

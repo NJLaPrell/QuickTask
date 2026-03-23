@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 6 extraction and product boundary._
-- Phase kickoff assessment: Phase 6 kickoff pending; define single-package extraction execution plan, cutover sequencing, and consumer-regression validation tasks.
+- Current phase in execution: _Workspace kit roadmap delivered through Phase 6 (complete)._
+- Phase kickoff assessment: Phase 6 kickoff and extraction closeout completed; extraction path, consumer boundary checks, and release-independence gates are now codified.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T171`
+- Ready queue (`[p]`): _none_
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T171` Phase 6 kickoff assessment, then implement extraction execution tasks and close with final extraction evidence.
+- Next tasks: _No open `[workspace-kit]` phase tasks._ Track future kit follow-ups as new backlog items when extraction repository execution is initiated.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T171 [workspace-kit] Kick off Phase 6 extraction execution plan and task mapping`
+- _Empty._
 
 ### Scheduled (`[ ]`)
 
@@ -1072,9 +1072,9 @@ Work below is triaged for implementation.
     - Active focus moved to Phase 6 kickoff/extraction execution planning.
     - Phase 6 kickoff task `T171` seeded in active backlog.
 
-### [p] T171 [workspace-kit] Kick off Phase 6 extraction execution plan and task mapping
+### [x] T171 [workspace-kit] Kick off Phase 6 extraction execution plan and task mapping
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Run Phase 6 kickoff assessment and convert extraction strategy into executable tasks for single-package split, cutover, and consumer regression coverage.
 - Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`, extraction docs/scripts as needed
@@ -1089,7 +1089,91 @@ Work below is triaged for implementation.
   - Phase 6 kickoff outputs an ordered extraction task chain with clear acceptance criteria and validation commands.
   - Status handoff files reflect Phase 6 active focus and next extraction tasks.
 - Validation evidence:
-  - Pending.
+  - Reviewed Phase 6 objective, deliverables, recommended cutover gate criteria, and extraction constraints in `ROADMAP.md`.
+  - Reviewed phase-relevant docs (`README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`) and converted discovered scope gaps into Phase 6 follow-on tasks.
+  - Added execution tasks `T172`, `T173`, and `T174` to close extraction planning, consumer gating, and phase promotion evidence.
+
+### [x] T172 [workspace-kit] Publish Phase 6 extraction plan and history-strategy decision
+
+- Status: [x]
+- Priority: P1
+- Goal: Document extraction execution plan and record selected history strategy for single-package split.
+- Files: `docs/maintainers/workspace-kit-phase6-extraction-plan.md`, `docs/maintainers/workspace-kit-phase6-consumer-boundary.md`, `ROADMAP.md`, `ARCHITECTURE.md`
+- Dependencies: T171
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Create maintainer extraction plan covering sequence, cutover policy, and human-only gates.
+  2. Record chosen history strategy in roadmap decisions.
+  3. Link canonical Phase 6 docs from architecture overview.
+- Acceptance criteria:
+  - Extraction approach is explicit and maintainers can execute it without relying on chat history.
+  - Roadmap includes a recorded decision for Phase 6 history strategy.
+- Validation evidence:
+  - Added `docs/maintainers/workspace-kit-phase6-extraction-plan.md` with cutover sequence and `git subtree split` strategy.
+  - Added `docs/maintainers/workspace-kit-phase6-consumer-boundary.md` with packaged-consumer contract and CI/readiness policy.
+  - Updated `ROADMAP.md` recommended gate checklist to checked state and recorded Phase 6 history-strategy decision.
+  - Updated `ARCHITECTURE.md` to point maintainers to Phase 6 extraction source docs.
+
+### [x] T173 [workspace-kit] Enforce packaged-kit consumer regression gate in CI and readiness flow
+
+- Status: [x]
+- Priority: P1
+- Goal: Ensure QuickTask validates workspace-kit as a packaged dependency boundary (tarball/published path), not unpublished monorepo-relative sources.
+- Files: `scripts/workspace-kit-phase6-consumer-check.mjs`, `scripts/test/workspace-kit-phase6-consumer-check.test.mjs`, `package.json`, `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.github/workflows/release-candidate.yml`, `scripts/release-prepare-readiness.mjs`, `scripts/check-workflow-contracts.mjs`, `scripts/test/check-workflow-contracts.test.mjs`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`
+- Dependencies: T171
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Add a deterministic command that packs workspace-kit, installs tarball into fixture, and runs upgrade/init/check/doctor chain.
+  2. Wire command into CI and release-readiness checks.
+  3. Extend workflow-contract validation/test coverage to enforce gate presence in release workflows.
+- Acceptance criteria:
+  - `pnpm workspace-kit:phase6:consumer-check` succeeds and outputs machine-readable evidence.
+  - CI and release readiness include the packaged-consumer gate.
+  - Workflow contract checks fail when release workflows drift from required packaged-consumer gate.
+- Validation evidence:
+  - Added `scripts/workspace-kit-phase6-consumer-check.mjs` and root script `workspace-kit:phase6:consumer-check`.
+  - Added script export coverage in `scripts/test/workspace-kit-phase6-consumer-check.test.mjs`.
+  - Added gate execution in `.github/workflows/ci.yml`, `.github/workflows/release.yml`, and `.github/workflows/release-candidate.yml`.
+  - Added release-readiness command check in `scripts/release-prepare-readiness.mjs`.
+  - Added workflow-contract enforcement + tests for `pnpm workspace-kit:phase6:consumer-check` in `scripts/check-workflow-contracts.mjs` and `scripts/test/check-workflow-contracts.test.mjs`.
+  - Updated release/readiness docs to include the new gate command.
+
+### [x] T174 [workspace-kit] Run Phase 6 closeout evidence pass and update state handoff
+
+- Status: [x]
+- Priority: P1
+- Goal: Close Phase 6 with objective evidence and mark workspace-kit roadmap execution complete in active tracker/handoff files.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `docs/release-readiness-report.md`
+- Dependencies: T172, T173
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run full validation commands for Phase 6 exit evidence.
+  2. Capture command outcomes in task evidence and report artifacts.
+  3. Update status handoff to reflect completed roadmap state and no active phase tasks.
+- Acceptance criteria:
+  - Phase 6 evidence includes packaged-consumer gate, readiness checks, and workflow-contract checks.
+  - `TASKS.md` and status YAML reflect no open `[workspace-kit]` phase tasks.
+- Validation evidence:
+  - Phase 6 closeout validation matrix (pass, 2026-03-23):
+    - `pnpm check`
+    - `pnpm test`
+    - `pnpm tasks:check`
+    - `pnpm docs:check-links`
+    - `pnpm release:check-workflow-contracts`
+    - `pnpm workspace-kit:improvement-log:validate`
+    - `pnpm workspace-kit:phase6:consumer-check`
+    - `pnpm release:prepare`
+    - `pnpm format:check`
+  - Consumer-boundary proof:
+    - `workspace-kit:phase6:consumer-check` installs packaged tarball in fixture and runs `upgrade/init/check/doctor` successfully.
+    - CI/release/release-candidate workflows include packaged-consumer gate enforcement.
+    - Release-readiness command checks include packaged-consumer gate with medium-severity failure policy.
+  - Promotion result:
+    - No open `[workspace-kit]` roadmap phase tasks remain in active backlog.
+    - `current_kit_phase` remains `6` and status handoff now marks roadmap completion with extraction follow-through as optional future work.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

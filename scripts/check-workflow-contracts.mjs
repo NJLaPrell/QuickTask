@@ -30,6 +30,7 @@ const REQUIRED_DOCS_CHECK_ENVS = [
   "RELEASE_DOCS_SYNC_NOTES"
 ];
 const REQUIRED_RELEASE_GATES = [
+  "pnpm workspace-kit:phase6:consumer-check",
   "pnpm docs:check-links",
   "pnpm check:command-entrypoints",
   "pnpm check:generated-artifacts",
@@ -39,6 +40,7 @@ const REQUIRED_RELEASE_GATES = [
   "run: pnpm release:validate-host-installs"
 ];
 const REQUIRED_RC_GATES = [
+  "pnpm workspace-kit:phase6:consumer-check",
   "pnpm docs:check-links",
   "pnpm check:command-entrypoints",
   "pnpm check:generated-artifacts",

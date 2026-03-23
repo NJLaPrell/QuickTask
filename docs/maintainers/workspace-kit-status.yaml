@@ -13,23 +13,23 @@ current_kit_phase: 6
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 5 promoted to 6 — execute T171 Phase 6 kickoff and extraction task mapping"
+active_focus: "Phase 6 complete — workspace-kit roadmap delivered; extraction repo execution can proceed as follow-up when requested"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run T171 Phase 6 kickoff assessment and seed extraction execution task chain"
-  - "Implement single-package extraction cutover tasks with consumer-regression validation requirements"
-  - "Prepare Phase 6 closeout evidence plan for extraction execution completion"
+  - "No open Phase 0-6 roadmap tasks remain; keep workspace-kit in maintenance mode unless new scoped work is requested"
+  - "If extraction execution is requested, use `docs/maintainers/workspace-kit-phase6-extraction-plan.md` as canonical cutover sequence"
+  - "Preserve packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) in CI/release/readiness flows"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T170 and recorded full Phase 5 promotion evidence with all required checks passing."
-  - "Validated machine-readable improvement log + deterministic summary loop in release-readiness context as Phase 5 gate evidence."
-  - "Promoted workspace-kit phase state from 5 to 6 after confirming improvement-engine automation criteria."
-  - "Seeded T171 as the next execution task for Phase 6 extraction kickoff planning."
+  - "Completed T171 Phase 6 kickoff and mapped extraction closeout work into T172/T173/T174."
+  - "Published canonical Phase 6 extraction and consumer-boundary docs, and recorded the `git subtree split` history strategy decision."
+  - "Implemented packaged-kit consumer regression command and enforced it in CI, release, release-candidate, and release-readiness checks."
+  - "Closed T174 with full validation evidence and marked workspace-kit roadmap phases complete through Phase 6."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 5 promotion complete: improvement-engine automation and first release-cycle evidence are validated; Phase 6 extraction kickoff pending."
+  notes: "Phase 6 complete: extraction plan and packaged-consumer boundary gates are in place; roadmap execution delivered through final phase."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null

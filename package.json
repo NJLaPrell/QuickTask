@@ -40,6 +40,7 @@
     "workspace-kit:phase2:pilot-adoption-check": "node scripts/workspace-kit-phase2-pilot-adoption-check.mjs",
     "workspace-kit:phase3:publish-readiness-check": "node scripts/workspace-kit-phase3-publish-readiness-check.mjs",
     "workspace-kit:phase3:package-cold-start-check": "node scripts/workspace-kit-phase3-package-cold-start-check.mjs",
+    "workspace-kit:phase6:consumer-check": "node scripts/workspace-kit-phase6-consumer-check.mjs",
     "workspace-kit:generate-workflow-contract-snippets": "node scripts/generate-workflow-contract-snippets.mjs",
     "workspace-kit:validate-workflow-contract": "node scripts/validate-workflow-contract.mjs",
     "workspace-kit:improvement-log:validate": "node scripts/validate-workspace-kit-improvement-log.mjs",

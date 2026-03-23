@@ -62,6 +62,13 @@ const commandChecks = [
     failureSeverity: "medium"
   },
   {
+    id: "workspace-kit-phase6-consumer",
+    label: "Workspace-kit tarball consumer regression check",
+    command: "pnpm",
+    args: ["workspace-kit:phase6:consumer-check"],
+    failureSeverity: "medium"
+  },
+  {
     id: "docs-links",
     label: "Docs link integrity check",
     command: "pnpm",
