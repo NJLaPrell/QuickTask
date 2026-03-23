@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
+import { renderWorkflowContractSnippets } from "./generate-workflow-contract-snippets.mjs";
+import { validateWorkflowContract } from "./validate-workflow-contract.mjs";
 
 const REQUIRED_RELEASE_INPUTS = ["readme_status", "docs_status", "docs_sync_notes", "rc_run_id"];
 const REQUIRED_DOCS_GATE_ENVS = [
@@ -49,6 +51,14 @@ const REQUIRED_POST_RELEASE_GATES = [
   "node scripts/host-install-validate.mjs"
 ];
 
+function jsonContentMatches(left, right) {
+  try {
+    return JSON.stringify(JSON.parse(left)) === JSON.stringify(JSON.parse(right));
+  } catch {
+    return false;
+  }
+}
+
 export function checkWorkflowContracts(sources) {
   const findings = [];
   const {
@@ -56,7 +66,11 @@ export function checkWorkflowContracts(sources) {
     rcWorkflow,
     postReleaseWorkflow,
     releaseHandoffScript,
-    releaseDocsCheckScript
+    releaseDocsCheckScript,
+    workflowContract,
+    workflowProfile,
+    generatedWorkflowSummary,
+    generatedWorkflowRule
   } = sources;
 
   for (const inputName of REQUIRED_RELEASE_INPUTS) {
@@ -113,6 +127,25 @@ export function checkWorkflowContracts(sources) {
     }
   }
 
+  const contractValidation = validateWorkflowContract(workflowContract);
+  if (!contractValidation.ok) {
+    for (const finding of contractValidation.findings) {
+      findings.push(`workflow-contract validation: ${finding}`);
+    }
+  } else {
+    const rendered = renderWorkflowContractSnippets(workflowContract, workflowProfile);
+    if (!jsonContentMatches(generatedWorkflowSummary, rendered.summaryJson)) {
+      findings.push(
+        "generated workflow-contract summary drift detected: run `pnpm workspace-kit:generate-workflow-contract-snippets`."
+      );
+    }
+    if (generatedWorkflowRule !== rendered.ruleText) {
+      findings.push(
+        "generated workflow-contract rule drift detected: run `pnpm workspace-kit:generate-workflow-contract-snippets`."
+      );
+    }
+  }
+
   return {
     ok: findings.length === 0,
     findings
@@ -125,12 +158,28 @@ export function main() {
   const postReleaseWorkflow = readFileSync(".github/workflows/post-release-verify.yml", "utf8");
   const releaseHandoffScript = readFileSync("scripts/release-handoff.mjs", "utf8");
   const releaseDocsCheckScript = readFileSync("scripts/release-docs-check.mjs", "utf8");
+  const workflowContract = JSON.parse(
+    readFileSync(".workspace-kit/workflow-contract.json", "utf8")
+  );
+  const workflowProfile = JSON.parse(readFileSync("workspace-kit.profile.json", "utf8"));
+  const generatedWorkflowSummary = readFileSync(
+    ".workspace-kit/generated/workflow-contract-summary.json",
+    "utf8"
+  );
+  const generatedWorkflowRule = readFileSync(
+    ".cursor/rules/workspace-kit-workflow-contract.mdc",
+    "utf8"
+  );
   const result = checkWorkflowContracts({
     releaseWorkflow,
     rcWorkflow,
     postReleaseWorkflow,
     releaseHandoffScript,
-    releaseDocsCheckScript
+    releaseDocsCheckScript,
+    workflowContract,
+    workflowProfile,
+    generatedWorkflowSummary,
+    generatedWorkflowRule
   });
 
   if (!result.ok) {

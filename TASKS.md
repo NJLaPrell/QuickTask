@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
 - Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): `T165`
+- Active implementation (`[~]`): `T166`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T166`, `T167`
+- Ready queue (`[p]`): `T167`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling`
 - `[p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment`
 - `[p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update`
 
@@ -877,9 +876,9 @@ Work below is triaged for implementation.
     - `pnpm test`
     - `pnpm check`
 
-### [~] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
+### [x] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Enforce contract correctness and generated-output consistency in CI-relevant validation flow.
 - Files: `scripts/check-workflow-contracts.mjs`, root `package.json`, related tests/docs/status files
@@ -894,11 +893,21 @@ Work below is triaged for implementation.
   - Contract and generated-output drift is detectable and enforced in checks.
   - Validation output is deterministic and actionable.
 - Validation evidence:
-  - In progress.
+  - Extended `release:check-workflow-contracts` contract tool:
+    - `scripts/check-workflow-contracts.mjs`
+    - now validates `.workspace-kit/workflow-contract.json` structure via `validateWorkflowContract`
+    - now compares generated outputs against deterministic render output and fails on drift
+  - Added workflow-contract tooling tests:
+    - `scripts/test/check-workflow-contracts.test.mjs`
+    - includes malformed contract and generated-output drift failure coverage
+  - Validation run (pass, 2026-03-23):
+    - `pnpm release:check-workflow-contracts`
+    - `pnpm test`
+    - `pnpm check`
 
-### [p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
+### [~] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Document contract-driven architecture with one canonical diagram/source and align maintainer docs to generated flow.
 - Files: `docs/**`, `ARCHITECTURE.md` (if needed), contract/reference docs as needed
@@ -913,7 +922,7 @@ Work below is triaged for implementation.
   - Contract-driven flow has a clear canonical documentation source.
   - Docs references point to contract/generator artifacts rather than duplicated prose.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
 
