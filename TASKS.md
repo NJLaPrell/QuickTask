@@ -68,13 +68,13 @@ Use this section only when medium/high findings are explicitly accepted instead 
 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
-- Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
+- Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
 - Phase kickoff assessment: Phase 2 kickoff completed via `T151`; execution is now in deliverable implementation and promotion evidence capture.
-- Active implementation (`[~]`): `T155`
+- Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): _none_
+- Ready queue (`[p]`): `T156`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T155` and, if 2 -> 3 criteria pass, advance to Phase 3 upgrade/distribution implementation planning.
+- Next tasks: Execute `T156` to run Phase 3 kickoff assessment and map upgrade/distribution deliverables into concrete tasks.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
+- `[p] T156 [workspace-kit] Kick off Phase 3 package-primary upgrade/distribution plan`
 
 ### Scheduled (`[ ]`)
 
@@ -238,7 +238,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
+- _Empty._
 
 ### Blocked
 
@@ -563,9 +563,9 @@ Work below is triaged for implementation.
     - `pnpm workspace-kit:phase2:pilot-adoption-check`
     - `pnpm check && pnpm tasks:check && pnpm docs:check-links && pnpm release:check-workflow-contracts`
 
-### [~] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
+### [x] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Close Phase 2 with objective evidence and advance kit phase state cleanly from 2 -> 3.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -580,7 +580,43 @@ Work below is triaged for implementation.
   - Evidence for 2 -> 3 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - In progress.
+  - Ran required promotion checks for `2 -> 3` (pass, 2026-03-23):
+    - `pnpm check`
+    - `pnpm test`
+    - `pnpm tasks:check`
+    - `pnpm docs:check-links`
+    - `pnpm release:check-workflow-contracts`
+  - Confirmed profile-driven and pilot exit criteria evidence:
+    - `pnpm workspace-kit:phase2:pilot-adoption-check`
+    - Output included matching values:
+      - `profileProjectName: "phase2-pilot-non-quicktask"`
+      - `generatedProjectName: "phase2-pilot-non-quicktask"`
+      - init/check/doctor pass output for pilot fixture.
+  - Reconfirmed baseline starter doctor fixture remains valid:
+    - `pnpm workspace-kit:phase1:cold-start-check`
+    - Output included `workspace-kit doctor passed.` for fixture path `artifacts/workspace-kit-fixtures/phase1-cold-start`.
+  - Updated `docs/maintainers/workspace-kit-status.yaml` to:
+    - set `current_kit_phase: 3`,
+    - refresh `active_focus` and `next_agent_actions` for Phase 3 kickoff.
+
+### [p] T156 [workspace-kit] Kick off Phase 3 package-primary upgrade/distribution plan
+
+- Status: [p]
+- Priority: P1
+- Goal: Convert Phase 3 roadmap deliverables into concrete executable tasks and dependency order.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md`
+- Dependencies: T155
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run a Phase 3 kickoff assessment against roadmap deliverables and exit criteria.
+  2. Define implementation tasks for `upgrade`, drift check, packaging/publish readiness, and template-thin-wrapper alignment.
+  3. Update execution state and status YAML with ordered next actions.
+- Acceptance criteria:
+  - Phase 3 kickoff summary and concrete task sequence are recorded in active tracker/state files.
+  - Follow-on tasks are actionable and aligned to 3 -> 4 promotion requirements.
+- Validation evidence:
+  - Pending.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

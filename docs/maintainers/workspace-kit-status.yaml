@@ -7,29 +7,29 @@
 schema_version: 1
 
 # Roadmap "Phases (full plan)" — integer 0-6
-current_kit_phase: 2
+current_kit_phase: 3
 
 # ISO date (YYYY-MM-DD) of last intentional update to this file
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T154 complete — run T155 Phase 2 promotion evidence and phase-state update"
+active_focus: "Phase 3 kickoff — define package-primary upgrade/distribution implementation tasks"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Run and record full 2 -> 3 promotion validation command set"
-  - "Record explicit evidence that profile-driven generation and pilot adoption exit criteria are satisfied"
-  - "Advance `current_kit_phase` to 3 if criteria pass and seed Phase 3 starter tasks"
+  - "Run T156 Phase 3 kickoff assessment and map roadmap deliverables to concrete tasks"
+  - "Prioritize upgrade command + kit-owned merge policy implementation sequence"
+  - "Define drift-check and package-primary distribution readiness dependency order"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T154 by adding a Phase 2 migration guide for profile-driven adoption."
-  - "Added non-QuickTask pilot harness command `workspace-kit:phase2:pilot-adoption-check`."
-  - "Captured pilot run evidence showing profile name and generated context name match for non-QuickTask fixture."
-  - "Validated repo checks remain green after T154 additions."
+  - "Ran and passed Phase 2 promotion checks (`pnpm check`, `pnpm test`, docs/tasks/workflow checks)."
+  - "Verified non-QuickTask pilot adoption via `pnpm workspace-kit:phase2:pilot-adoption-check` with matching profile/generated project name."
+  - "Reconfirmed starter doctor baseline via `pnpm workspace-kit:phase1:cold-start-check`."
+  - "Closed T155 and advanced current kit phase from 2 to 3, seeding T156 kickoff."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
@@ -41,7 +41,7 @@ pending_decisions:
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Phase 1 promotion complete: checks and fixture doctor pass recorded. Upgrade rehearsal metric remains pending."
+  notes: "Phase 2 promotion complete: profile check + generated context + non-QuickTask pilot adoption evidence recorded. Upgrade rehearsal metric remains pending."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
