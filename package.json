@@ -38,6 +38,7 @@
     "workspace-kit:check-profile": "pnpm --filter quicktask-workspace-kit build && node packages/workspace-kit/dist/cli.js check",
     "workspace-kit:drift-check": "pnpm --filter quicktask-workspace-kit build && node packages/workspace-kit/dist/cli.js drift-check",
     "workspace-kit:phase2:pilot-adoption-check": "node scripts/workspace-kit-phase2-pilot-adoption-check.mjs",
+    "workspace-kit:phase3:publish-readiness-check": "node scripts/workspace-kit-phase3-publish-readiness-check.mjs",
     "docs:check-links": "node scripts/check-doc-links.mjs",
     "phase:check": "node scripts/phase-exit-check.mjs",
     "qt:sandbox": "node scripts/qt-sandbox.mjs",

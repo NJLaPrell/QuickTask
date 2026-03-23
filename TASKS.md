@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
 - Phase kickoff assessment: Phase 3 kickoff completed via `T156`; execution is now in Phase 3 deliverable implementation.
-- Active implementation (`[~]`): `T159`
+- Active implementation (`[~]`): `T160`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T160`, `T161`
+- Ready queue (`[p]`): `T161`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 3 in order `T157` -> `T158` -> `T159` -> `T160`, then run `T161` for 3 -> 4 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff`
 - `[p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper`
 - `[p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update`
 
@@ -690,9 +689,9 @@ Work below is triaged for implementation.
     - `pnpm workspace-kit:drift-check`
     - `pnpm check && pnpm tasks:check && pnpm docs:check-links && pnpm release:check-workflow-contracts`
 
-### [~] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff
+### [x] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Establish publish-ready package-primary workflow with lockstep version/changelog handoff evidence.
 - Files: `packages/workspace-kit/package.json`, release scripts/config, changesets/docs/status/task files as needed
@@ -707,11 +706,22 @@ Work below is triaged for implementation.
   - Publish-readiness checks are documented and executable without publishing.
   - Human-only publish gates are explicit and auditable.
 - Validation evidence:
-  - In progress.
+  - Added publish-readiness check script and root command:
+    - `scripts/workspace-kit-phase3-publish-readiness-check.mjs`
+    - `pnpm workspace-kit:phase3:publish-readiness-check`
+  - Added maintainer handoff documentation:
+    - `docs/maintainers/workspace-kit-phase3-publish-handoff.md`
+  - Publish-readiness evidence run (pass, 2026-03-23):
+    - `pnpm workspace-kit:phase3:publish-readiness-check`
+    - Output included:
+      - `packageVersion: "0.0.0"`
+      - generated artifact `quicktask-workspace-kit-0.0.0.tgz`
+      - explicit human-gate checklist entries.
+  - Confirms publish itself remains human-triggered per release strategy and credentials gate.
 
-### [p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper
+### [~] T160 [workspace-kit] Reduce starter to thin profile + package wrapper
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Align starter template to Phase 3 objective so it acts as profile stub + package invocation wrapper.
 - Files: `templates/workspace-starter/**`, docs/status/task files as needed
@@ -726,7 +736,7 @@ Work below is triaged for implementation.
   - Starter template is thin and package-primary.
   - Cold-start flow works with package + profile and no manual rule copying.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T161 [workspace-kit] Run Phase 3 promotion evidence pass and status update
 
