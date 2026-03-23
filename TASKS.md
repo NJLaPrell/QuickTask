@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 3 package-primary distribution and upgrades._
 - Phase kickoff assessment: Phase 3 kickoff completed via `T156`; execution is now in Phase 3 deliverable implementation.
-- Active implementation (`[~]`): _none_
+- Active implementation (`[~]`): `T158`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T157`, `T158`, `T159`, `T160`, `T161`
+- Ready queue (`[p]`): `T159`, `T160`, `T161`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 3 in order `T157` -> `T158` -> `T159` -> `T160`, then run `T161` for 3 -> 4 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T157 [workspace-kit] Implement upgrade command with kit-owned merge + backup`
 - `[p] T158 [workspace-kit] Add drift-check command and CI wiring for pinned assets`
 - `[p] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff`
 - `[p] T160 [workspace-kit] Reduce starter to thin profile + package wrapper`
@@ -629,9 +628,9 @@ Work below is triaged for implementation.
     - `T160` starter-template reduction to thin wrapper around package,
     - `T161` 3 -> 4 promotion evidence and phase-state update.
 
-### [p] T157 [workspace-kit] Implement upgrade command with kit-owned merge + backup
+### [x] T157 [workspace-kit] Implement upgrade command with kit-owned merge + backup
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Add `workspace-kit upgrade` that updates kit-owned paths from package assets while preserving custom overrides via backups/merge policy.
 - Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `templates/workspace-starter/**`, docs/status/task files as needed
@@ -646,11 +645,22 @@ Work below is triaged for implementation.
   - `workspace-kit upgrade` updates kit-owned assets and writes backup artifacts.
   - Merge strategy is explicit and deterministic for owned vs user-managed paths.
 - Validation evidence:
-  - Pending.
+  - Added `upgrade` command in `packages/workspace-kit/src/cli.ts`:
+    - validates profile before upgrade execution,
+    - preserves merge-managed `workspace-kit.profile.json`,
+    - overwrites known kit-owned assets with deterministic baseline content,
+    - updates manifest upgrade metadata and regenerates profile-driven context outputs,
+    - writes backups for changed files under `.workspace-kit/backups/<ISO timestamp>/`.
+  - Added package tests in `packages/workspace-kit/test/cli.test.mjs` for:
+    - successful upgrade with backup creation and profile preservation,
+    - validation-failure behavior for invalid profile input.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm --filter quicktask-workspace-kit test`
+    - `pnpm workspace-kit:check-profile`
 
-### [p] T158 [workspace-kit] Add drift-check command and CI wiring for pinned assets
+### [~] T158 [workspace-kit] Add drift-check command and CI wiring for pinned assets
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Detect installed-asset drift relative to pinned kit version and enforce drift check in CI paths.
 - Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, root `package.json`, scripts/docs/status/task files as needed
@@ -665,7 +675,7 @@ Work below is triaged for implementation.
   - Drift check reports deterministic pass/fail status for asset-version mismatches.
   - CI-relevant validation path includes drift check execution.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T159 [workspace-kit] Add package-primary distribution readiness and publish handoff
 

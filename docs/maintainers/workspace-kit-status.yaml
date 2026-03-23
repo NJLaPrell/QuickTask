@@ -13,23 +13,23 @@ current_kit_phase: 3
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Phase 3 kickoff complete — execute T157 upgrade command implementation"
+active_focus: "T157 complete — execute T158 drift-check command and CI wiring"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Implement T157 workspace-kit upgrade command with deterministic backup/merge behavior"
-  - "Implement T158 drift-check command and CI enforcement for pinned kit assets"
-  - "Execute T159/T160 package-primary distribution + thin-wrapper template alignment, then close T161 promotion evidence"
+  - "Implement T158 drift-check command with deterministic mismatch reporting and CI gate integration"
+  - "Execute T159 package-primary distribution readiness + publish handoff checklist"
+  - "Execute T160 template-thin-wrapper alignment, then close T161 promotion evidence"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T156 Phase 3 kickoff assessment against roadmap deliverables and exit criteria."
-  - "Added actionable Phase 3 task sequence T157 through T161 with dependency order and acceptance criteria."
-  - "Set active execution focus to T157 upgrade command implementation."
-  - "No new blockers identified; publish remains human-gated per release policy."
+  - "Completed T157 by implementing workspace-kit upgrade with deterministic merge/overwrite + backup behavior."
+  - "Added upgrade tests covering profile-preservation, backup creation, and validation-failure paths."
+  - "Validated package-level upgrade behavior via workspace-kit tests and profile-check command."
+  - "Advanced active Phase 3 execution from T157 to T158."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
