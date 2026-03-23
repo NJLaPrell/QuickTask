@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "phases": [
+    {
+      "id": "phase0",
+      "order": 0,
+      "title": "Inventory and contracts",
+      "requiredChecks": ["tasks-check", "docs-links"],
+      "allowedTransitions": ["phase1"]
+    },
+    {
+      "id": "phase1",
+      "order": 1,
+      "title": "Template plus local package skeleton",
+      "requiredChecks": ["monorepo-check", "workspace-kit-cold-start"],
+      "allowedTransitions": ["phase2"]
+    },
+    {
+      "id": "phase2",
+      "order": 2,
+      "title": "State and migration",
+      "requiredChecks": ["monorepo-check", "pilot-adoption-check"],
+      "allowedTransitions": ["phase3"]
+    },
+    {
+      "id": "phase3",
+      "order": 3,
+      "title": "Package-primary distribution and upgrades",
+      "requiredChecks": ["drift-check", "publish-readiness-check", "package-cold-start-check"],
+      "allowedTransitions": ["phase4"]
+    },
+    {
+      "id": "phase4",
+      "order": 4,
+      "title": "Workflow contract in data",
+      "requiredChecks": ["workflow-contract-check"],
+      "allowedTransitions": ["phase5"]
+    },
+    {
+      "id": "phase5",
+      "order": 5,
+      "title": "Improvement loop",
+      "requiredChecks": ["workflow-contract-check", "release-prepare"],
+      "allowedTransitions": ["phase6"]
+    },
+    {
+      "id": "phase6",
+      "order": 6,
+      "title": "Extraction and product boundary",
+      "requiredChecks": ["workflow-contract-check", "release-prepare"],
+      "allowedTransitions": []
+    }
+  ],
+  "checks": [
+    {
+      "id": "tasks-check",
+      "label": "Task tracker consistency",
+      "command": "pnpm tasks:check"
+    },
+    {
+      "id": "docs-links",
+      "label": "Docs link integrity",
+      "command": "pnpm docs:check-links"
+    },
+    {
+      "id": "monorepo-check",
+      "label": "Repository compile and kit checks",
+      "command": "pnpm check"
+    },
+    {
+      "id": "workspace-kit-cold-start",
+      "label": "Starter fixture cold-start",
+      "command": "pnpm workspace-kit:phase1:cold-start-check"
+    },
+    {
+      "id": "pilot-adoption-check",
+      "label": "Non-QuickTask pilot adoption",
+      "command": "pnpm workspace-kit:phase2:pilot-adoption-check"
+    },
+    {
+      "id": "drift-check",
+      "label": "Managed asset drift check",
+      "command": "pnpm workspace-kit:drift-check"
+    },
+    {
+      "id": "publish-readiness-check",
+      "label": "Package publish readiness",
+      "command": "pnpm workspace-kit:phase3:publish-readiness-check"
+    },
+    {
+      "id": "package-cold-start-check",
+      "label": "Package-primary cold-start fixture",
+      "command": "pnpm workspace-kit:phase3:package-cold-start-check"
+    },
+    {
+      "id": "workflow-contract-check",
+      "label": "Workflow contract drift check",
+      "command": "pnpm workspace-kit:validate-workflow-contract"
+    },
+    {
+      "id": "release-prepare",
+      "label": "Release readiness aggregate",
+      "command": "pnpm release:prepare"
+    }
+  ],
+  "gates": [
+    {
+      "id": "phase0-gate",
+      "phaseId": "phase0",
+      "requiredCheckIds": ["tasks-check", "docs-links"],
+      "onFailure": "block"
+    },
+    {
+      "id": "phase1-gate",
+      "phaseId": "phase1",
+      "requiredCheckIds": ["monorepo-check", "workspace-kit-cold-start"],
+      "onFailure": "block"
+    },
+    {
+      "id": "phase2-gate",
+      "phaseId": "phase2",
+      "requiredCheckIds": ["monorepo-check", "pilot-adoption-check"],
+      "onFailure": "block"
+    },
+    {
+      "id": "phase3-gate",
+      "phaseId": "phase3",
+      "requiredCheckIds": ["drift-check", "publish-readiness-check", "package-cold-start-check"],
+      "onFailure": "block"
+    },
+    {
+      "id": "phase4-gate",
+      "phaseId": "phase4",
+      "requiredCheckIds": ["workflow-contract-check"],
+      "onFailure": "block"
+    },
+    {
+      "id": "phase5-gate",
+      "phaseId": "phase5",
+      "requiredCheckIds": ["workflow-contract-check", "release-prepare"],
+      "onFailure": "warn"
+    },
+    {
+      "id": "phase6-gate",
+      "phaseId": "phase6",
+      "requiredCheckIds": ["workflow-contract-check", "release-prepare"],
+      "onFailure": "warn"
+    }
+  ]
+}
