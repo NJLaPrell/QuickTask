@@ -69,10 +69,10 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
-- Phase kickoff assessment: Phase 2 kickoff pending (seeded by T150 phase-promotion closeout); start by defining profile-driven parameterization and pilot-repo validation plan.
-- Active implementation (`[~]`): `T153`
+- Phase kickoff assessment: Phase 2 kickoff completed via `T151`; execution is now in deliverable implementation and promotion evidence capture.
+- Active implementation (`[~]`): `T154`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T154`, `T155`
+- Ready queue (`[p]`): `T155`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 2 in order `T152` -> `T153` -> `T154`, then run `T155` for 2 -> 3 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T153 [workspace-kit] Implement profile-driven project-context generation`
 - `[p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
 - `[p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
 
@@ -240,7 +239,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T153 [workspace-kit] Implement profile-driven project-context generation`
+- `[~] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
 
 ### Blocked
 
@@ -506,9 +505,9 @@ Work below is triaged for implementation.
     - `pnpm workspace-kit:check-profile`
     - `pnpm check && pnpm tasks:check && pnpm release:check-workflow-contracts`
 
-### [~] T153 [workspace-kit] Implement profile-driven project-context generation
+### [x] T153 [workspace-kit] Implement profile-driven project-context generation
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Replace hardcoded project-name assumptions with generated profile-driven context artifacts.
 - Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `templates/workspace-starter/**`
@@ -523,11 +522,22 @@ Work below is triaged for implementation.
   - Generated artifacts reflect current profile values.
   - Changing `project.name` and rerunning generation updates output deterministically.
 - Validation evidence:
-  - In progress.
+  - Updated `workspace-kit init` to generate profile-driven artifacts:
+    - generated project-context JSON output in the workspace-kit metadata directory
+    - generated Cursor project-context rule output under workspace rules
+  - Updated starter template to remove hardcoded project-name assumptions and point to profile/generated context via `templates/workspace-starter/.cursor/rules/workspace-kit-profile-pointer.mdc`.
+  - Updated template owned paths and README to document generated project-context behavior and regeneration after profile edits.
+  - Added tests in `packages/workspace-kit/test/cli.test.mjs` proving:
+    - init generates profile-driven outputs,
+    - changing `project.name` in profile and rerunning init updates generated rule output without manual edits.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm --filter quicktask-workspace-kit test`
+    - `pnpm check && pnpm tasks:check && pnpm docs:check-links && pnpm release:check-workflow-contracts`
+    - `pnpm workspace-kit:phase1:cold-start-check`
 
-### [p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
+### [~] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Document migration from hand-maintained guidance to profile-driven outputs and capture non-QuickTask pilot adoption evidence.
 - Files: `docs/maintainers/*`, `scripts/*`, `package.json`, `TASKS.md`, status YAML as needed
@@ -542,7 +552,7 @@ Work below is triaged for implementation.
   - Migration guide exists and documents profile-driven transition steps.
   - Pilot harness demonstrates successful init/check flow for non-QuickTask fixture.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update
 

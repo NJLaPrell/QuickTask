@@ -13,23 +13,23 @@ current_kit_phase: 2
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T152 complete — execute T153 profile-driven project-context generation"
+active_focus: "T153 complete — execute T154 migration guide and pilot adoption evidence"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Implement T153 profile-driven generation and wire it into workspace-kit init flow"
-  - "Add tests proving project.name changes update generated outputs without manual edits"
-  - "Advance to T154 migration guide + pilot adoption evidence after T153 merge"
+  - "Publish Phase 2 migration guide documenting hand-maintained to profile-driven transition"
+  - "Implement and run pilot adoption harness using non-QuickTask fixture profile"
+  - "Advance to T155 promotion evidence and phase update once pilot evidence is recorded"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T152 by adding workspace-kit profile validation (`check`) command and deterministic error reporting."
-  - "Added package test coverage for profile validation pass/fail paths."
-  - "Wired root check flow to include `workspace-kit:check-profile` for CI-level enforcement."
-  - "Advanced active Phase 2 execution from T152 to T153."
+  - "Completed T153 by replacing init placeholder behavior with profile-driven artifact generation."
+  - "Added generated project-context JSON/rule outputs and starter pointer rule to reduce hardcoded project-name guidance."
+  - "Added tests proving project.name updates propagate through rerun init without manual find/replace."
+  - "Validated repo checks and fixture doctor flow after profile-driven generation changes."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:
