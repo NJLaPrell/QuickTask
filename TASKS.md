@@ -70,11 +70,11 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 1 dual-track bootstrap (template + package skeleton)._
 - Phase kickoff assessment: Phase 1 kickoff complete (2026-03-23). Reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and kit roadmap/status docs; confirmed scope alignment with Phase 1 deliverables and set `T147` as active implementation.
-- Active implementation (`[~]`): `T149`
+- Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): _none_
+- Ready queue (`[p]`): `T150`
 - Blocked tasks (`[!]`): none
-- Next tasks: Complete `T149` cold-start fixture + doctor evidence capture, then verify 1 -> 2 promotion readiness.
+- Next tasks: Run `T150` to record formal 1 -> 2 promotion evidence and update kit phase state.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- _Empty._
+- `[p] T150 [workspace-kit] Run Phase 1 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -238,7 +238,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T149 [workspace-kit] Define cold-start fixture and doctor validation harness`
+- _Empty._
 
 ### Blocked
 
@@ -398,9 +398,9 @@ Work below is triaged for implementation.
     - `pnpm release:check-workflow-contracts`
     - `pnpm templates:eval`
 
-### [~] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
+### [x] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Establish repeatable Phase 1 cold-start validation proving template + local CLI `doctor` success.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, fixture path/docs/scripts as needed
@@ -415,7 +415,34 @@ Work below is triaged for implementation.
   - Fixture path and invocation steps are documented and repeatable.
   - `doctor` pass evidence is captured for Phase 1 progression.
 - Validation evidence:
-  - In progress.
+  - Added canonical fixture guidance at `docs/maintainers/workspace-kit-cold-start-fixture.md` with source template path, fixture path, and reproducible command flow.
+  - Added repeatable harness script `scripts/workspace-kit-phase1-cold-start-check.mjs` and root script alias `pnpm workspace-kit:phase1:cold-start-check`.
+  - Cold-start run succeeded (2026-03-23):
+    - Command: `pnpm workspace-kit:phase1:cold-start-check`
+    - Fixture path: `artifacts/workspace-kit-fixtures/phase1-cold-start`
+    - Doctor output:
+      - `workspace-kit doctor passed.`
+      - `All canonical workspace-kit contract files are present and parseable JSON.`
+  - Updated status metrics baseline with first measured values from fixture run.
+
+### [p] T150 [workspace-kit] Run Phase 1 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 1 with objective evidence and advance kit phase state cleanly from 1 -> 2.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
+- Dependencies: T147, T148, T149
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run required checks from roadmap phase promotion matrix for 1 -> 2.
+  2. Capture command and fixture evidence summary in task block and update status YAML.
+  3. If criteria pass, set `current_kit_phase` to `2` and refresh next actions for Phase 2.
+- Acceptance criteria:
+  - Evidence for 1 -> 2 checks is recorded in this task.
+  - Status YAML phase and focus fields reflect post-promotion state.
+- Validation evidence:
+  - Pending.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 
