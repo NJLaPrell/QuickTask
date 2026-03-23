@@ -55,6 +55,7 @@ Current release phase is derived from milestone progress in `TASKS.md` (highest 
 - `pnpm tasks:check-templates`
 - `pnpm release:check-workflow-contracts`
 - `pnpm workspace-kit:improvement-log:validate`
+- `pnpm workspace-kit:phase6:consumer-check`
 - `pnpm docs:check-links`
 - `pnpm check:command-entrypoints`
 - `pnpm check:generated-artifacts`

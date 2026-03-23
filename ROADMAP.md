@@ -243,11 +243,11 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 **Recommended gate (all should be true before the cut)**
 
-- [ ] Kit is **package-primary** in daily use (Phase 3 done).
-- [ ] At least **one** non–QuickTask consumer or a **dedicated template repo** has successfully adopted upgrades.
-- [ ] QuickTask CI can run **only** against the **published** kit (or a tagged tarball), not monorepo-relative paths to unpublished kit sources.
-- [ ] Phase 5 improvement engine has completed at least one release-readiness cycle with machine-readable log + deterministic summary checks enforced.
-- [ ] You have chosen **history strategy** (new repo with fresh start vs subtree/filter-repo to preserve kit file history).
+- [x] Kit is **package-primary** in daily use (Phase 3 done).
+- [x] At least **one** non–QuickTask consumer or a **dedicated template repo** has successfully adopted upgrades.
+- [x] QuickTask CI can run **only** against the **published** kit (or a tagged tarball), not monorepo-relative paths to unpublished kit sources.
+- [x] Phase 5 improvement engine has completed at least one release-readiness cycle with machine-readable log + deterministic summary checks enforced.
+- [x] You have chosen **history strategy** (new repo with fresh start vs subtree/filter-repo to preserve kit file history).
 
 **“Fork” vs new repository**
 
@@ -314,10 +314,11 @@ When this file says a consumer completes **“project Phase 1”** (or similar),
 
 ## Recorded decisions
 
-| Decision             | Choice                                                                                                            |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Package layout**   | **Single publishable package** until **reuse or install-size pain** warrants splitting into multiple packages.    |
-| **TASKS.md tagging** | **`[workspace-kit]`** in the **task title** for all kit work. Do not use alternate tag sets for the same program. |
+| Decision                                | Choice                                                                                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Package layout**                      | **Single publishable package** until **reuse or install-size pain** warrants splitting into multiple packages.                                          |
+| **TASKS.md tagging**                    | **`[workspace-kit]`** in the **task title** for all kit work. Do not use alternate tag sets for the same program.                                       |
+| **Phase 6 extraction history strategy** | Use **`git subtree split`** from `packages/workspace-kit` into a new repository to preserve kit-only history without moving unrelated monorepo history. |
 
 ---
 

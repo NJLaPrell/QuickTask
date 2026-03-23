@@ -87,12 +87,15 @@ This gate uses `TASKS.md` as the issue system (no GitHub issues for this flow).
    - run `pnpm build`
    - run `pnpm release:validate-changesets`
    - run `pnpm release:check-workflow-contracts`
-   - run `pnpm docs:check-links`
-   - run `pnpm check:command-entrypoints`
-   - run `pnpm check:support-matrix`
-   - run `pnpm check:package-compliance`
-   - run `pnpm check:generated-artifacts`
-   - run `pnpm release:docs-check`
+
+- run `pnpm workspace-kit:phase6:consumer-check`
+- run `pnpm docs:check-links`
+- run `pnpm check:command-entrypoints`
+- run `pnpm check:support-matrix`
+- run `pnpm check:package-compliance`
+- run `pnpm check:generated-artifacts`
+- run `pnpm release:docs-check`
+
 5. Workflow builds and validates curated release notes with `pnpm release:notes` + `pnpm release:check-notes-quality`.
 6. Workflow versions packages/changelogs with `pnpm release:version`.
 7. Workflow builds and verifies release assets using:

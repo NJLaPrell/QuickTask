@@ -98,6 +98,7 @@ jobs:
 
       - name: Validate release workflow contracts
         run: |
+          pnpm workspace-kit:phase6:consumer-check
           pnpm release:check-workflow-contracts
           pnpm docs:check-links
           pnpm check:command-entrypoints
