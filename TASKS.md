@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
 - Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): `T163`
+- Active implementation (`[~]`): `T164`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T164`, `T165`, `T166`, `T167`
+- Ready queue (`[p]`): `T165`, `T166`, `T167`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T163 [workspace-kit] Define workflow-contract schema for phases, gates, transitions`
 - `[p] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets`
 - `[p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling`
 - `[p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment`
@@ -817,9 +816,9 @@ Work below is triaged for implementation.
     - `T166` single-source-of-truth docs/diagram alignment,
     - `T167` 4 -> 5 promotion evidence and phase-state update.
 
-### [~] T163 [workspace-kit] Define workflow-contract schema for phases, gates, transitions
+### [x] T163 [workspace-kit] Define workflow-contract schema for phases, gates, transitions
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Establish structured workflow-contract data schema that captures phases, gates, checks, and allowed transitions.
 - Files: `schemas/**`, `docs/**`, `scripts/check-workflow-contracts.mjs` (or related validator entrypoints), status/task files as needed
@@ -834,11 +833,23 @@ Work below is triaged for implementation.
   - Contract data schema exists and represents phases/checks/transitions in machine-readable form.
   - Validation path can reject malformed contract data.
 - Validation evidence:
-  - In progress.
+  - Added workflow-contract JSON schema:
+    - `schemas/workspace-kit-workflow-contract.schema.json`
+  - Added canonical workflow contract data source:
+    - `.workspace-kit/workflow-contract.json`
+  - Added contract validation script + tests:
+    - `scripts/validate-workflow-contract.mjs`
+    - `scripts/test/validate-workflow-contract.test.mjs`
+  - Added root command for contract validation:
+    - `pnpm workspace-kit:validate-workflow-contract`
+  - Validation run (pass, 2026-03-23):
+    - `pnpm workspace-kit:validate-workflow-contract`
+    - `pnpm test`
+    - `pnpm check`
 
-### [p] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets
+### [~] T164 [workspace-kit] Implement contract-driven generator for rules/instructions snippets
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Generate workflow-facing snippets from contract + profile so rules/docs consume one contract source instead of duplicated prose.
 - Files: generator scripts under `scripts/**` or `packages/workspace-kit/src/**`, generated outputs/docs as needed
@@ -853,7 +864,7 @@ Work below is triaged for implementation.
   - Generator outputs are deterministic and contract-driven.
   - Contract edits propagate to generated snippets without manual copy edits.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T165 [workspace-kit] Wire contract validation checks into workflow-contract tooling
 
