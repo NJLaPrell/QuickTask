@@ -1,5 +1,4 @@
 {
-  "$schema": "./schemas/workspace-kit-profile.schema.json",
   "project": {
     "name": "starter-project"
   },

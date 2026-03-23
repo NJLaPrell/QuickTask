@@ -22,7 +22,8 @@ The command:
 
 1. Recreates the fixture directory from `templates/workspace-starter`.
 2. Builds the local workspace-kit CLI package.
-3. Runs `workspace-kit doctor` in the fixture workspace.
-4. Prints JSON output containing `fixtureRoot` and `doctorOutput`.
+3. Runs `workspace-kit upgrade` and `workspace-kit init` in the fixture workspace.
+4. Runs `workspace-kit doctor` in the fixture workspace.
+5. Prints JSON output containing `fixtureRoot`, `upgradeOutput`, `initOutput`, and `doctorOutput`.
 
 Use this output in `TASKS.md` evidence when validating Phase 1 completion and 1 -> 2 promotion readiness.

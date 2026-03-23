@@ -1,41 +1,41 @@
-# Workspace Kit Starter (Phase 2)
+# Workspace Kit Starter (Phase 3)
 
-This starter is the Phase 2 bootstrap path for workspace-kit template adoption.
+This starter is the Phase 3 package-primary bootstrap path.
 
 ## 5-minute local init flow
 
 1. Copy this starter into a clean working directory.
-2. Build the local workspace-kit package from the QuickTask repo root:
+2. Install dependencies in the starter workspace:
 
 ```bash
-pnpm --filter quicktask-workspace-kit build
+pnpm install
 ```
 
-3. Run the local CLI doctor from the target workspace root:
+3. Apply package-managed canonical assets:
 
 ```bash
-node "<quicktask-repo>/packages/workspace-kit/dist/cli.js" doctor
+pnpm workspace-kit:upgrade
 ```
 
-4. Run init to generate profile-driven project context snippets:
+4. Generate profile-driven project context snippets:
 
 ```bash
-node "<quicktask-repo>/packages/workspace-kit/dist/cli.js" init
+pnpm workspace-kit:init
 ```
 
-This creates:
+5. Validate:
 
-- `.workspace-kit/generated/project-context.json`
-- `.cursor/rules/workspace-kit-project-context.mdc`
+```bash
+pnpm workspace-kit:check
+pnpm workspace-kit:doctor
+```
 
-When you update `workspace-kit.profile.json` (for example changing `project.name`), rerun `init` to regenerate these outputs.
+When you update `workspace-kit.profile.json` (for example changing `project.name`), rerun `pnpm workspace-kit:init` and `pnpm workspace-kit:drift-check`.
 
 ## Included starter contract files
 
 - `workspace-kit.profile.json`
-- `schemas/workspace-kit-profile.schema.json`
-- `.workspace-kit/manifest.json`
-- `.workspace-kit/owned-paths.json`
-- `.cursor/rules/workspace-kit-profile-pointer.mdc`
+- `package.json`
+- `README.md`
 
-These files are intentionally minimal for Phase 2 and will evolve as init/upgrade behavior is implemented.
+`workspace-kit:upgrade` materializes package-managed canonical files and generated context outputs in the target workspace.

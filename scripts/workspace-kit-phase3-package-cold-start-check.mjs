@@ -26,7 +26,7 @@ function main() {
     repoRoot,
     "artifacts",
     "workspace-kit-fixtures",
-    "phase1-cold-start"
+    "phase3-package-cold-start"
   );
   const starterPath = path.join(repoRoot, "templates", "workspace-starter");
   const cliPath = path.join(repoRoot, "packages", "workspace-kit", "dist", "cli.js");
@@ -38,9 +38,12 @@ function main() {
   run("pnpm", ["--filter", "quicktask-workspace-kit", "build"], { cwd: repoRoot });
   const upgradeOutput = run("node", [cliPath, "upgrade"], { cwd: fixtureRoot });
   const initOutput = run("node", [cliPath, "init"], { cwd: fixtureRoot });
+  const checkOutput = run("node", [cliPath, "check"], { cwd: fixtureRoot });
   const doctorOutput = run("node", [cliPath, "doctor"], { cwd: fixtureRoot });
 
-  console.log(JSON.stringify({ fixtureRoot, upgradeOutput, initOutput, doctorOutput }, null, 2));
+  console.log(
+    JSON.stringify({ fixtureRoot, upgradeOutput, initOutput, checkOutput, doctorOutput }, null, 2)
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
