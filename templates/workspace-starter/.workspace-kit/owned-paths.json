@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "ownedPaths": [
+    "workspace-kit.profile.json",
+    "schemas/workspace-kit-profile.schema.json",
+    ".workspace-kit/manifest.json",
+    ".workspace-kit/owned-paths.json"
+  ],
+  "notes": "Phase 1 starter owned-path baseline. Expand as template and packaged assets evolve."
+}

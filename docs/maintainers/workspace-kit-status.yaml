@@ -13,23 +13,23 @@ current_kit_phase: 1
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "T147 complete — execute T148 template starter path and consumer README"
+active_focus: "T148 complete — execute T149 cold-start fixture and doctor evidence capture"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "Complete T148 by creating templates/workspace-starter profile stub and consumer README"
-  - "Run docs/link + contract checks after T148 updates (`pnpm docs:check-links`, `pnpm release:check-workflow-contracts`)"
-  - "Execute T149 cold-start fixture and doctor evidence capture after T148 merge"
+  - "Define a canonical cold-start fixture path and copy process for template + local CLI validation"
+  - "Run `workspace-kit doctor` against the fixture and capture objective pass/fail evidence in TASKS.md"
+  - "Update metrics baseline values from fixture run outcomes and prep 1 -> 2 readiness summary"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Completed T147 package skeleton in packages/workspace-kit with init/doctor CLI placeholders and stable exit-code contract."
-  - "Added package tests for command invocation and doctor validation behavior."
-  - "Validated T147 scope with pnpm check/test/tasks/workflow-contract commands (pass)."
-  - "Advanced task state to T148 in progress; no blockers identified."
+  - "Completed T148 by adding templates/workspace-starter with profile/schema/manifest/owned-paths stubs."
+  - "Added template consumer README stub documenting local 5-minute init flow."
+  - "Validated template/docs contract checks for this scope and advanced active task to T149."
+  - "No blockers identified; pending decisions remain non-blocking for Phase 1 completion."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions:

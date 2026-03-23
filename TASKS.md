@@ -70,11 +70,11 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 1 dual-track bootstrap (template + package skeleton)._
 - Phase kickoff assessment: Phase 1 kickoff complete (2026-03-23). Reviewed `README.md`, `CONTRIBUTORS.md`, `ARCHITECTURE.md`, `RELEASE_STRATEGY.md`, `PRE_RELEASE_READINESS_WORKFLOW.md`, and kit roadmap/status docs; confirmed scope alignment with Phase 1 deliverables and set `T147` as active implementation.
-- Active implementation (`[~]`): `T148`
+- Active implementation (`[~]`): `T149`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T149`
+- Ready queue (`[p]`): _none_
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute Phase 1 bootstrap in order `T147` -> `T148` -> `T149` and record cold-start `doctor` evidence for 1 -> 2 readiness.
+- Next tasks: Complete `T149` cold-start fixture + doctor evidence capture, then verify 1 -> 2 promotion readiness.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness`
+- _Empty._
 
 ### Scheduled (`[ ]`)
 
@@ -238,7 +238,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T148 [workspace-kit] Create template starter path and consumer README stub`
+- `[~] T149 [workspace-kit] Define cold-start fixture and doctor validation harness`
 
 ### Blocked
 
@@ -370,9 +370,9 @@ Work below is triaged for implementation.
     - `pnpm --filter quicktask-workspace-kit test`
     - `pnpm check && pnpm test && pnpm tasks:check && pnpm release:check-workflow-contracts`
 
-### [~] T148 [workspace-kit] Create template starter path and consumer README stub
+### [x] T148 [workspace-kit] Create template starter path and consumer README stub
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Stand up Phase 1 template starter location with profile stub and kit-consumer onboarding README.
 - Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -387,11 +387,20 @@ Work below is triaged for implementation.
   - Starter template path exists and includes profile stub plus consumer-facing README.
   - README guides local CLI/bootstrap path for Phase 1.
 - Validation evidence:
-  - In progress.
+  - Added template starter tree at `templates/workspace-starter/` with canonical contract stubs:
+    - `workspace-kit.profile.json`
+    - `schemas/workspace-kit-profile.schema.json`
+    - `.workspace-kit/manifest.json`
+    - `.workspace-kit/owned-paths.json`
+  - Added kit-consumer README stub at `templates/workspace-starter/README.md` with 5-minute local init flow and explicit separation from product README.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm docs:check-links`
+    - `pnpm release:check-workflow-contracts`
+    - `pnpm templates:eval`
 
-### [p] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
+### [~] T149 [workspace-kit] Define cold-start fixture and doctor validation harness
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Establish repeatable Phase 1 cold-start validation proving template + local CLI `doctor` success.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, fixture path/docs/scripts as needed
@@ -406,7 +415,7 @@ Work below is triaged for implementation.
   - Fixture path and invocation steps are documented and repeatable.
   - `doctor` pass evidence is captured for Phase 1 progression.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 
