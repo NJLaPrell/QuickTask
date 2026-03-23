@@ -30,6 +30,8 @@ Fast-lane minimum validation:
 2. `pnpm docs:check-links`
 3. `pnpm release:check-workflow-contracts` (when workflow/policy docs touched)
 
+When workflow-contract artifacts are in scope, use `docs/maintainers/workspace-kit-workflow-contract-source.md` as the canonical reference instead of duplicating contract prose in workflow docs.
+
 Fast-lane exclusions (must use full loop validations):
 
 - Any change under `packages/**`

@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 4 workflow contract in data._
 - Phase kickoff assessment: Phase 4 kickoff pending (seeded by T161 phase-promotion closeout); start by defining workflow-contract-in-data implementation plan.
-- Active implementation (`[~]`): `T166`
+- Active implementation (`[~]`): `T167`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T167`
+- Ready queue (`[p]`): _none_
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 4 in order `T163` -> `T164` -> `T165` -> `T166`, then run `T167` for 4 -> 5 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment`
 - `[p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
@@ -905,9 +904,9 @@ Work below is triaged for implementation.
     - `pnpm test`
     - `pnpm check`
 
-### [~] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
+### [x] T166 [workspace-kit] Publish single-source-of-truth contract diagram and docs alignment
 
-- Status: [~]
+- Status: [x]
 - Priority: P1
 - Goal: Document contract-driven architecture with one canonical diagram/source and align maintainer docs to generated flow.
 - Files: `docs/**`, `ARCHITECTURE.md` (if needed), contract/reference docs as needed
@@ -922,11 +921,19 @@ Work below is triaged for implementation.
   - Contract-driven flow has a clear canonical documentation source.
   - Docs references point to contract/generator artifacts rather than duplicated prose.
 - Validation evidence:
-  - In progress.
+  - Added canonical workflow-contract maintainer doc + single-source diagram:
+    - `docs/maintainers/workspace-kit-workflow-contract-source.md`
+  - Linked docs to canonical source to avoid duplicated prose:
+    - `docs/workflows/task-pr-delivery-workflow.md`
+    - `ARCHITECTURE.md`
+  - Validation run (pass, 2026-03-23):
+    - `pnpm docs:check-links`
+    - `pnpm release:check-workflow-contracts`
+    - `pnpm tasks:check`
 
-### [p] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
+### [~] T167 [workspace-kit] Run Phase 4 promotion evidence pass and status update
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Close Phase 4 with objective evidence and advance kit phase state cleanly from 4 -> 5.
 - Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -941,7 +948,7 @@ Work below is triaged for implementation.
   - Evidence for 4 -> 5 checks is recorded in this task.
   - Status YAML phase and focus fields reflect post-promotion state.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [x] T101 - Specify `/qt init` command contract and result codes
 

@@ -68,6 +68,14 @@ The single source of truth for supported command forms and runtime result codes 
 
 Host adapters and user-facing docs should reference this contract to avoid drift.
 
+## Workspace-kit workflow contract source
+
+For workspace-kit phase/gate/check contract details, generated artifact paths, and the canonical data-flow diagram, use:
+
+- `docs/maintainers/workspace-kit-workflow-contract-source.md`
+
+That maintainer doc is the single source of truth for contract-in-data wiring between schema/data, generators, and release contract checks.
+
 ## Approved command-surface scope
 
 QuickTask keeps an intentionally minimal `/qt` surface:
