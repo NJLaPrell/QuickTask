@@ -33,7 +33,7 @@
     {
       "id": "F001",
       "title": "Phase 5 baseline had no machine-readable friction source",
-      "status": "in_progress",
+      "status": "resolved",
       "severity": "medium",
       "category": "process",
       "source": {
@@ -47,10 +47,33 @@
       "proposedChange": "Adopt schema-backed improvement log plus deterministic generated summary and CI enforcement.",
       "affectedAreas": ["release", "tasks", "docs"],
       "followUpTaskId": "T168",
-      "releaseImpact": "requires_change",
+      "releaseImpact": "note_only",
       "disposition": {
-        "kind": "planned_fix",
-        "notes": "Implement in Phase 5 before Phase 6 extraction gate."
+        "kind": "resolved",
+        "notes": "Implemented in T168 and verified via T169 release-readiness evidence pass."
+      }
+    },
+    {
+      "id": "F002",
+      "title": "First release-cycle evidence pass captured with zero new medium/high findings",
+      "status": "resolved",
+      "severity": "low",
+      "category": "release",
+      "source": {
+        "kind": "release_prepare",
+        "reference": "docs/release-readiness-report.md @ 2026-03-23T18:54:12.711Z"
+      },
+      "detectedAt": "2026-03-23",
+      "lastUpdated": "2026-03-23",
+      "promptIntent": "Prove the machine-readable improvement loop runs in a full release-readiness cycle.",
+      "frictionObserved": "No additional friction surfaced in the first release-cycle evidence pass.",
+      "proposedChange": "Maintain current policy and continue tracking next cycle signal quality.",
+      "affectedAreas": ["release", "ci"],
+      "followUpTaskId": "T169",
+      "releaseImpact": "none",
+      "disposition": {
+        "kind": "resolved",
+        "notes": "Evidence captured; proceed to Phase 5 -> 6 promotion closeout planning."
       }
     }
   ]

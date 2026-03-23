@@ -69,12 +69,12 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - Last updated: 2026-03-23
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 5 improvement loop._
-- Phase kickoff assessment: Phase 5 kickoff complete; machine-readable improvement log baseline and automation gates are in place, pending first release-cycle evidence pass.
+- Phase kickoff assessment: Phase 5 kickoff complete and first release-cycle evidence pass recorded; next closeout step is 5 -> 6 promotion evidence.
 - Active implementation (`[~]`): _none_
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T169`
+- Ready queue (`[p]`): `T170`
 - Blocked tasks (`[!]`): none
-- Next tasks: Execute `T169` to capture first release-cycle evidence for the improvement engine, then close with a dedicated 5 -> 6 promotion evidence task.
+- Next tasks: Execute `T170` to run 5 -> 6 promotion evidence pass and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
 
 ## `v1.0.0` release execution plan
@@ -226,7 +226,7 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T169 [workspace-kit] Run first release-cycle evidence pass for machine-readable improvement engine`
+- `[p] T170 [workspace-kit] Run Phase 5 promotion evidence pass and status update`
 
 ### Scheduled (`[ ]`)
 
@@ -1007,9 +1007,9 @@ Work below is triaged for implementation.
     - `node --test scripts/test/check-workflow-contracts.test.mjs scripts/test/release-prepare-readiness.test.mjs`
     - `node --test scripts/test/validate-workspace-kit-improvement-log.test.mjs scripts/test/generate-workspace-kit-improvement-summary.test.mjs`
 
-### [p] T169 [workspace-kit] Run first release-cycle evidence pass for machine-readable improvement engine
+### [x] T169 [workspace-kit] Run first release-cycle evidence pass for machine-readable improvement engine
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Demonstrate one full release-readiness cycle using the new machine-readable improvement log and deterministic summary workflow.
 - Files: `.workspace-kit/improvement-log.json`, `.workspace-kit/generated/improvement-summary.json`, `docs/release-readiness-report.md`, `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`
@@ -1023,6 +1023,40 @@ Work below is triaged for implementation.
 - Acceptance criteria:
   - At least one release-readiness cycle has auditable evidence that the improvement engine is actively used.
   - Evidence explicitly links to machine-readable log data and generated summary outputs.
+- Validation evidence:
+  - Updated machine-readable improvement records for first release-cycle evidence pass:
+    - `.workspace-kit/improvement-log.json`:
+      - `F001` marked `resolved` with release-cycle closure notes.
+      - `F002` added for first release-cycle evidence signal capture.
+  - Regenerated deterministic summary output:
+    - `.workspace-kit/generated/improvement-summary.json`
+    - summary now reports `recordCount: 2`, `resolved: 2`, `openRecordIds: []`.
+  - Release-cycle evidence command pass (2026-03-23):
+    - `pnpm workspace-kit:improvement-log:validate`
+    - `pnpm workspace-kit:improvement-log:generate`
+    - `pnpm release:prepare`
+  - Release-readiness evidence:
+    - `docs/release-readiness-report.md` reports:
+      - `Workspace-kit improvement log validation | pass`
+      - `Findings: None`
+      - `Handoff decision: READY`
+
+### [p] T170 [workspace-kit] Run Phase 5 promotion evidence pass and status update
+
+- Status: [p]
+- Priority: P1
+- Goal: Close Phase 5 with objective evidence and advance kit phase state from 5 -> 6 only when automated improvement-engine gates and release-cycle evidence are complete.
+- Files: `TASKS.md`, `docs/maintainers/workspace-kit-status.yaml`, `ROADMAP.md` (if evidence wording needs alignment)
+- Dependencies: T169
+- Blocked by: none
+- Unblock plan: n/a
+- Steps:
+  1. Run Phase 5 promotion checks from roadmap matrix, including machine-readable improvement log and release-readiness gates.
+  2. Capture 5 -> 6 evidence summary and confirm deterministic improvement-loop outputs remain aligned.
+  3. If criteria pass, update `current_kit_phase` to `6` and refresh status handoff next actions for extraction execution.
+- Acceptance criteria:
+  - Phase 5 promotion evidence is recorded with explicit command outcomes and improvement-loop proof.
+  - Status YAML reflects post-promotion phase state and Phase 6 extraction-execution focus.
 - Validation evidence:
   - Pending.
 

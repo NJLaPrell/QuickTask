@@ -2,29 +2,31 @@
   "schemaVersion": 1,
   "generatedAt": "deterministic-improvement-summary",
   "reviewCadence": "per-kit-minor-release",
-  "recordCount": 1,
+  "recordCount": 2,
   "statusCounts": {
     "open": 0,
-    "in_progress": 1,
-    "resolved": 0,
+    "in_progress": 0,
+    "resolved": 2,
     "accepted_risk": 0,
     "archived": 0
   },
   "severityCounts": {
-    "low": 0,
+    "low": 1,
     "medium": 1,
     "high": 0
   },
   "categoryCounts": {
-    "process": 1
+    "process": 1,
+    "release": 1
   },
   "sourceKindCounts": {
+    "release_prepare": 1,
     "session_retro": 1
   },
   "releaseSignals": {
-    "requiresChangeCount": 1,
-    "noteOnlyCount": 0,
-    "noneCount": 0
+    "requiresChangeCount": 0,
+    "noteOnlyCount": 1,
+    "noneCount": 1
   },
-  "openRecordIds": ["F001"]
+  "openRecordIds": []
 }
