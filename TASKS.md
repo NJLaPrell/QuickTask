@@ -70,9 +70,9 @@ Use this section only when medium/high findings are explicitly accepted instead 
 - **Phase 12** (`v1.0.x` adoption): **shipped** as **`v1.1.0`** (2026-03-22); task records **`[h]`** in `TASKS_ARCHIVED.md`. Release: https://github.com/NJLaPrell/QuickTask/releases/tag/v1.1.0
 - Current phase in execution: _Workspace kit roadmap Phase 2 state and migration._
 - Phase kickoff assessment: Phase 2 kickoff pending (seeded by T150 phase-promotion closeout); start by defining profile-driven parameterization and pilot-repo validation plan.
-- Active implementation (`[~]`): `T151`
+- Active implementation (`[~]`): `T153`
 - Scheduled (`[ ]`): _none_
-- Ready queue (`[p]`): `T152`, `T153`, `T154`, `T155`
+- Ready queue (`[p]`): `T154`, `T155`
 - Blocked tasks (`[!]`): none
 - Next tasks: Execute Phase 2 in order `T152` -> `T153` -> `T154`, then run `T155` for 2 -> 3 promotion evidence and phase-state update.
 - Phase 11 planned tasks (`T112`, `T113`, `T114`, `T116`, `T117`, `T118`, `T120`, `T123`, `T124`, `T126`, `T132`) remain `[x]`.
@@ -226,7 +226,6 @@ Work below is triaged for implementation.
 
 ### Proposed
 
-- `[p] T152 [workspace-kit] Add profile validation command and CI gate wiring`
 - `[p] T153 [workspace-kit] Implement profile-driven project-context generation`
 - `[p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness`
 - `[p] T155 [workspace-kit] Run Phase 2 promotion evidence pass and status update`
@@ -241,7 +240,7 @@ Work below is triaged for implementation.
 
 ### In progress
 
-- `[~] T151 [workspace-kit] Kick off Phase 2 profile-driven migration plan`
+- `[~] T153 [workspace-kit] Implement profile-driven project-context generation`
 
 ### Blocked
 
@@ -480,9 +479,9 @@ Work below is triaged for implementation.
     - `T154` migration guide + non-QuickTask pilot adoption evidence,
     - `T155` 2 -> 3 promotion evidence and phase-state update.
 
-### [p] T152 [workspace-kit] Add profile validation command and CI gate wiring
+### [x] T152 [workspace-kit] Add profile validation command and CI gate wiring
 
-- Status: [p]
+- Status: [x]
 - Priority: P1
 - Goal: Implement `workspace-kit check` profile validation and enforce it in repository-level validation flow.
 - Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `package.json`, docs/status/task files as needed
@@ -497,11 +496,19 @@ Work below is triaged for implementation.
   - `workspace-kit check` exits `0` for valid profile and `1` for validation failures.
   - Repository validation path includes profile check gate.
 - Validation evidence:
-  - Pending.
+  - Added `check` command to workspace-kit CLI in `packages/workspace-kit/src/cli.ts` with deterministic profile validation for baseline fields (`project.name`, `packageManager`, `commands.test/lint/typecheck`, `github.defaultBranch`).
+  - Added package tests for `check` command pass/fail behavior in `packages/workspace-kit/test/cli.test.mjs`.
+  - Wired profile validation into repository-level check path:
+    - root `check` now runs `pnpm -r check && pnpm workspace-kit:check-profile`,
+    - added `workspace-kit:check-profile` script in root `package.json`.
+  - Validation run (pass, 2026-03-23):
+    - `pnpm --filter quicktask-workspace-kit test`
+    - `pnpm workspace-kit:check-profile`
+    - `pnpm check && pnpm tasks:check && pnpm release:check-workflow-contracts`
 
-### [p] T153 [workspace-kit] Implement profile-driven project-context generation
+### [~] T153 [workspace-kit] Implement profile-driven project-context generation
 
-- Status: [p]
+- Status: [~]
 - Priority: P1
 - Goal: Replace hardcoded project-name assumptions with generated profile-driven context artifacts.
 - Files: `packages/workspace-kit/src/*`, `packages/workspace-kit/test/*`, `templates/workspace-starter/**`
@@ -516,7 +523,7 @@ Work below is triaged for implementation.
   - Generated artifacts reflect current profile values.
   - Changing `project.name` and rerunning generation updates output deterministically.
 - Validation evidence:
-  - Pending.
+  - In progress.
 
 ### [p] T154 [workspace-kit] Add Phase 2 migration guide and pilot adoption harness
 
