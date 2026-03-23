@@ -372,7 +372,7 @@ Work below is triaged for implementation.
 - Status: [p]
 - Priority: P1
 - Goal: Stand up Phase 1 template starter location with profile stub and kit-consumer onboarding README.
-- Files: `templates/workspace-starter/**`, `templates/workspace-starter/README.md`
+- Files: `TASKS.md`, `ROADMAP.md`, `docs/maintainers/workspace-kit-status.yaml`
 - Dependencies: T147
 - Blocked by: none
 - Unblock plan: n/a
