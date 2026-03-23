@@ -13,23 +13,22 @@ current_kit_phase: 6
 last_updated: "2026-03-23"
 
 # One line: what the next session should prioritize (agent or human fills)
-active_focus: "Extraction follow-through complete — Workflow Cannon repo bootstrap and first npm publish verified"
+active_focus: "Roadmap complete with decisions finalized; execute extraction follow-through only when explicitly requested"
 
 # Human-required stops; agent must not "resolve" these without user
 blockers: []
 
 # Ordered hints for the next agent run (clear when done)
 next_agent_actions:
-  - "No open extraction follow-through blockers remain; keep workspace-kit in maintenance mode unless new work is requested"
-  - "Keep packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) enforced in QuickTask CI/readiness"
-  - "Use Workflow Cannon repository as canonical package home for future workspace-kit release changes"
+  - "No open Phase 0-6 roadmap tasks remain; keep workspace-kit in maintenance mode unless new scoped work is requested"
+  - "If extraction execution is requested, use Workflow Cannon repo target (`workflow-cannon`) and package scope (`@workflow-cannon/workspace-kit`)"
+  - "Preserve packaged-consumer regression gate (`pnpm workspace-kit:phase6:consumer-check`) in CI/release/readiness flows"
 
 # Optional: 2-5 bullets for the following session
 last_session_summary:
-  - "Resolved npm human gates by setting `NPM_TOKEN` secret and confirming `@workflow-cannon` scope ownership."
-  - "Ran Workflow Cannon `Publish NPM` workflow successfully (`run_id: 23463225397`)."
-  - "Verified package is live on npm as `@workflow-cannon/workspace-kit@0.1.0` with `latest` tag."
-  - "Closed T177 extraction blocker and marked extraction follow-through complete."
+  - "Recorded final naming/package/merge/directives decisions in `ROADMAP.md`, including Workflow Cannon and `workflow-cannon`."
+  - "Cleared all remaining pending decision items from workspace-kit status handoff."
+  - "Kept roadmap state complete through Phase 6 and constrained next actions to optional extraction follow-through."
 
 # Open roadmap decisions still blocking implementation (mirror ROADMAP open decisions)
 pending_decisions: []
@@ -38,7 +37,7 @@ pending_decisions: []
 metrics:
   updated_at: "2026-03-23"
   source: "manual"
-  notes: "Extraction follow-through complete: Workflow Cannon repository bootstrap and first npm publish succeeded (`@workflow-cannon/workspace-kit@0.1.0`)."
+  notes: "Phase 6 complete with final decisions recorded (name/repo/package/directives/merge policy); extraction follow-through is optional and ready."
   time_to_doctor_minutes: 0.03
   cold_start_success_rate_pct: 100
   upgrade_success_rate_pct: null
